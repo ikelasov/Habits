@@ -13,5 +13,6 @@
     <color name="high_priority">#FFBF7F</color>
     <color name="medium_priority">#189AB4</color>
     <color name="low_priority">#7770AF</color>
+    <color name="orange">#FFC888</color>
 
 </resources>
