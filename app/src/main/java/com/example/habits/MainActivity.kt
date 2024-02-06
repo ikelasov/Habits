@@ -46,9 +46,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.HabitUi
 import com.example.habits.view.HabitsViewModel
-import com.example.habits.view.HabitsViewState
 import dagger.hilt.android.AndroidEntryPoint
 
+@OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -70,7 +70,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }) { contentPadding ->
                         HabitsContent(
-                            viewState,
+                            viewState.habits,
                             habitsViewModel::addHabit,
                             habitsViewModel::deleteHabits,
                             habitsViewModel::deleteHabit,
@@ -95,7 +95,7 @@ private fun LoadingScreen() {
 
 @Composable
 private fun HabitsContent(
-    viewState: HabitsViewState,
+    habits: List<HabitUi>,
     addHabit: () -> Unit,
     deleteHabits: () -> Unit,
     deleteHabit: (Int) -> Unit,
@@ -107,7 +107,7 @@ private fun HabitsContent(
         color = colorResource(id = R.color.background)
     ) {
         HabitsList(
-            viewState.habits,
+            habits,
             onAddHabitClicked = { addHabit() },
             onDeleteClicked = { deleteHabits() },
             onHabitClicked = { deleteHabit(it) },
