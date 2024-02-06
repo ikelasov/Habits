@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
@@ -198,9 +197,9 @@ fun StatisticsItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
-            Text(text = "$statisticTitle", style = MaterialTheme.typography.titleLarge)
+            Text(text = statisticTitle, style = MaterialTheme.typography.titleLarge)
             Text(
-                text = "$statisticsComment",
+                text = statisticsComment,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -400,9 +399,9 @@ fun TopBarPreview() {
     TopBar()
 }
 
-@Preview()
+@Preview
 @Composable
-fun statisticsContentPreview() {
+fun StatisticsContentPreview() {
     StatisticsContent(longestStreak = 20, currentStreak = 5, completionRate = 98, averageTasks = 7)
 }
 
