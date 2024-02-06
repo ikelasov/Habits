@@ -1,10 +1,14 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(
+    ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class
+)
 
 package com.example.habits
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -51,7 +55,6 @@ import com.example.habits.view.HabitUi
 import com.example.habits.view.HabitsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
-@OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -116,7 +119,10 @@ private fun HabitsScreen(
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(
+    userName: String = "Ilias",
+    @DrawableRes profileIcon: Int = R.drawable.ic_profile
+) {
     Row(
         modifier = Modifier
             .padding(24.dp)
@@ -124,10 +130,10 @@ fun TopBar() {
     ) {
         Row(modifier = Modifier.weight(1f)) {
             Text(text = "Hello, ")
-            Text(text = "Ilias!", color = colorResource(R.color.medium_priority))
+            Text(text = "$userName!", color = colorResource(R.color.medium_priority))
         }
         Image(
-            painter = painterResource(R.drawable.ic_profile),
+            painter = painterResource(profileIcon),
             contentDescription = null,
             modifier = Modifier.size(34.dp)
         )
