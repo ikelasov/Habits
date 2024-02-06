@@ -63,20 +63,12 @@ class MainActivity : ComponentActivity() {
                 if (viewState.loading) {
                     LoadingScreen()
                 } else {
-                    Scaffold(
-                        floatingActionButton = {
-                            FloatingActionButton(onClick = { /*TODO*/ }) {
-                                Icon(Icons.Default.Add, contentDescription = null)
-                            }
-                        }) { contentPadding ->
-                        HabitsContent(
-                            viewState.habits,
-                            habitsViewModel::addHabit,
-                            habitsViewModel::deleteHabits,
-                            habitsViewModel::deleteHabit,
-                            Modifier.padding(contentPadding)
-                        )
-                    }
+                    HabitsScreen(
+                        viewState.habits,
+                        habitsViewModel::addHabit,
+                        habitsViewModel::deleteHabit,
+                        habitsViewModel::deleteHabits
+                    )
                 }
             }
         }
@@ -90,6 +82,29 @@ private fun LoadingScreen() {
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(modifier = Modifier.size(100.dp))
+    }
+}
+
+@Composable
+private fun HabitsScreen(
+    habits: List<HabitUi>,
+    addHabit: () -> Unit,
+    deleteHabit: (Int) -> Unit,
+    deleteHabits: () -> Unit
+) {
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.Add, contentDescription = null)
+            }
+        }) { contentPadding ->
+        HabitsContent(
+            habits,
+            addHabit,
+            deleteHabits,
+            deleteHabit,
+            Modifier.padding(contentPadding)
+        )
     }
 }
 
@@ -288,4 +303,23 @@ fun HabitItemPreview() {
     HabitsTheme {
         HabitItem(mockHabit, {})
     }
+}
+
+@Preview
+@Composable
+fun ScreenPreview() {
+    val mockHabit = HabitUi(
+        id = 0,
+        name = "Go to the gym",
+        timeToDoIndication = "10:00 AM",
+        repetitionIndication = "10 times per day",
+        0.3f,
+        R.color.purple_200
+    )
+    HabitsScreen(
+        listOf(mockHabit),
+        {},
+        {},
+        {}
+    )
 }
