@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -88,6 +89,7 @@ private fun LoadingScreen() {
     }
 }
 
+@ExperimentalMaterial3Api
 @Composable
 private fun HabitsScreen(
     habits: List<HabitUi>,
@@ -105,13 +107,14 @@ private fun HabitsScreen(
             TopBar()
         }
     ) { contentPadding ->
-        HabitsContent(
-            habits,
-            addHabit,
-            deleteHabits,
-            deleteHabit,
-            Modifier.padding(contentPadding)
-        )
+        Column(modifier = Modifier.padding(contentPadding)) {
+            HabitsContent(
+                habits,
+                addHabit,
+                deleteHabits,
+                deleteHabit,
+            )
+        }
     }
 }
 
@@ -133,6 +136,77 @@ fun TopBar(
             painter = painterResource(profileIcon),
             contentDescription = null,
             modifier = Modifier.size(34.dp)
+        )
+    }
+}
+
+@Composable
+fun StatisticsContent(
+    longestStreak: Int = 20,
+    currentStreak: Int = 7,
+    completionRate: Int = 98,
+    averageTasks: Int = 6
+) {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = Color.White,
+        modifier = Modifier.padding(horizontal = 24.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            Column(modifier = Modifier.weight(0.5f)) {
+                StatisticsItem(
+                    statisticTitle = "$longestStreak Day" + if (longestStreak == 1) "s" else "",
+                    statisticsComment = "Longest streak",
+                    icon = R.drawable.ic_longest_streak
+                )
+                StatisticsItem(
+                    statisticTitle = "$completionRate%",
+                    statisticsComment = "Completion rate",
+                    icon = R.drawable.ic_completion_rate
+                )
+            }
+            Column(modifier = Modifier.weight(0.5f)) {
+                StatisticsItem(
+                    statisticTitle = "$currentStreak Day" + if (currentStreak == 1) "s" else "",
+                    statisticsComment = "Current streak",
+                    icon = R.drawable.ic_current_streak
+                )
+                StatisticsItem(
+                    statisticTitle = "$averageTasks",
+                    statisticsComment = "Average tasks",
+                    icon = R.drawable.ic_average_tasks
+                )
+            }
+        }
+    }
+
+}
+
+@Composable
+fun StatisticsItem(
+    statisticTitle: String,
+    statisticsComment: String,
+    @DrawableRes icon: Int,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = "$statisticTitle", style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = "$statisticsComment",
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = null
         )
     }
 }
@@ -169,6 +243,8 @@ private fun HabitsList(
     listState: LazyListState
 ) {
     LazyColumn(state = listState) {
+        item { StatisticsContent() }
+        item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
         items(
             items = habits,
             key = { it.id },
@@ -322,6 +398,22 @@ private fun ProgressIndicator(progress: Float, modifier: Modifier = Modifier) {
 @Composable
 fun TopBarPreview() {
     TopBar()
+}
+
+@Preview()
+@Composable
+fun statisticsContentPreview() {
+    StatisticsContent(longestStreak = 20, currentStreak = 5, completionRate = 98, averageTasks = 7)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StatisticsItemPreview() {
+    StatisticsItem(
+        statisticTitle = "20 Days",
+        statisticsComment = "Longest streak",
+        icon = R.drawable.ic_longest_streak
+    )
 }
 
 @Preview
