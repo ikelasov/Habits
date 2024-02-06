@@ -5,6 +5,7 @@ package com.example.habits
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
@@ -39,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -97,13 +100,36 @@ private fun HabitsScreen(
             FloatingActionButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
-        }) { contentPadding ->
+        },
+        topBar = {
+            TopBar()
+        }
+    ) { contentPadding ->
         HabitsContent(
             habits,
             addHabit,
             deleteHabits,
             deleteHabit,
             Modifier.padding(contentPadding)
+        )
+    }
+}
+
+@Composable
+fun TopBar() {
+    Row(
+        modifier = Modifier
+            .padding(24.dp)
+            .fillMaxWidth()
+    ) {
+        Row(modifier = Modifier.weight(1f)) {
+            Text(text = "Hello, ")
+            Text(text = "Ilias!", color = colorResource(R.color.medium_priority))
+        }
+        Image(
+            painter = painterResource(R.drawable.ic_profile),
+            contentDescription = null,
+            modifier = Modifier.size(34.dp)
         )
     }
 }
@@ -287,6 +313,12 @@ private fun ProgressIndicator(progress: Float, modifier: Modifier = Modifier) {
             progress = progress
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun TopBarPreview() {
+    TopBar()
 }
 
 @Preview
