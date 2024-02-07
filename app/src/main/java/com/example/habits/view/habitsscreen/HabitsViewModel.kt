@@ -1,5 +1,6 @@
-package com.example.habits.view
+package com.example.habits.view.habitsscreen
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.R
@@ -7,19 +8,26 @@ import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.data.repository.StatisticsData
+import com.example.habits.data.repository.StatisticsRepository
+import com.example.habits.data.repository.StatisticsType
+import com.example.habits.data.repository.StatisticsTypeData
+import com.example.habits.view.habitsscreen.mapper.mapHabitEntityToHabitUI
+import com.example.habits.view.habitsscreen.mapper.mapToStatisticsDataUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HabitsViewModel @Inject constructor(
     private val habitsRepository: HabitsRepository,
+    private val statisticsRepository: StatisticsRepository
 ) : ViewModel() {
 
     private val _habits: MutableStateFlow<List<HabitEntity>> = MutableStateFlow(listOf())
@@ -32,41 +40,25 @@ class HabitsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            habitsRepository.getHabits().map { habitsList ->
-                return@map habitsList.map { habit ->
-                    habit.mapHabitEntityToHabitUI()
-                }
-            }.collectLatest { habitsUi ->
-                _viewState.update { it.copy(habits = habitsUi, loading = false) }
+            combine(
+                habitsRepository.getHabits(),
+                statisticsRepository.getStatistics()
+            ) { habits, statistics ->
+                val habitsUiList = habits.map { it.mapHabitEntityToHabitUI() }
+                val statisticsUi = statistics.mapToStatisticsDataUi()
+
+                HabitsViewState(
+                    habits = habitsUiList,
+                    statisticsDataUi = statisticsUi,
+                    loading = false
+                )
+            }.catch { throwable ->
+                // TODO: Implement emitting UI error. For now just rethrow
+                throw throwable
+            }.collectLatest {
+                _viewState.value = it
             }
         }
-    }
-
-    private fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
-        val timeToDoIndication = when (this.timeOfTheDay) {
-            TimeOfTheDay.MORNING -> "9:00 AM"
-            TimeOfTheDay.NOUN -> "12:00 PM"
-            TimeOfTheDay.EVENING -> "9:00 PM"
-            TimeOfTheDay.ALL_DAY -> "All day"
-        }
-
-        val repetitionIndication = "${this.repetitionsPerDay.toInt()} times per day"
-        val progress = this.completedRepetitions / this.repetitionsPerDay
-        val priorityIndicationColor = when (this.priorityLevel) {
-            HabitPriorityLevel.TOP_PRIORITY -> R.color.top_priority
-            HabitPriorityLevel.HIGH_PRIORITY -> R.color.high_priority
-            HabitPriorityLevel.MEDIUM_PRIORITY -> R.color.medium_priority
-            HabitPriorityLevel.LOW_PRIORITY -> R.color.low_priority
-        }
-
-        return HabitUi(
-            id = this.id,
-            name = this.name,
-            timeToDoIndication = timeToDoIndication,
-            repetitionIndication = repetitionIndication,
-            progress = progress,
-            priorityIndicationColor = priorityIndicationColor
-        )
     }
 
     fun addHabit() {
@@ -90,6 +82,7 @@ class HabitsViewModel @Inject constructor(
 
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
+    val statisticsDataUi: StatisticsDataUi = StatisticsDataUi(),
     val loading: Boolean = false
 )
 
@@ -100,4 +93,17 @@ data class HabitUi(
     val repetitionIndication: String,
     val progress: Float,
     val priorityIndicationColor: Int
+)
+
+data class StatisticsDataUi(
+    val longestStreak: StatisticsItemUi = StatisticsItemUi(),
+    val currentStreak: StatisticsItemUi = StatisticsItemUi(),
+    val completionRate: StatisticsItemUi = StatisticsItemUi(),
+    val averageTasks: StatisticsItemUi = StatisticsItemUi(),
+)
+
+data class StatisticsItemUi(
+    val title: String = "",
+    val hint: String = "",
+    @DrawableRes val icon: Int = 0
 )

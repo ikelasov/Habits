@@ -48,8 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habits.ui.theme.HabitsTheme
-import com.example.habits.view.HabitUi
-import com.example.habits.view.HabitsViewModel
+import com.example.habits.view.habitsscreen.HabitUi
+import com.example.habits.view.habitsscreen.HabitsViewModel
+import com.example.habits.view.habitsscreen.StatisticsDataUi
+import com.example.habits.view.habitsscreen.StatisticsItemUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,6 +70,7 @@ class MainActivity : ComponentActivity() {
                 } else {
                     HabitsScreen(
                         viewState.habits,
+                        viewState.statisticsDataUi,
                         habitsViewModel::addHabit,
                         habitsViewModel::deleteHabit,
                         habitsViewModel::deleteHabits
@@ -92,6 +95,7 @@ private fun LoadingScreen() {
 @Composable
 private fun HabitsScreen(
     habits: List<HabitUi>,
+    statistics: StatisticsDataUi,
     addHabit: () -> Unit,
     deleteHabit: (Int) -> Unit,
     deleteHabits: () -> Unit
@@ -107,8 +111,9 @@ private fun HabitsScreen(
         }
     ) { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
-            HabitsContent(
+            ScreenContent(
                 habits,
+                statistics,
                 addHabit,
                 deleteHabits,
                 deleteHabit,
@@ -123,9 +128,10 @@ fun TopBar(
     @DrawableRes profileIcon: Int = R.drawable.ic_profile
 ) {
     Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .padding(24.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Row(modifier = Modifier.weight(1f)) {
             Text(text = "Hello, ")
@@ -141,10 +147,7 @@ fun TopBar(
 
 @Composable
 fun StatisticsContent(
-    longestStreak: Int = 20,
-    currentStreak: Int = 7,
-    completionRate: Int = 98,
-    averageTasks: Int = 6
+    statistics: StatisticsDataUi
 ) {
     Surface(
         shape = MaterialTheme.shapes.large,
@@ -157,26 +160,26 @@ fun StatisticsContent(
         ) {
             Column(modifier = Modifier.weight(0.5f)) {
                 StatisticsItem(
-                    statisticTitle = "$longestStreak Day" + if (longestStreak == 1) "s" else "",
-                    statisticsComment = "Longest streak",
-                    icon = R.drawable.ic_longest_streak
+                    statisticTitle = statistics.longestStreak.title,
+                    statisticsComment = statistics.longestStreak.hint,
+                    icon = statistics.longestStreak.icon
                 )
                 StatisticsItem(
-                    statisticTitle = "$completionRate%",
-                    statisticsComment = "Completion rate",
-                    icon = R.drawable.ic_completion_rate
+                    statisticTitle = statistics.completionRate.title,
+                    statisticsComment = statistics.completionRate.hint,
+                    icon = statistics.completionRate.icon
                 )
             }
             Column(modifier = Modifier.weight(0.5f)) {
                 StatisticsItem(
-                    statisticTitle = "$currentStreak Day" + if (currentStreak == 1) "s" else "",
-                    statisticsComment = "Current streak",
-                    icon = R.drawable.ic_current_streak
+                    statisticTitle = statistics.currentStreak.title,
+                    statisticsComment = statistics.currentStreak.hint,
+                    icon = statistics.currentStreak.icon
                 )
                 StatisticsItem(
-                    statisticTitle = "$averageTasks",
-                    statisticsComment = "Average tasks",
-                    icon = R.drawable.ic_average_tasks
+                    statisticTitle = statistics.averageTasks.title,
+                    statisticsComment = statistics.averageTasks.hint,
+                    icon = statistics.averageTasks.icon
                 )
             }
         }
@@ -211,8 +214,9 @@ fun StatisticsItem(
 }
 
 @Composable
-private fun HabitsContent(
+private fun ScreenContent(
     habits: List<HabitUi>,
+    statistics: StatisticsDataUi,
     addHabit: () -> Unit,
     deleteHabits: () -> Unit,
     deleteHabit: (Int) -> Unit,
@@ -223,8 +227,9 @@ private fun HabitsContent(
         modifier = modifier,
         color = colorResource(id = R.color.background)
     ) {
-        HabitsList(
+        Content(
             habits,
+            statistics,
             onAddHabitClicked = { addHabit() },
             onDeleteClicked = { deleteHabits() },
             onHabitClicked = { deleteHabit(it) },
@@ -234,15 +239,16 @@ private fun HabitsContent(
 }
 
 @Composable
-private fun HabitsList(
+private fun Content(
     habits: List<HabitUi>,
+    statistics: StatisticsDataUi,
     onAddHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onHabitClicked: (Int) -> Unit,
     listState: LazyListState
 ) {
     LazyColumn(state = listState) {
-        item { StatisticsContent() }
+        item { StatisticsContent(statistics) }
         item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
         items(
             items = habits,
@@ -402,7 +408,7 @@ fun TopBarPreview() {
 @Preview
 @Composable
 fun StatisticsContentPreview() {
-    StatisticsContent(longestStreak = 20, currentStreak = 5, completionRate = 98, averageTasks = 7)
+    StatisticsContent(getMockStatisticsDate())
 }
 
 @Preview(showBackground = true)
@@ -444,8 +450,27 @@ fun ScreenPreview() {
     )
     HabitsScreen(
         listOf(mockHabit),
+        getMockStatisticsDate(),
         {},
         {},
         {}
+    )
+}
+
+// TODO move this
+private fun getMockStatisticsDate(): StatisticsDataUi {
+    val longestStreak =
+        StatisticsItemUi("20 Days", "Longest streak", R.drawable.ic_longest_streak)
+    val currentStreak =
+        StatisticsItemUi("7 Days", "Current streak", R.drawable.ic_current_streak)
+    val completionRate =
+        StatisticsItemUi("98%", "Completion rate", R.drawable.ic_completion_rate)
+    val averageTasks = StatisticsItemUi("7", "Average tasks", R.drawable.ic_average_tasks)
+
+    return StatisticsDataUi(
+        longestStreak = longestStreak,
+        currentStreak = currentStreak,
+        completionRate = completionRate,
+        averageTasks = averageTasks
     )
 }
