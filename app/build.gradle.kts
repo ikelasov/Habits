@@ -3,6 +3,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+    id("org.jmailen.kotlinter") version "4.2.0"
     kotlin("kapt")
 }
 
