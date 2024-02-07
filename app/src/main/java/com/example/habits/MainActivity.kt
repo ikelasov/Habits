@@ -56,7 +56,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -73,7 +72,7 @@ class MainActivity : ComponentActivity() {
                         viewState.statisticsDataUi,
                         habitsViewModel::addHabit,
                         habitsViewModel::deleteHabit,
-                        habitsViewModel::deleteHabits
+                        habitsViewModel::deleteHabits,
                     )
                 }
             }
@@ -85,7 +84,7 @@ class MainActivity : ComponentActivity() {
 private fun LoadingScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(modifier = Modifier.size(100.dp))
     }
@@ -98,7 +97,7 @@ private fun HabitsScreen(
     statistics: StatisticsDataUi,
     addHabit: () -> Unit,
     deleteHabit: (Int) -> Unit,
-    deleteHabits: () -> Unit
+    deleteHabits: () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -108,7 +107,7 @@ private fun HabitsScreen(
         },
         topBar = {
             TopBar()
-        }
+        },
     ) { contentPadding ->
         Column(modifier = Modifier.padding(contentPadding)) {
             ScreenContent(
@@ -125,13 +124,14 @@ private fun HabitsScreen(
 @Composable
 fun TopBar(
     userName: String = "Ilias",
-    @DrawableRes profileIcon: Int = R.drawable.ic_profile
+    @DrawableRes profileIcon: Int = R.drawable.ic_profile,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(24.dp)
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .padding(24.dp)
+                .fillMaxWidth(),
     ) {
         Row(modifier = Modifier.weight(1f)) {
             Text(text = "Hello, ")
@@ -140,51 +140,47 @@ fun TopBar(
         Image(
             painter = painterResource(profileIcon),
             contentDescription = null,
-            modifier = Modifier.size(34.dp)
+            modifier = Modifier.size(34.dp),
         )
     }
 }
 
 @Composable
-fun StatisticsContent(
-    statistics: StatisticsDataUi
-) {
+fun StatisticsContent(statistics: StatisticsDataUi) {
     Surface(
         shape = MaterialTheme.shapes.large,
         color = Color.White,
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = Modifier.padding(horizontal = 24.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Column(modifier = Modifier.weight(0.5f)) {
                 StatisticsItem(
                     statisticTitle = statistics.longestStreak.title,
                     statisticsComment = statistics.longestStreak.hint,
-                    icon = statistics.longestStreak.icon
+                    icon = statistics.longestStreak.icon,
                 )
                 StatisticsItem(
                     statisticTitle = statistics.completionRate.title,
                     statisticsComment = statistics.completionRate.hint,
-                    icon = statistics.completionRate.icon
+                    icon = statistics.completionRate.icon,
                 )
             }
             Column(modifier = Modifier.weight(0.5f)) {
                 StatisticsItem(
                     statisticTitle = statistics.currentStreak.title,
                     statisticsComment = statistics.currentStreak.hint,
-                    icon = statistics.currentStreak.icon
+                    icon = statistics.currentStreak.icon,
                 )
                 StatisticsItem(
                     statisticTitle = statistics.averageTasks.title,
                     statisticsComment = statistics.averageTasks.hint,
-                    icon = statistics.averageTasks.icon
+                    icon = statistics.averageTasks.icon,
                 )
             }
         }
     }
-
 }
 
 @Composable
@@ -194,9 +190,10 @@ fun StatisticsItem(
     @DrawableRes icon: Int,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -208,7 +205,7 @@ fun StatisticsItem(
         }
         Image(
             painter = painterResource(id = icon),
-            contentDescription = null
+            contentDescription = null,
         )
     }
 }
@@ -220,12 +217,12 @@ private fun ScreenContent(
     addHabit: () -> Unit,
     deleteHabits: () -> Unit,
     deleteHabit: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
     Surface(
         modifier = modifier,
-        color = colorResource(id = R.color.background)
+        color = colorResource(id = R.color.background),
     ) {
         Content(
             habits,
@@ -233,7 +230,7 @@ private fun ScreenContent(
             onAddHabitClicked = { addHabit() },
             onDeleteClicked = { deleteHabits() },
             onHabitClicked = { deleteHabit(it) },
-            listState
+            listState,
         )
     }
 }
@@ -245,7 +242,7 @@ private fun Content(
     onAddHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onHabitClicked: (Int) -> Unit,
-    listState: LazyListState
+    listState: LazyListState,
 ) {
     LazyColumn(state = listState) {
         item { StatisticsContent(statistics) }
@@ -256,7 +253,7 @@ private fun Content(
         ) {
             HabitItem(
                 habit = it,
-                onHabitClicked = onHabitClicked
+                onHabitClicked = onHabitClicked,
             )
         }
 
@@ -272,11 +269,11 @@ private fun Content(
 @Composable
 private fun AddHabitButton(
     onButtonClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = { onButtonClick() },
-        modifier = modifier
+        modifier = modifier,
     ) {
         Text(text = "Add")
     }
@@ -285,7 +282,7 @@ private fun AddHabitButton(
 @Composable
 private fun DeleteHabitsButton(
     onButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(onClick = { onButtonClicked() }, modifier = modifier) {
         Text(text = "Delete")
@@ -296,16 +293,17 @@ private fun DeleteHabitsButton(
 fun HabitItem(
     habit: HabitUi,
     onHabitClicked: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         shape = MaterialTheme.shapes.large,
         color = Color.White,
-        modifier = modifier
-            .padding(vertical = 8.dp, horizontal = 24.dp)
-            .fillMaxWidth()
-            .height(90.dp)
-            .clickable { onHabitClicked(habit.id) }
+        modifier =
+            modifier
+                .padding(vertical = 8.dp, horizontal = 24.dp)
+                .fillMaxWidth()
+                .height(90.dp)
+                .clickable { onHabitClicked(habit.id) },
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
             PriorityIndication(habit)
@@ -313,7 +311,7 @@ fun HabitItem(
                 habit.name,
                 habit.timeToDoIndication,
                 habit.repetitionIndication,
-                Modifier.weight(1f)
+                Modifier.weight(1f),
             )
             ProgressIndicator(habit.progress, Modifier.align(Alignment.CenterVertically))
         }
@@ -323,11 +321,12 @@ fun HabitItem(
 @Composable
 private fun PriorityIndication(habit: HabitUi) {
     Surface(
-        modifier = Modifier
-            .padding(end = 12.dp)
-            .width(16.dp)
-            .fillMaxHeight(1f),
-        color = colorResource(habit.priorityIndicationColor)
+        modifier =
+            Modifier
+                .padding(end = 12.dp)
+                .width(16.dp)
+                .fillMaxHeight(1f),
+        color = colorResource(habit.priorityIndicationColor),
     ) {}
 }
 
@@ -336,65 +335,72 @@ private fun HabitMainInfo(
     habitName: String,
     timeToDoIndication: String,
     repetitionIndication: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.padding(top = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = timeToDoIndication,
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
             Icon(
                 Icons.Default.Refresh,
                 contentDescription = "Habit repetition icon",
                 tint = colorResource(R.color.orange),
-                modifier = Modifier
-                    .padding(start = 8.dp, end = 2.dp)
-                    .size(10.dp)
+                modifier =
+                    Modifier
+                        .padding(start = 8.dp, end = 2.dp)
+                        .size(10.dp),
             )
             Text(
                 text = "Sun, Tue, Thu",
                 style = MaterialTheme.typography.bodySmall,
-                color = colorResource(R.color.orange)
+                color = colorResource(R.color.orange),
             )
         }
         Text(
             text = habitName,
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
         )
         Surface(
             shape = MaterialTheme.shapes.large,
             color = MaterialTheme.colorScheme.secondaryContainer,
-            modifier = Modifier
-                .padding(top = 4.dp, bottom = 12.dp),
+            modifier =
+                Modifier
+                    .padding(top = 4.dp, bottom = 12.dp),
         ) {
             Text(
                 text = repetitionIndication,
                 style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .paddingFromBaseline(top = 8.dp, bottom = 4.dp)
+                modifier =
+                    Modifier
+                        .padding(horizontal = 4.dp)
+                        .paddingFromBaseline(top = 8.dp, bottom = 4.dp),
             )
         }
     }
 }
 
 @Composable
-private fun ProgressIndicator(progress: Float, modifier: Modifier = Modifier) {
+private fun ProgressIndicator(
+    progress: Float,
+    modifier: Modifier = Modifier,
+) {
     Box(
-        modifier = modifier
-            .padding(end = 24.dp)
-            .size(40.dp),
+        modifier =
+            modifier
+                .padding(end = 24.dp)
+                .size(40.dp),
     ) {
         CircularProgressIndicator(
             progress = 1f,
-            color = Color(0xFFD5D8DC)
+            color = Color(0xFFD5D8DC),
         )
         CircularProgressIndicator(
-            progress = progress
+            progress = progress,
         )
     }
 }
@@ -417,21 +423,22 @@ fun StatisticsItemPreview() {
     StatisticsItem(
         statisticTitle = "20 Days",
         statisticsComment = "Longest streak",
-        icon = R.drawable.ic_longest_streak
+        icon = R.drawable.ic_longest_streak,
     )
 }
 
 @Preview
 @Composable
 fun HabitItemPreview() {
-    val mockHabit = HabitUi(
-        id = 0,
-        name = "Go to the gym",
-        timeToDoIndication = "10:00 AM",
-        repetitionIndication = "10 times per day",
-        0.3f,
-        R.color.purple_200
-    )
+    val mockHabit =
+        HabitUi(
+            id = 0,
+            name = "Go to the gym",
+            timeToDoIndication = "10:00 AM",
+            repetitionIndication = "10 times per day",
+            0.3f,
+            R.color.purple_200,
+        )
     HabitsTheme {
         HabitItem(mockHabit, {})
     }
@@ -440,20 +447,21 @@ fun HabitItemPreview() {
 @Preview
 @Composable
 fun ScreenPreview() {
-    val mockHabit = HabitUi(
-        id = 0,
-        name = "Go to the gym",
-        timeToDoIndication = "10:00 AM",
-        repetitionIndication = "10 times per day",
-        0.3f,
-        R.color.purple_200
-    )
+    val mockHabit =
+        HabitUi(
+            id = 0,
+            name = "Go to the gym",
+            timeToDoIndication = "10:00 AM",
+            repetitionIndication = "10 times per day",
+            0.3f,
+            R.color.purple_200,
+        )
     HabitsScreen(
         listOf(mockHabit),
         getMockStatisticsDate(),
         {},
         {},
-        {}
+        {},
     )
 }
 
@@ -471,6 +479,6 @@ private fun getMockStatisticsDate(): StatisticsDataUi {
         longestStreak = longestStreak,
         currentStreak = currentStreak,
         completionRate = completionRate,
-        averageTasks = averageTasks
+        averageTasks = averageTasks,
     )
 }

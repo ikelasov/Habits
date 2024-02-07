@@ -19,26 +19,30 @@ fun StatisticsData.mapToStatisticsDataUi(): StatisticsDataUi {
     val averageTasksIcon = this.averageTasks.resolveStatisticsIconResource()
 
     return StatisticsDataUi(
-        longestStreak = StatisticsItemUi(
-            longestStreakTitle,
-            this.longestStreakData.type.hint,
-            longestStreakIcon
-        ),
-        averageTasks = StatisticsItemUi(
-            averageTasksTitle,
-            this.averageTasks.type.hint,
-            averageTasksIcon
-        ),
-        completionRate = StatisticsItemUi(
-            completionRateTitle,
-            this.completionRate.type.hint,
-            completionRateIcon
-        ),
-        currentStreak = StatisticsItemUi(
-            currentStreakTitle,
-            this.currentStreakData.type.hint,
-            currentStreakIcon
-        ),
+        longestStreak =
+            StatisticsItemUi(
+                longestStreakTitle,
+                this.longestStreakData.type.hint,
+                longestStreakIcon,
+            ),
+        averageTasks =
+            StatisticsItemUi(
+                averageTasksTitle,
+                this.averageTasks.type.hint,
+                averageTasksIcon,
+            ),
+        completionRate =
+            StatisticsItemUi(
+                completionRateTitle,
+                this.completionRate.type.hint,
+                completionRateIcon,
+            ),
+        currentStreak =
+            StatisticsItemUi(
+                currentStreakTitle,
+                this.currentStreakData.type.hint,
+                currentStreakIcon,
+            ),
     )
 }
 

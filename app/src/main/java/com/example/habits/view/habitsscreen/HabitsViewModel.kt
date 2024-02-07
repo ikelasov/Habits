@@ -3,15 +3,9 @@ package com.example.habits.view.habitsscreen
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.HabitEntity
-import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import com.example.habits.data.repository.HabitsRepository
-import com.example.habits.data.repository.StatisticsData
 import com.example.habits.data.repository.StatisticsRepository
-import com.example.habits.data.repository.StatisticsType
-import com.example.habits.data.repository.StatisticsTypeData
 import com.example.habits.view.habitsscreen.mapper.mapHabitEntityToHabitUI
 import com.example.habits.view.habitsscreen.mapper.mapToStatisticsDataUi
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,65 +19,66 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HabitsViewModel @Inject constructor(
-    private val habitsRepository: HabitsRepository,
-    private val statisticsRepository: StatisticsRepository
-) : ViewModel() {
+class HabitsViewModel
+    @Inject
+    constructor(
+        private val habitsRepository: HabitsRepository,
+        private val statisticsRepository: StatisticsRepository,
+    ) : ViewModel() {
+        private val _habits: MutableStateFlow<List<HabitEntity>> = MutableStateFlow(listOf())
+        val habits: StateFlow<List<HabitEntity>>
+            get() = _habits.asStateFlow()
 
-    private val _habits: MutableStateFlow<List<HabitEntity>> = MutableStateFlow(listOf())
-    val habits: StateFlow<List<HabitEntity>>
-        get() = _habits.asStateFlow()
+        private val _viewState = MutableStateFlow(HabitsViewState(loading = true))
+        val viewState: StateFlow<HabitsViewState>
+            get() = _viewState
 
-    private val _viewState = MutableStateFlow(HabitsViewState(loading = true))
-    val viewState: StateFlow<HabitsViewState>
-        get() = _viewState
+        init {
+            viewModelScope.launch {
+                combine(
+                    habitsRepository.getHabits(),
+                    statisticsRepository.getStatistics(),
+                ) { habits, statistics ->
+                    val habitsUiList = habits.map { it.mapHabitEntityToHabitUI() }
+                    val statisticsUi = statistics.mapToStatisticsDataUi()
 
-    init {
-        viewModelScope.launch {
-            combine(
-                habitsRepository.getHabits(),
-                statisticsRepository.getStatistics()
-            ) { habits, statistics ->
-                val habitsUiList = habits.map { it.mapHabitEntityToHabitUI() }
-                val statisticsUi = statistics.mapToStatisticsDataUi()
+                    HabitsViewState(
+                        habits = habitsUiList,
+                        statisticsDataUi = statisticsUi,
+                        loading = false,
+                    )
+                }.catch { throwable ->
+                    // TODO: Implement emitting UI error. For now just rethrow
+                    throw throwable
+                }.collectLatest {
+                    _viewState.value = it
+                }
+            }
+        }
 
-                HabitsViewState(
-                    habits = habitsUiList,
-                    statisticsDataUi = statisticsUi,
-                    loading = false
-                )
-            }.catch { throwable ->
-                // TODO: Implement emitting UI error. For now just rethrow
-                throw throwable
-            }.collectLatest {
-                _viewState.value = it
+        fun addHabit() {
+            viewModelScope.launch {
+                habitsRepository.addHabit()
+            }
+        }
+
+        fun deleteHabits() {
+            viewModelScope.launch {
+                habitsRepository.deleteHabits()
+            }
+        }
+
+        fun deleteHabit(habitId: Int) {
+            viewModelScope.launch {
+                habitsRepository.deleteHabit(habitId)
             }
         }
     }
 
-    fun addHabit() {
-        viewModelScope.launch {
-            habitsRepository.addHabit()
-        }
-    }
-
-    fun deleteHabits() {
-        viewModelScope.launch {
-            habitsRepository.deleteHabits()
-        }
-    }
-
-    fun deleteHabit(habitId: Int) {
-        viewModelScope.launch {
-            habitsRepository.deleteHabit(habitId)
-        }
-    }
-}
-
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
     val statisticsDataUi: StatisticsDataUi = StatisticsDataUi(),
-    val loading: Boolean = false
+    val loading: Boolean = false,
 )
 
 data class HabitUi(
@@ -92,7 +87,7 @@ data class HabitUi(
     val timeToDoIndication: String,
     val repetitionIndication: String,
     val progress: Float,
-    val priorityIndicationColor: Int
+    val priorityIndicationColor: Int,
 )
 
 data class StatisticsDataUi(
@@ -105,5 +100,5 @@ data class StatisticsDataUi(
 data class StatisticsItemUi(
     val title: String = "",
     val hint: String = "",
-    @DrawableRes val icon: Int = 0
+    @DrawableRes val icon: Int = 0,
 )

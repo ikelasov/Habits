@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class DatabaseModule {
-
     @Provides
     fun provideHabitsDao(habitsDatabase: HabitsRoomDatabase): HabitDao {
         return habitsDatabase.habitDao()
@@ -21,7 +20,9 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideHabitsDatabase(@ApplicationContext applicationContext: Context): HabitsRoomDatabase {
+    fun provideHabitsDatabase(
+        @ApplicationContext applicationContext: Context,
+    ): HabitsRoomDatabase {
         return HabitsRoomDatabase.getDatabase(applicationContext)
     }
 }

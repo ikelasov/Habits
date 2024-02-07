@@ -12,21 +12,21 @@ fun generateMockHabit(): HabitEntity {
     val completedRepetitions = Random.nextInt(from = 0, until = repetitionsPerDay)
     val habitPriorityLevel = HabitPriorityLevel.values().random()
 
-
     return HabitEntity(
         name = habitName,
         comment = "Comment",
         timeOfTheDay = timeOfTheDay,
         repetitionsPerDay = repetitionsPerDay.toFloat(),
         completedRepetitions = completedRepetitions.toFloat(),
-        priorityLevel = habitPriorityLevel
+        priorityLevel = habitPriorityLevel,
     )
 }
 
-val listOfNames = listOf(
-    "Go to the gym",
-    "Drink water",
-    "Clean bedroom",
-    "Meditate",
-    "Eat a frog"
-)
+val listOfNames =
+    listOf(
+        "Go to the gym",
+        "Drink water",
+        "Clean bedroom",
+        "Meditate",
+        "Eat a frog",
+    )

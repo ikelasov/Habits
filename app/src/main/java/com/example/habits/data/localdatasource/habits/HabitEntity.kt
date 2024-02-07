@@ -11,19 +11,19 @@ data class HabitEntity(
     val timeOfTheDay: TimeOfTheDay,
     val repetitionsPerDay: Float,
     val completedRepetitions: Float,
-    val priorityLevel: HabitPriorityLevel
+    val priorityLevel: HabitPriorityLevel,
 )
 
 enum class TimeOfTheDay(val value: String) {
     MORNING("Morning"),
     NOUN("Noun"),
     EVENING("Evening"),
-    ALL_DAY("All day")
+    ALL_DAY("All day"),
 }
 
 enum class HabitPriorityLevel(val value: String) {
     TOP_PRIORITY("Top priority"),
     HIGH_PRIORITY("High priority"),
     MEDIUM_PRIORITY("Medium priority"),
-    LOW_PRIORITY("Low priority")
+    LOW_PRIORITY("Low priority"),
 }

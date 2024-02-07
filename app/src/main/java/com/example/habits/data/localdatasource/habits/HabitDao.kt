@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitDao {
-
     @Query("SELECT * from habits_table")
     fun getHabits(): Flow<List<HabitEntity>>
 
@@ -23,5 +22,4 @@ interface HabitDao {
 
     @Query("DELETE from habits_table WHERE id=:habitId")
     suspend fun deleteHabit(habitId: Int)
-
 }
