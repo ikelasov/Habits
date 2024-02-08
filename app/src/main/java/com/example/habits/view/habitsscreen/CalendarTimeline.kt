@@ -44,8 +44,8 @@ fun HorizontalCalendar(
 ) {
     Column(
         modifier =
-        modifier
-            .fillMaxWidth(),
+            modifier
+                .fillMaxWidth(),
     ) {
         CalendarMonthSection(
             selectedMonth,
@@ -78,10 +78,10 @@ private fun CalendarMonthSection(
         Text(
             text = selectedMonth,
             modifier =
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 24.dp)
-                .clickable { onCurrentDateClicked() },
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 24.dp)
+                    .clickable { onCurrentDateClicked() },
             textAlign = TextAlign.Center,
         )
         IconButton(onClick = { onNextMonthClicked() }) {
@@ -110,7 +110,7 @@ private fun DaysOfMonthSection(
     }
     LazyRow(
         state = state,
-        contentPadding = PaddingValues(horizontal = 16.dp)
+        contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
         items(daysOfMonth) { item ->
             CalendarItem(
@@ -139,11 +139,11 @@ fun CalendarItem(
 
     Column(
         modifier =
-        modifier
-            .clickable {
-                onDayClicked(dayInMonth)
-            }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier
+                .clickable {
+                    onDayClicked(dayInMonth)
+                }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -151,13 +151,13 @@ fun CalendarItem(
             fontSize = 14.sp,
             color = if (isSelected) Color.White else colorResource(R.color.slate_blue_gray),
             modifier =
-            Modifier
-                .drawBehind {
-                    drawCircle(
-                        color = backgroundColor,
-                    )
-                }
-                .padding(4.dp),
+                Modifier
+                    .drawBehind {
+                        drawCircle(
+                            color = backgroundColor,
+                        )
+                    }
+                    .padding(4.dp),
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = dayInMonth.toString(), fontSize = 12.sp)
