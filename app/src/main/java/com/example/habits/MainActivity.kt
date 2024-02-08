@@ -48,8 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.view.habitsscreen.CalendarDataUi
 import com.example.habits.view.habitsscreen.HabitUi
 import com.example.habits.view.habitsscreen.HabitsViewModel
+import com.example.habits.view.habitsscreen.HorizontalCalendar
 import com.example.habits.view.habitsscreen.StatisticsDataUi
 import com.example.habits.view.habitsscreen.StatisticsItemUi
 import dagger.hilt.android.AndroidEntryPoint
@@ -70,6 +72,11 @@ class MainActivity : ComponentActivity() {
                     HabitsScreen(
                         viewState.habits,
                         viewState.statisticsDataUi,
+                        viewState.calendarDataUi,
+                        habitsViewModel::onNextMonthClicked,
+                        habitsViewModel::onPreviousMonthClicked,
+                        habitsViewModel::onCurrentDateClicked,
+                        habitsViewModel::daySelected,
                         habitsViewModel::addHabit,
                         habitsViewModel::deleteHabit,
                         habitsViewModel::deleteHabits,
@@ -95,13 +102,18 @@ private fun LoadingScreen() {
 private fun HabitsScreen(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
+    calendarDataUi: CalendarDataUi,
+    onNextMonthClicked: () -> Unit,
+    onPreviousMonthClicked: () -> Unit,
+    onCurrentDateClicked: () -> Unit,
+    daySelected: (Int) -> Unit,
     addHabit: () -> Unit,
     deleteHabit: (Int) -> Unit,
     deleteHabits: () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         },
@@ -113,6 +125,11 @@ private fun HabitsScreen(
             ScreenContent(
                 habits,
                 statistics,
+                calendarDataUi,
+                onNextMonthClicked,
+                onPreviousMonthClicked,
+                onCurrentDateClicked,
+                daySelected,
                 addHabit,
                 deleteHabits,
                 deleteHabit,
@@ -214,6 +231,11 @@ fun StatisticsItem(
 private fun ScreenContent(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
+    calendarDataUi: CalendarDataUi,
+    onNextMonthClicked: () -> Unit,
+    onPreviousMonthClicked: () -> Unit,
+    onCurrentDateClicked: () -> Unit,
+    daySelected: (Int) -> Unit,
     addHabit: () -> Unit,
     deleteHabits: () -> Unit,
     deleteHabit: (Int) -> Unit,
@@ -227,6 +249,11 @@ private fun ScreenContent(
         Content(
             habits,
             statistics,
+            calendarDataUi,
+            onNextMonthClicked,
+            onPreviousMonthClicked,
+            onCurrentDateClicked,
+            daySelected,
             onAddHabitClicked = { addHabit() },
             onDeleteClicked = { deleteHabits() },
             onHabitClicked = { deleteHabit(it) },
@@ -239,6 +266,11 @@ private fun ScreenContent(
 private fun Content(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
+    calendarDataUi: CalendarDataUi,
+    onNextMonthClicked: () -> Unit,
+    onPreviousMonthClicked: () -> Unit,
+    onCurrentDateClicked: () -> Unit,
+    daySelected: (Int) -> Unit,
     onAddHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onHabitClicked: (Int) -> Unit,
@@ -246,7 +278,19 @@ private fun Content(
 ) {
     LazyColumn(state = listState) {
         item { StatisticsContent(statistics) }
-        item { Spacer(modifier = Modifier.padding(vertical = 16.dp)) }
+        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
+        item {
+            HorizontalCalendar(
+                calendarDataUi.selectedMonth,
+                onNextMonthClicked,
+                onPreviousMonthClicked,
+                onCurrentDateClicked,
+                calendarDataUi.daysOfMonth,
+                daySelected,
+                Modifier.padding(horizontal = 16.dp),
+            )
+        }
+        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
         items(
             items = habits,
             key = { it.id },
@@ -459,6 +503,11 @@ fun ScreenPreview() {
     HabitsScreen(
         listOf(mockHabit),
         getMockStatisticsDate(),
+        CalendarDataUi(),
+        {},
+        {},
+        {},
+        {},
         {},
         {},
         {},
