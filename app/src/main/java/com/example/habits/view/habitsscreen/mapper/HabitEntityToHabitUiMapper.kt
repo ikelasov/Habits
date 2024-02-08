@@ -6,6 +6,12 @@ import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import com.example.habits.view.habitsscreen.HabitUi
 
+fun List<HabitEntity>.mapHabitEntityListToHabitUIList(): List<HabitUi> {
+    return this.map {
+        it.mapHabitEntityToHabitUI()
+    }
+}
+
 fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
     val timeToDoIndication =
         when (this.timeOfTheDay) {
