@@ -1,4 +1,4 @@
-package com.example.habits.view.habits
+package com.example.habits.view.habits.screencomponents
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habits.R
 import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.view.habits.CalendarItemUi
 import com.example.habits.view.habits.utils.getDaysOfMonth
 
 @Composable
@@ -47,8 +48,8 @@ fun HorizontalCalendar(
 ) {
     Column(
         modifier =
-        modifier
-            .fillMaxWidth(),
+            modifier
+                .fillMaxWidth(),
     ) {
         CalendarMonthSection(
             selectedMonth,
@@ -81,10 +82,10 @@ private fun CalendarMonthSection(
         Text(
             text = selectedMonth,
             modifier =
-            Modifier
-                .weight(1f)
-                .padding(horizontal = 24.dp)
-                .clickable { onCurrentDateClicked() },
+                Modifier
+                    .weight(1f)
+                    .padding(horizontal = 24.dp)
+                    .clickable { onCurrentDateClicked() },
             textAlign = TextAlign.Center,
         )
         IconButton(onClick = { onNextMonthClicked() }) {
@@ -137,16 +138,16 @@ fun CalendarItem(
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) colorResource(R.color.orange) else Color.Transparent,
         animationSpec = tween(),
-        label = ""
+        label = "",
     )
 
     Column(
         modifier =
-        modifier
-            .clickable {
-                onDayClicked(dayInMonth)
-            }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            modifier
+                .clickable {
+                    onDayClicked(dayInMonth)
+                }
+                .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -154,13 +155,13 @@ fun CalendarItem(
             fontSize = 14.sp,
             color = if (isSelected) Color.White else colorResource(R.color.slate_blue_gray),
             modifier =
-            Modifier
-                .drawBehind {
-                    drawCircle(
-                        color = backgroundColor,
-                    )
-                }
-                .padding(4.dp),
+                Modifier
+                    .drawBehind {
+                        drawCircle(
+                            color = backgroundColor,
+                        )
+                    }
+                    .padding(4.dp),
         )
         Spacer(modifier = Modifier.height(12.dp))
         Text(text = dayInMonth.toString(), fontSize = 12.sp)

@@ -31,7 +31,7 @@ public final class HabitsViewModel_HiltModules {
 
     @Binds
     @IntoMap
-    @StringKey("com.example.habits.view.habitsscreen.HabitsViewModel")
+    @StringKey("com.example.habits.view.habits.HabitsViewModel")
     @HiltViewModelMap
     public abstract ViewModel binds(HabitsViewModel vm);
   }
@@ -46,7 +46,7 @@ public final class HabitsViewModel_HiltModules {
     @IntoSet
     @HiltViewModelMap.KeySet
     public static String provide() {
-      return "com.example.habits.view.habitsscreen.HabitsViewModel";
+      return "com.example.habits.view.habits.HabitsViewModel";
     }
   }
 }
