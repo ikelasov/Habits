@@ -48,12 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habits.ui.theme.HabitsTheme
-import com.example.habits.view.habitsscreen.CalendarDataUi
-import com.example.habits.view.habitsscreen.HabitUi
-import com.example.habits.view.habitsscreen.HabitsViewModel
-import com.example.habits.view.habitsscreen.HorizontalCalendar
-import com.example.habits.view.habitsscreen.StatisticsDataUi
-import com.example.habits.view.habitsscreen.StatisticsItemUi
+import com.example.habits.view.habits.CalendarDataUi
+import com.example.habits.view.habits.HabitUi
+import com.example.habits.view.habits.HabitsViewModel
+import com.example.habits.view.habits.HorizontalCalendar
+import com.example.habits.view.habits.StatisticsDataUi
+import com.example.habits.view.habits.StatisticsItemUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

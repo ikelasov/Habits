@@ -1,10 +1,10 @@
-package com.example.habits.view.habitsscreen.mapper
+package com.example.habits.view.habits.mapper
 
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habits.TimeOfTheDay
-import com.example.habits.view.habitsscreen.HabitUi
+import com.example.habits.view.habits.HabitUi
 
 fun List<HabitEntity>.mapHabitEntityListToHabitUIList(): List<HabitUi> {
     return this.map {

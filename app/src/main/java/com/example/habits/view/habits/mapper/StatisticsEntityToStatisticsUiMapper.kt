@@ -1,11 +1,11 @@
-package com.example.habits.view.habitsscreen.mapper
+package com.example.habits.view.habits.mapper
 
 import com.example.habits.R
 import com.example.habits.data.repository.StatisticsData
 import com.example.habits.data.repository.StatisticsType
 import com.example.habits.data.repository.StatisticsTypeData
-import com.example.habits.view.habitsscreen.StatisticsDataUi
-import com.example.habits.view.habitsscreen.StatisticsItemUi
+import com.example.habits.view.habits.StatisticsDataUi
+import com.example.habits.view.habits.StatisticsItemUi
 
 fun StatisticsData.mapToStatisticsDataUi(): StatisticsDataUi {
     val longestStreakTitle = this.longestStreakData.resolveStatisticsTitle()

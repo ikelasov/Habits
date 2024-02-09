@@ -1,14 +1,14 @@
-package com.example.habits.view.habitsscreen
+package com.example.habits.view.habits
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.data.repository.StatisticsRepository
-import com.example.habits.view.habitsscreen.mapper.mapHabitEntityListToHabitUIList
-import com.example.habits.view.habitsscreen.mapper.mapToStatisticsDataUi
-import com.example.habits.view.habitsscreen.utils.formatMonthYear
-import com.example.habits.view.habitsscreen.utils.getDaysOfMonthAbbreviated
+import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
+import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
+import com.example.habits.view.habits.utils.formatMonthYear
+import com.example.habits.view.habits.utils.getDaysOfMonthAbbreviated
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

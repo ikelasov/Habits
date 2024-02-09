@@ -1,6 +1,6 @@
-package com.example.habits.view.habitsscreen.utils
+package com.example.habits.view.habits.utils
 
-import com.example.habits.view.habitsscreen.CalendarItemUi
+import com.example.habits.view.habits.CalendarItemUi
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
