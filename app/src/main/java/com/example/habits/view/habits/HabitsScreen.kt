@@ -23,8 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.habits.R
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.components.LoadingScreen
@@ -35,8 +35,10 @@ import com.example.habits.view.habits.screencomponents.StatisticsItem
 import com.example.habits.view.habits.screencomponents.TopBar
 
 @Composable
-fun HabitsScreen() {
-    val habitsViewModel: HabitsViewModel = viewModel()
+fun HabitsScreen(
+    onAddHabitClicked: () -> Unit,
+    habitsViewModel: HabitsViewModel = hiltViewModel(),
+) {
     val viewState by habitsViewModel.viewState
         .collectAsStateWithLifecycle()
 
@@ -47,6 +49,7 @@ fun HabitsScreen() {
             viewState.habits,
             viewState.statisticsDataUi,
             viewState.calendarDataUi,
+            onAddHabitClicked,
             habitsViewModel::onNextMonthClicked,
             habitsViewModel::onPreviousMonthClicked,
             habitsViewModel::onCurrentDateClicked,
@@ -63,6 +66,7 @@ private fun ScreenContent(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
     calendarDataUi: CalendarDataUi,
+    onAddHabitClicked: () -> Unit,
     onNextMonthClicked: () -> Unit,
     onPreviousMonthClicked: () -> Unit,
     onCurrentDateClicked: () -> Unit,
@@ -73,7 +77,7 @@ private fun ScreenContent(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = { onAddHabitClicked() }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         },
@@ -94,7 +98,7 @@ private fun ScreenContent(
             onDeleteClicked = { deleteHabits() },
             onHabitClicked = { deleteHabit(it) },
             listState,
-            Modifier.padding(contentPadding)
+            Modifier.padding(contentPadding),
         )
     }
 }
@@ -112,11 +116,11 @@ private fun Content(
     onDeleteClicked: () -> Unit,
     onHabitClicked: (Int) -> Unit,
     listState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyColumn(
         state = listState,
-        modifier = modifier.background(colorResource(R.color.background))
+        modifier = modifier.background(colorResource(R.color.background)),
     ) {
         item { StatisticsContent(statistics) }
         item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
@@ -231,6 +235,7 @@ fun ScreenPreview() {
         listOf(mockHabit),
         getMockStatisticsDate(),
         CalendarDataUi(),
+        {},
         {},
         {},
         {},
