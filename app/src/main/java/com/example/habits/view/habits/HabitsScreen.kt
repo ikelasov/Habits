@@ -33,6 +33,7 @@ import com.example.habits.view.habits.screencomponents.HorizontalCalendar
 import com.example.habits.view.habits.screencomponents.StatisticsContent
 import com.example.habits.view.habits.screencomponents.StatisticsItem
 import com.example.habits.view.habits.screencomponents.TopBar
+import com.example.habits.view.habits.utils.getDaysOfMonth
 
 @Composable
 fun HabitsScreen(
@@ -234,7 +235,7 @@ fun ScreenPreview() {
     ScreenContent(
         listOf(mockHabit),
         getMockStatisticsDate(),
-        CalendarDataUi(),
+        CalendarDataUi(selectedMonth = "February 2024", daysOfMonth = getDaysOfMonth(2024, 2)),
         {},
         {},
         {},
