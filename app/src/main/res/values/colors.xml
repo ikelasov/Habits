@@ -15,5 +15,6 @@
     <color name="low_priority">#7770AF</color>
     <color name="orange">#FFC888</color>
     <color name="slate_blue_gray">#717C89</color>
+    <color name="light_gray">#D5D8DC</color>
 
 </resources>

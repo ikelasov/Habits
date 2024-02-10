@@ -7,12 +7,22 @@ import androidx.room.PrimaryKey
 data class HabitEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
-    val comment: String,
     val timeOfTheDay: TimeOfTheDay,
-    val repetitionsPerDay: Float,
-    val completedRepetitions: Float,
+    val daysToRepeat: List<DaysOfWeek>,
+    val repetitionsPerDay: Int,
+    val completedRepetitions: Int,
     val priorityLevel: HabitPriorityLevel,
 )
+
+enum class DaysOfWeek(val value: String) {
+    MONDAY("Monday"),
+    TUESDAY("Tuesday"),
+    WEDNESDAY("Wednesday"),
+    THURSDAY("Thursday"),
+    FRIDAY("Friday"),
+    SATURDAY("Saturday"),
+    SUNDAY("Sunday"),
+}
 
 enum class TimeOfTheDay(val value: String) {
     MORNING("Morning"),

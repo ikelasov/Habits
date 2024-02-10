@@ -1,5 +1,6 @@
 package com.example.habits.common
 
+import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habits.TimeOfTheDay
@@ -14,10 +15,10 @@ fun generateMockHabit(): HabitEntity {
 
     return HabitEntity(
         name = habitName,
-        comment = "Comment",
         timeOfTheDay = timeOfTheDay,
-        repetitionsPerDay = repetitionsPerDay.toFloat(),
-        completedRepetitions = completedRepetitions.toFloat(),
+        repetitionsPerDay = repetitionsPerDay,
+        daysToRepeat = listOf(DaysOfWeek.FRIDAY, DaysOfWeek.MONDAY),
+        completedRepetitions = completedRepetitions,
         priorityLevel = habitPriorityLevel,
     )
 }
