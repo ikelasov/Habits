@@ -26,7 +26,11 @@ fun HabitsNavHost(
             )
         }
         composable(route = HabitsDestinations.AddHabitScreen.route) {
-            AddHabitScreen()
+            AddHabitScreen(
+                onBackArrowClicked = {
+                    navController.popBackStack()
+                },
+            )
         }
     }
 }
