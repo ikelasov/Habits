@@ -30,6 +30,9 @@ fun HabitsNavHost(
                 onBackArrowClicked = {
                     navController.popBackStack()
                 },
+                onHabitCreated = {
+                    navController.popBackStack(HabitsDestinations.HabitsScreen.route, inclusive = false)
+                },
             )
         }
     }

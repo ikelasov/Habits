@@ -11,9 +11,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -32,13 +36,60 @@ import com.example.habits.view.addhabit.screencomponents.HabitNameInput
 import com.example.habits.view.addhabit.screencomponents.PriorityPicker
 import com.example.habits.view.addhabit.screencomponents.RepetitionsPerDayComponent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddHabitScreen(
     onBackArrowClicked: () -> Unit,
+    onHabitCreated: () -> Unit,
     viewModel: AddHabitViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    if (viewState.habitCreated) {
+        onHabitCreated()
+    }
+
+    LaunchedEffect(viewState.errorMessage) {
+        with(viewState.errorMessage) {
+            if (this == null) {
+                return@LaunchedEffect
+            }
+
+            snackBarHostState.showSnackbar(message = this)
+            viewModel.onSnackbarDismissed()
+        }
+    }
+
+    ScreenContent(
+        onBackArrowClicked,
+        viewModel::attemptCreateHabit,
+        viewModel::onHabitNameChanged,
+        viewModel::onDaysToRepeatChanged,
+        viewModel::onRepetitionsNumberPerDayChanged,
+        viewModel::onPriorityLevelChanged,
+        snackBarHostState,
+        viewState.habitName,
+        viewState.daysToRepeat,
+        viewState.repetitionsPerDay,
+        viewState.priorityLevel,
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun ScreenContent(
+    onBackArrowClicked: () -> Unit,
+    attemptCreateHabit: () -> Unit,
+    onHabitNameChanged: (String) -> Unit,
+    onDaysToRepeatChanged: (DaysOfWeek, Boolean) -> Unit,
+    onRepetitionsNumberPerDayChanged: (Int) -> Unit,
+    onPriorityLevelChanged: (HabitPriorityLevel) -> Unit,
+    snackBarHostState: SnackbarHostState,
+    habitName: String,
+    daysToRepeat: List<DaysOfWeek>,
+    repetitionsPerDay: Int,
+    priorityLevel: HabitPriorityLevel,
+) {
     Scaffold(
         topBar = {
             AddHabitTopBar(
@@ -48,23 +99,26 @@ fun AddHabitScreen(
         },
         bottomBar = {
             CreateHabitButton(
-                onAddHabitClicked = { viewModel.attemptCreateHabit() },
+                onAddHabitClicked = { attemptCreateHabit() },
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 24.dp),
             )
         },
+        snackbarHost = {
+            SnackbarHost(snackBarHostState)
+        },
     ) { paddingValues ->
         Content(
-            viewState.habitName,
-            viewState.daysToRepeat,
-            viewState.repetitionsPerDay,
-            viewState.priorityLevel,
-            viewModel::onHabitNameChanged,
-            viewModel::onDaysToRepeatChanged,
-            viewModel::onRepetitionsNumberPerDayChanged,
-            viewModel::onPriorityLevelChanged,
+            habitName,
+            daysToRepeat,
+            repetitionsPerDay,
+            priorityLevel,
+            onHabitNameChanged,
+            onDaysToRepeatChanged,
+            onRepetitionsNumberPerDayChanged,
+            onPriorityLevelChanged,
             Modifier.padding(paddingValues),
         )
     }
@@ -135,7 +189,19 @@ private fun Content(
 fun AddHabitScreenPreview() {
     HabitsTheme {
         Surface(color = colorResource(R.color.background), modifier = Modifier.fillMaxSize()) {
-            AddHabitScreen({})
+            val snackBarHostState = remember { SnackbarHostState() }
+            ScreenContent(
+                {},
+                {},
+                { _ -> },
+                { _, _ -> },
+                { _ -> },
+                { _ -> },
+                snackBarHostState,
+                "",
+                listOf(DaysOfWeek.MONDAY),
+                3, HabitPriorityLevel.MEDIUM_PRIORITY,
+            )
         }
     }
 }

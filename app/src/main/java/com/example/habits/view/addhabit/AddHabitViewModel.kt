@@ -24,15 +24,24 @@ class AddHabitViewModel
 
         fun attemptCreateHabit() {
             viewModelScope.launch {
-                with(viewState.value) {
-                    habitsRepository.addHabit(
-                        habitName,
-                        daysToRepeat,
-                        repetitionsPerDay,
-                        priorityLevel,
-                    )
+                if (!allFieldsAreFilled()) {
+                    _viewState.update { it.copy(errorMessage = "All fields must be filled") }
+                } else {
+                    with(viewState.value) {
+                        habitsRepository.addHabit(
+                            habitName,
+                            daysToRepeat,
+                            repetitionsPerDay,
+                            priorityLevel,
+                        )
+                        _viewState.update { it.copy(habitCreated = true) }
+                    }
                 }
             }
+        }
+
+        fun onSnackbarDismissed() {
+            _viewState.update { it.copy(errorMessage = null) }
         }
 
         fun onHabitNameChanged(newName: String) {
@@ -65,6 +74,11 @@ class AddHabitViewModel
         fun onPriorityLevelChanged(newPriorityLevel: HabitPriorityLevel) {
             _viewState.update { it.copy(priorityLevel = newPriorityLevel) }
         }
+
+        private fun allFieldsAreFilled(): Boolean =
+            with(viewState.value) {
+                habitName != "" && daysToRepeat.isNotEmpty()
+            }
     }
 
 data class ViewState(
@@ -72,4 +86,6 @@ data class ViewState(
     val daysToRepeat: List<DaysOfWeek> = listOf(),
     val repetitionsPerDay: Int = 1,
     val priorityLevel: HabitPriorityLevel = HabitPriorityLevel.TOP_PRIORITY,
+    val errorMessage: String? = null,
+    val habitCreated: Boolean = false,
 )
