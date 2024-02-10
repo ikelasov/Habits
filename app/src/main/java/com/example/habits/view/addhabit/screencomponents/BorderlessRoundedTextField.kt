@@ -28,17 +28,17 @@ fun BorderlessRoundedTextField(
         },
         placeholder = { Text(text = hint) },
         colors =
-        TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Transparent,
-            unfocusedBorderColor = Color.Transparent,
-            placeholderColor = colorResource(R.color.slate_blue_gray),
-        ),
-        modifier =
-        modifier
-            .background(
-                color = Color.White,
-                shape = MaterialTheme.shapes.large,
+            TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                placeholderColor = colorResource(R.color.slate_blue_gray),
             ),
+        modifier =
+            modifier
+                .background(
+                    color = Color.White,
+                    shape = MaterialTheme.shapes.large,
+                ),
     )
 }
 

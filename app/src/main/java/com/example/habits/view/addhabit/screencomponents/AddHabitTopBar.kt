@@ -41,6 +41,6 @@ fun AddHabitTopBar(
 @Composable
 fun AddHabitTopBarPreview() {
     HabitsTheme {
-        AddHabitTopBar(onBackArrowClicked = {  })
+        AddHabitTopBar(onBackArrowClicked = { })
     }
 }
