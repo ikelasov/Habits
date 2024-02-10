@@ -131,6 +131,7 @@ data class HabitUi(
     val id: Int,
     val name: String,
     val timeToDoIndication: String,
+    val daysToRepeat: String,
     val repetitionIndication: String,
     val progress: Float,
     val priorityIndicationColor: Int,

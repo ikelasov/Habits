@@ -50,6 +50,7 @@ fun HabitItem(
             HabitMainInfo(
                 habit.name,
                 habit.timeToDoIndication,
+                habit.daysToRepeat,
                 habit.repetitionIndication,
                 Modifier.weight(1f),
             )
@@ -74,6 +75,7 @@ private fun HabitPriorityIndication(habit: HabitUi) {
 private fun HabitMainInfo(
     habitName: String,
     timeToDoIndication: String,
+    daysToRepeat: String,
     repetitionIndication: String,
     modifier: Modifier = Modifier,
 ) {
@@ -96,7 +98,7 @@ private fun HabitMainInfo(
                         .size(10.dp),
             )
             Text(
-                text = "Sun, Tue, Thu",
+                text = daysToRepeat,
                 style = MaterialTheme.typography.bodySmall,
                 color = colorResource(R.color.orange),
             )
@@ -153,6 +155,7 @@ fun HabitItemPreview() {
             id = 0,
             name = "Go to the gym",
             timeToDoIndication = "10:00 AM",
+            daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
             0.3f,
             R.color.purple_200,

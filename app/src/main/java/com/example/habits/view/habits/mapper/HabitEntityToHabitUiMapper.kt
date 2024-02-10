@@ -17,6 +17,15 @@ fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
     val repetitionIndication =
         "${this.repetitionsPerDay} time" + if (repetitionsPerDay > 1) "s" else "" + " per day"
 
+    val daysToRepeat =
+        if (this.daysToRepeat.size == 7) {
+            "Every day"
+        } else {
+            this.daysToRepeat.joinToString(", ") {
+                it.value.take(3)
+            }
+        }
+
     val progress = this.completedRepetitions.toFloat() / this.repetitionsPerDay.toFloat()
 
     val priorityIndicationColor =
@@ -31,6 +40,7 @@ fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
         id = this.id,
         name = this.name,
         timeToDoIndication = timeToDoIndication,
+        daysToRepeat = daysToRepeat,
         repetitionIndication = repetitionIndication,
         progress = progress,
         priorityIndicationColor = priorityIndicationColor,
