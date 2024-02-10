@@ -3,7 +3,6 @@ package com.example.habits.view.habits.mapper
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import com.example.habits.view.habits.HabitUi
 
 fun List<HabitEntity>.mapHabitEntityListToHabitUIList(): List<HabitUi> {
@@ -13,16 +12,13 @@ fun List<HabitEntity>.mapHabitEntityListToHabitUIList(): List<HabitUi> {
 }
 
 fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
-    val timeToDoIndication =
-        when (this.timeOfTheDay) {
-            TimeOfTheDay.MORNING -> "9:00 AM"
-            TimeOfTheDay.NOUN -> "12:00 PM"
-            TimeOfTheDay.EVENING -> "9:00 PM"
-            TimeOfTheDay.ALL_DAY -> "All day"
-        }
+    val timeToDoIndication = this.timeOfTheDay.value
 
-    val repetitionIndication = "${this.repetitionsPerDay.toInt()} times per day"
-    val progress = this.completedRepetitions / this.repetitionsPerDay
+    val repetitionIndication =
+        "${this.repetitionsPerDay} time" + if (repetitionsPerDay > 1) "s" else "" + " per day"
+
+    val progress = this.completedRepetitions.toFloat() / this.repetitionsPerDay.toFloat()
+
     val priorityIndicationColor =
         when (this.priorityLevel) {
             HabitPriorityLevel.TOP_PRIORITY -> R.color.top_priority
