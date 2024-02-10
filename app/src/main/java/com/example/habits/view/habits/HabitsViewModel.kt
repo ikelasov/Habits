@@ -73,7 +73,7 @@ class HabitsViewModel
         // region Habits actions
         fun addHabit() {
             viewModelScope.launch {
-                habitsRepository.addHabit()
+                habitsRepository.addMockHabit()
             }
         }
 
