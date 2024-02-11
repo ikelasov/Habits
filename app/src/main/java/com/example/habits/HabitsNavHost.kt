@@ -1,7 +1,12 @@
 package com.example.habits
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,22 +23,60 @@ fun HabitsNavHost(
         startDestination = HabitsDestinations.HabitsScreen.route,
         modifier = modifier,
     ) {
-        composable(route = HabitsDestinations.HabitsScreen.route) {
+        composableWithAnimation(HabitsDestinations.HabitsScreen.route) {
             HabitsScreen(
                 onAddHabitClicked = {
                     navController.navigate(HabitsDestinations.AddHabitScreen.route)
                 },
             )
         }
-        composable(route = HabitsDestinations.AddHabitScreen.route) {
+        composableWithAnimation(HabitsDestinations.AddHabitScreen.route) {
             AddHabitScreen(
                 onBackArrowClicked = {
                     navController.popBackStack()
                 },
                 onHabitCreated = {
-                    navController.popBackStack(HabitsDestinations.HabitsScreen.route, inclusive = false)
+                    navController.popBackStack(
+                        HabitsDestinations.HabitsScreen.route,
+                        inclusive = false,
+                    )
                 },
             )
         }
+    }
+}
+
+fun NavGraphBuilder.composableWithAnimation(
+    route: String,
+    content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
+) {
+    composable(
+        route = route,
+        enterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(500),
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(500),
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = tween(500),
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
+                animationSpec = tween(500),
+            )
+        },
+    ) {
+        content.invoke(this, it)
     }
 }
