@@ -3,6 +3,7 @@ package com.example.habits.view.habits
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.data.repository.StatisticsRepository
 import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
@@ -41,7 +42,10 @@ class HabitsViewModel
                     selectedMonth,
                     selectedDay,
                 ) { habits, statistics, selectedDate, selectedDay ->
-                    val habitsUiList = habits.mapHabitEntityListToHabitUIList()
+                    val habitsUiList =
+                        habits
+                            .filter { it.daysToRepeat.contains(DaysOfWeek.fromLocalDate(selectedDay.dayOfWeek)) }
+                            .mapHabitEntityListToHabitUIList()
                     val statisticsUi = statistics.mapToStatisticsDataUi()
                     val calendarItemsUi =
                         getDaysOfMonthAbbreviated(
