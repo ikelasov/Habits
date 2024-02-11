@@ -1,7 +1,5 @@
 package com.example.habits.view.habits.screencomponents
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -135,11 +132,8 @@ fun CalendarItem(
     onDayClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (isSelected) colorResource(R.color.orange) else Color.Transparent,
-        animationSpec = tween(),
-        label = "",
-    )
+    val backgroundColor =
+        if (isSelected) colorResource(R.color.orange) else Color.Transparent
 
     Column(
         modifier =
