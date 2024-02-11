@@ -2,6 +2,7 @@ package com.example.habits.data.localdatasource.habits
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.DayOfWeek
 
 @Entity(tableName = "habits_table")
 data class HabitEntity(
@@ -22,6 +23,21 @@ enum class DaysOfWeek(val value: String) {
     FRIDAY("Friday"),
     SATURDAY("Saturday"),
     SUNDAY("Sunday"),
+    ;
+
+    companion object {
+        fun fromLocalDate(dayOfWeek: DayOfWeek): DaysOfWeek {
+            return when (dayOfWeek) {
+                DayOfWeek.MONDAY -> MONDAY
+                DayOfWeek.TUESDAY -> TUESDAY
+                DayOfWeek.WEDNESDAY -> WEDNESDAY
+                DayOfWeek.THURSDAY -> THURSDAY
+                DayOfWeek.FRIDAY -> FRIDAY
+                DayOfWeek.SATURDAY -> SATURDAY
+                DayOfWeek.SUNDAY -> SUNDAY
+            }
+        }
+    }
 }
 
 enum class TimeOfTheDay(val value: String) {
