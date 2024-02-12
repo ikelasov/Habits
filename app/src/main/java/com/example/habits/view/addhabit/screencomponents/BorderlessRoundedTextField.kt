@@ -4,8 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,10 +28,11 @@ fun BorderlessRoundedTextField(
         },
         placeholder = { Text(text = hint) },
         colors =
-            TextFieldDefaults.outlinedTextFieldColors(
+            OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent,
-                placeholderColor = colorResource(R.color.slate_blue_gray),
+                focusedPlaceholderColor = colorResource(R.color.slate_blue_gray),
+                unfocusedPlaceholderColor = colorResource(R.color.slate_blue_gray),
             ),
         modifier =
             modifier
