@@ -1,5 +1,7 @@
 package com.example.habits.view.habits.screencomponents
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -131,6 +134,11 @@ private fun HabitProgressIndicator(
     progress: Float,
     modifier: Modifier = Modifier,
 ) {
+    val anim by animateFloatAsState(
+        targetValue = progress,
+        label = "",
+        animationSpec = tween(500),
+    )
     Box(
         modifier =
             modifier
@@ -138,11 +146,11 @@ private fun HabitProgressIndicator(
                 .size(40.dp),
     ) {
         CircularProgressIndicator(
-            progress = 1f,
+            progress = { 1f },
             color = Color(0xFFD5D8DC),
         )
         CircularProgressIndicator(
-            progress = progress,
+            progress = { anim },
         )
     }
 }
