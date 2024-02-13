@@ -80,6 +80,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+    implementation("androidx.compose.foundation:foundation:1.7.0-alpha02")
 
     // endregion
 

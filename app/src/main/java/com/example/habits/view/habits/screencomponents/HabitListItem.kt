@@ -1,14 +1,18 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.example.habits.view.habits.screencomponents
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
@@ -22,22 +26,36 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onPlaced
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
 import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.view.habits.DraggedDirection
 import com.example.habits.view.habits.HabitUi
+import kotlin.math.absoluteValue
+import kotlin.math.roundToInt
 
 @Composable
 fun HabitItem(
     habit: HabitUi,
-    onHabitClicked: (Int) -> Unit,
+    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var offsetX by remember { mutableStateOf(0f) }
+    var componentWidth by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+
     Surface(
         shape = MaterialTheme.shapes.large,
         color = Color.White,
@@ -46,18 +64,49 @@ fun HabitItem(
                 .padding(vertical = 8.dp, horizontal = 24.dp)
                 .fillMaxWidth()
                 .height(90.dp)
-                .clickable { onHabitClicked(habit.id) },
+                .offset {
+                    IntOffset(
+                        x = offsetX.roundToInt(),
+                        y = 0,
+                    )
+                }
+                .pointerInput(Unit) {
+                    detectHorizontalDragGestures(
+                        onDragEnd = {
+                            if (offsetX > 0) {
+                                onHabitItemDragged(habit.id, DraggedDirection.StartToEnd)
+                            } else {
+                                onHabitItemDragged(habit.id, DraggedDirection.EndToStart)
+                            }
+                            offsetX = 0f
+                        },
+                        onHorizontalDrag = { change, dragAmount ->
+                            if ((offsetX + dragAmount).absoluteValue.toDp() <= componentWidth / 2) {
+                                offsetX += dragAmount
+                                change.consume()
+                            }
+                        },
+                    )
+                }
+                .onPlaced {
+                    with(density) {
+                        componentWidth = it.size.width.toDp()
+                    }
+                },
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            HabitPriorityIndication(habit)
+            HabitPriorityIndication(habit = habit)
             HabitMainInfo(
-                habit.name,
-                habit.timeToDoIndication,
-                habit.daysToRepeat,
-                habit.repetitionIndication,
-                Modifier.weight(1f),
+                habitName = habit.name,
+                timeToDoIndication = habit.timeToDoIndication,
+                daysToRepeat = habit.daysToRepeat,
+                repetitionIndication = habit.repetitionIndication,
+                modifier = Modifier.weight(1f),
             )
-            HabitProgressIndicator(habit.progress, Modifier.align(Alignment.CenterVertically))
+            HabitProgressIndicator(
+                progress = habit.progress,
+                modifier = Modifier.align(Alignment.CenterVertically),
+            )
         }
     }
 }
@@ -169,6 +218,6 @@ fun HabitItemPreview() {
             R.color.purple_200,
         )
     HabitsTheme {
-        HabitItem(mockHabit, {})
+        HabitItem(mockHabit, { _, _ -> })
     }
 }

@@ -1,6 +1,7 @@
 package com.example.habits.view.habits
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
@@ -11,6 +12,7 @@ import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
 import com.example.habits.view.habits.utils.formatMonthYear
 import com.example.habits.view.habits.utils.getDaysOfMonthAbbreviated
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -87,9 +89,15 @@ class HabitsViewModel
             }
         }
 
-        fun deleteHabit(habitId: Int) {
-            viewModelScope.launch {
-                habitsRepository.deleteHabit(habitId)
+        fun onHabitItemDragged(
+            habitId: Int,
+            draggedDirection: DraggedDirection,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                when (draggedDirection) {
+                    DraggedDirection.StartToEnd -> habitsRepository.updateProgress(habitId, 1)
+                    DraggedDirection.EndToStart -> habitsRepository.updateProgress(habitId, -1)
+                }
             }
         }
 
@@ -131,6 +139,8 @@ data class HabitsViewState(
 // endregion
 
 // region HabitUi data model
+
+@Stable
 data class HabitUi(
     val id: Int,
     val name: String,
@@ -145,6 +155,7 @@ data class HabitUi(
 
 // region Statistics data model
 
+@Stable
 data class StatisticsDataUi(
     val longestStreak: StatisticsItemUi = StatisticsItemUi(),
     val currentStreak: StatisticsItemUi = StatisticsItemUi(),
@@ -152,6 +163,7 @@ data class StatisticsDataUi(
     val averageTasks: StatisticsItemUi = StatisticsItemUi(),
 )
 
+@Stable
 data class StatisticsItemUi(
     val title: String = "",
     val hint: String = "",
@@ -161,16 +173,26 @@ data class StatisticsItemUi(
 // endregion
 
 // region Calendar data model
-
+@Stable
 data class CalendarDataUi(
     val selectedMonth: String = "",
     val daysOfMonth: List<CalendarItemUi> = listOf(),
 )
 
+@Stable
 data class CalendarItemUi(
     val dayOfWeekIndication: String = "",
     val dayInMonthIndication: Int = 0,
     val isSelected: Boolean = false,
 )
+
+// endregion
+
+// Enums
+
+enum class DraggedDirection {
+    StartToEnd,
+    EndToStart,
+}
 
 // endregion

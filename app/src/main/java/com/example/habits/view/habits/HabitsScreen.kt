@@ -47,17 +47,17 @@ fun HabitsScreen(
         LoadingScreen()
     } else {
         ScreenContent(
-            viewState.habits,
-            viewState.statisticsDataUi,
-            viewState.calendarDataUi,
-            onAddHabitClicked,
-            habitsViewModel::onNextMonthClicked,
-            habitsViewModel::onPreviousMonthClicked,
-            habitsViewModel::onCurrentDateClicked,
-            habitsViewModel::daySelected,
-            habitsViewModel::addHabit,
-            habitsViewModel::deleteHabits,
-            habitsViewModel::deleteHabit,
+            habits = viewState.habits,
+            statistics = viewState.statisticsDataUi,
+            calendarDataUi = viewState.calendarDataUi,
+            onAddHabitClicked = onAddHabitClicked,
+            onNextMonthClicked = habitsViewModel::onNextMonthClicked,
+            onPreviousMonthClicked = habitsViewModel::onPreviousMonthClicked,
+            onCurrentDateClicked = habitsViewModel::onCurrentDateClicked,
+            daySelected = habitsViewModel::daySelected,
+            addHabit = habitsViewModel::addHabit,
+            deleteHabits = habitsViewModel::deleteHabits,
+            onHabitItemDragged = habitsViewModel::onHabitItemDragged,
         )
     }
 }
@@ -74,7 +74,7 @@ private fun ScreenContent(
     daySelected: (Int) -> Unit,
     addHabit: () -> Unit,
     deleteHabits: () -> Unit,
-    deleteHabit: (Int) -> Unit,
+    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -88,18 +88,18 @@ private fun ScreenContent(
     ) { contentPadding ->
         val listState = rememberLazyListState()
         Content(
-            habits,
-            statistics,
-            calendarDataUi,
-            onNextMonthClicked,
-            onPreviousMonthClicked,
-            onCurrentDateClicked,
-            daySelected,
-            onAddHabitClicked = { addHabit() },
-            onDeleteClicked = { deleteHabits() },
-            onHabitClicked = { deleteHabit(it) },
-            listState,
-            Modifier.padding(contentPadding),
+            habits = habits,
+            statistics = statistics,
+            calendarDataUi = calendarDataUi,
+            onNextMonthClicked = onNextMonthClicked,
+            onPreviousMonthClicked = onPreviousMonthClicked,
+            onCurrentDateClicked = onCurrentDateClicked,
+            daySelected = daySelected,
+            onAddHabitClicked = addHabit,
+            onDeleteClicked = deleteHabits,
+            onHabitItemDragged = onHabitItemDragged,
+            listState = listState,
+            modifier = Modifier.padding(contentPadding),
         )
     }
 }
@@ -115,7 +115,7 @@ private fun Content(
     daySelected: (Int) -> Unit,
     onAddHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
-    onHabitClicked: (Int) -> Unit,
+    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
     listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
@@ -127,13 +127,13 @@ private fun Content(
         item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
         item {
             HorizontalCalendar(
-                calendarDataUi.selectedMonth,
-                onNextMonthClicked,
-                onPreviousMonthClicked,
-                onCurrentDateClicked,
-                calendarDataUi.daysOfMonth,
-                daySelected,
-                Modifier.padding(horizontal = 16.dp),
+                selectedMonth = calendarDataUi.selectedMonth,
+                onNextMonthClicked = onNextMonthClicked,
+                onPreviousMonthClicked = onPreviousMonthClicked,
+                onCurrentDateClicked = onCurrentDateClicked,
+                daysOfMonth = calendarDataUi.daysOfMonth,
+                onDayClicked = daySelected,
+                modifier = Modifier.padding(horizontal = 16.dp),
             )
         }
         item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
@@ -143,7 +143,7 @@ private fun Content(
         ) {
             HabitItem(
                 habit = it,
-                onHabitClicked = onHabitClicked,
+                onHabitItemDragged = onHabitItemDragged,
             )
         }
 
@@ -201,7 +201,7 @@ fun HabitItemPreview() {
             R.color.purple_200,
         )
     HabitsTheme {
-        HabitItem(mockHabit, {})
+        HabitItem(mockHabit, { _, _ -> })
     }
 }
 
@@ -235,17 +235,17 @@ fun ScreenPreview() {
             R.color.purple_200,
         )
     ScreenContent(
-        listOf(mockHabit),
-        getMockStatisticsDate(),
-        CalendarDataUi(selectedMonth = "February 2024", daysOfMonth = getDaysOfMonth(2024, 2)),
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
+        habits = listOf(element = mockHabit),
+        statistics = getMockStatisticsDate(),
+        calendarDataUi = CalendarDataUi(selectedMonth = "February 2024", daysOfMonth = getDaysOfMonth(2024, 2)),
+        onAddHabitClicked = {},
+        onNextMonthClicked = {},
+        onPreviousMonthClicked = {},
+        onCurrentDateClicked = {},
+        daySelected = {},
+        addHabit = {},
+        deleteHabits = {},
+        onHabitItemDragged = { _, _ -> },
     )
 }
 
