@@ -15,7 +15,7 @@ class HabitsRepository
         private val habitDao: HabitDao,
     ) {
         fun getHabits(): Flow<List<HabitEntity>> {
-            return habitDao.getHabits()
+            return habitDao.getHabitsFlow()
         }
 
         suspend fun addHabit(
