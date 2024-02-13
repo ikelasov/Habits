@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,6 +20,9 @@ interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addHabit(habit: HabitEntity)
+
+    @Update
+    suspend fun updateHabit(habit: HabitEntity)
 
     @Query("DELETE from habits_table")
     suspend fun deleteAllHabits()
