@@ -9,10 +9,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HabitDao {
     @Query("SELECT * from habits_table")
-    fun getHabits(): Flow<List<HabitEntity>>
+    fun getHabitsFlow(): Flow<List<HabitEntity>>
 
     @Query("SELECT * from habits_table where id=:habitId")
-    fun getHabit(habitId: Int): Flow<HabitEntity>
+    fun getHabitFlow(habitId: Int): Flow<HabitEntity>
+
+    @Query("SELECT * from habits_table where id=:habitId")
+    fun getHabit(habitId: Int): HabitEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addHabit(habit: HabitEntity)
