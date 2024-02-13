@@ -48,4 +48,20 @@ class HabitsRepository
         suspend fun deleteHabit(habitId: Int) {
             habitDao.deleteHabit(habitId)
         }
+
+        suspend fun updateProgress(
+            habitId: Int,
+            progressUpdateValue: Int,
+        ) {
+            val entity = habitDao.getHabit(habitId)
+            if (entity.completedRepetitions == 0 && progressUpdateValue < 0) {
+                return
+            }
+            val updatedProgress = entity.completedRepetitions + progressUpdateValue
+            if (updatedProgress > entity.repetitionsPerDay) {
+                return
+            }
+            val updatedEntity = entity.copy(completedRepetitions = updatedProgress)
+            habitDao.updateHabit(updatedEntity)
+        }
     }
