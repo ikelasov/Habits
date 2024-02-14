@@ -37,12 +37,12 @@ class HabitsUseCase
                     completedRepetitions = 0,
                     priorityLevel = priorityLevel,
                 )
-            habitsRepository.addHabit(habitEntity)
+            habitsRepository.createHabit(habitEntity)
         }
 
         suspend fun addMockHabit() {
             val mockHabit = generateMockHabit()
-            habitsRepository.addHabit(mockHabit)
+            habitsRepository.createHabit(mockHabit)
         }
 
         suspend fun deleteHabits() {
