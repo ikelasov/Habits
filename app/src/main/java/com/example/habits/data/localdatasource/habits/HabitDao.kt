@@ -19,7 +19,7 @@ interface HabitDao {
     fun getHabit(habitId: Int): HabitEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addHabit(habit: HabitEntity)
+    suspend fun createHabit(habit: HabitEntity)
 
     @Update
     suspend fun updateHabit(habit: HabitEntity)
