@@ -11,6 +11,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.habits.R
@@ -23,7 +24,7 @@ fun CreateHabitTopBar(
     modifier: Modifier = Modifier,
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = "Create a new habit", fontSize = 18.sp) },
+        title = { Text(text = stringResource(R.string.create_a_new_habit), fontSize = 18.sp) },
         navigationIcon = {
             IconButton(onClick = { onBackArrowClicked() }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = null)

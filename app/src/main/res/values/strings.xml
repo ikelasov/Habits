@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Habits</string>
+    <string name="create_habit_missing_fields_error">All fields must be filled</string>
+    <string name="task_repeat">Task Repeat</string>
+    <string name="habit_name">Habit name</string>
+    <string name="create_habit">Create habit</string>
+    <string name="create_a_new_habit">Create a new habit</string>
+    <string name="take_proteins">Take proteins</string>
+    <string name="times_per_day">Times per day</string>
 </resources>
