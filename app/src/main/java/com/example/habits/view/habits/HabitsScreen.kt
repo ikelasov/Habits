@@ -237,10 +237,11 @@ fun ScreenPreview() {
     ScreenContent(
         habits = listOf(element = mockHabit),
         statistics = getMockStatisticsDate(),
-        calendarDataUi = CalendarDataUi(
-            selectedMonth = "February 2024",
-            daysOfMonth = getDaysOfMonth(2024, 2)
-        ),
+        calendarDataUi =
+            CalendarDataUi(
+                selectedMonth = "February 2024",
+                daysOfMonth = getDaysOfMonth(2024, 2),
+            ),
         onCreateHabitClicked = {},
         onNextMonthClicked = {},
         onPreviousMonthClicked = {},

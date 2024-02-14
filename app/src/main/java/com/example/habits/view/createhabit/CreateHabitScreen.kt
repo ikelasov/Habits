@@ -29,8 +29,8 @@ import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.ui.theme.HabitsTheme
-import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
 import com.example.habits.view.createhabit.screencomponents.CreateHabitButton
+import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
 import com.example.habits.view.createhabit.screencomponents.DayPicker
 import com.example.habits.view.createhabit.screencomponents.HabitNameInput
 import com.example.habits.view.createhabit.screencomponents.PriorityPicker
