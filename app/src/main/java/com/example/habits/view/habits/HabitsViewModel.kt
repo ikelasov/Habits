@@ -5,8 +5,8 @@ import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
-import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.data.repository.StatisticsRepository
+import com.example.habits.domain.HabitsUseCase
 import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
 import com.example.habits.view.habits.utils.formatMonthYear
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class HabitsViewModel
     @Inject
     constructor(
-        private val habitsRepository: HabitsRepository,
+        private val habitsUseCase: HabitsUseCase,
         private val statisticsRepository: StatisticsRepository,
     ) : ViewModel() {
         private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
@@ -39,7 +39,7 @@ class HabitsViewModel
         init {
             viewModelScope.launch {
                 combine(
-                    habitsRepository.getHabits(),
+                    habitsUseCase.getHabitsFlow(),
                     statisticsRepository.getStatistics(),
                     selectedMonth,
                     selectedDay,
@@ -77,15 +77,15 @@ class HabitsViewModel
         }
 
         // region Habits actions
-        fun addHabit() {
+        fun addMockHabit() {
             viewModelScope.launch {
-                habitsRepository.addMockHabit()
+                habitsUseCase.addMockHabit()
             }
         }
 
         fun deleteHabits() {
             viewModelScope.launch {
-                habitsRepository.deleteHabits()
+                habitsUseCase.deleteHabits()
             }
         }
 
@@ -94,10 +94,12 @@ class HabitsViewModel
             draggedDirection: DraggedDirection,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
-                when (draggedDirection) {
-                    DraggedDirection.StartToEnd -> habitsRepository.updateProgress(habitId, 1)
-                    DraggedDirection.EndToStart -> habitsRepository.updateProgress(habitId, -1)
-                }
+                val valueToUpdate =
+                    when (draggedDirection) {
+                        DraggedDirection.StartToEnd -> 1
+                        DraggedDirection.EndToStart -> -1
+                    }
+                habitsUseCase.updateProgress(habitId, valueToUpdate)
             }
         }
 
@@ -119,7 +121,7 @@ class HabitsViewModel
             selectedMonth.value = currentDate
         }
 
-        fun daySelected(dayOfMonth: Int) {
+        fun onDayClicked(dayOfMonth: Int) {
             val selectedMonth = selectedMonth.value
             val adjustedDate = selectedMonth.withDayOfMonth(dayOfMonth)
             selectedDay.value = adjustedDate

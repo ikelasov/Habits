@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.domain.HabitsUseCase
+import com.example.habits.exception.CreateHabitMissingFieldsException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,7 @@ import javax.inject.Inject
 class AddHabitViewModel
     @Inject
     constructor(
-        private val habitsRepository: HabitsRepository,
+        private val habitsUseCase: HabitsUseCase,
     ) : ViewModel() {
         private val _viewState = MutableStateFlow(ViewState())
         val viewState: StateFlow<ViewState>
@@ -24,18 +25,18 @@ class AddHabitViewModel
 
         fun attemptCreateHabit() {
             viewModelScope.launch {
-                if (!allFieldsAreFilled()) {
-                    _viewState.update { it.copy(errorMessage = "All fields must be filled") }
-                } else {
-                    with(viewState.value) {
-                        habitsRepository.addHabit(
+                try {
+                    with(_viewState.value) {
+                        habitsUseCase.createHabit(
                             habitName,
                             daysToRepeat,
                             repetitionsPerDay,
                             priorityLevel,
                         )
-                        _viewState.update { it.copy(habitCreated = true) }
                     }
+                    _viewState.update { it.copy(habitCreated = true) }
+                } catch (missingFieldsException: CreateHabitMissingFieldsException) {
+                    _viewState.update { it.copy(errorMessage = "All fields must be filled") }
                 }
             }
         }
@@ -54,17 +55,14 @@ class AddHabitViewModel
             dayToRepeat: DaysOfWeek,
             isChecked: Boolean,
         ) {
-            _viewState.update {
-                val tempList = it.daysToRepeat.toMutableList()
-                if (isChecked) {
-                    tempList.add(dayToRepeat)
-                } else {
-                    tempList.remove(dayToRepeat)
-                }
-                it.copy(
-                    daysToRepeat = tempList,
-                )
+            val updatedList = _viewState.value.daysToRepeat.toMutableList()
+            if (isChecked) {
+                updatedList.add(dayToRepeat)
+            } else {
+                updatedList.remove(dayToRepeat)
             }
+
+            _viewState.update { it.copy(daysToRepeat = updatedList) }
         }
 
         fun onRepetitionsNumberPerDayChanged(newRepetitionsPerDay: Int) {
@@ -74,11 +72,6 @@ class AddHabitViewModel
         fun onPriorityLevelChanged(newPriorityLevel: HabitPriorityLevel) {
             _viewState.update { it.copy(priorityLevel = newPriorityLevel) }
         }
-
-        private fun allFieldsAreFilled(): Boolean =
-            with(viewState.value) {
-                habitName != "" && daysToRepeat.isNotEmpty()
-            }
     }
 
 data class ViewState(

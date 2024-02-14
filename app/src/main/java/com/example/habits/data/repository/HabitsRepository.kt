@@ -1,11 +1,7 @@
 package com.example.habits.data.repository
 
-import com.example.habits.common.generateMockHabit
-import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitDao
 import com.example.habits.data.localdatasource.habits.HabitEntity
-import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -14,31 +10,16 @@ class HabitsRepository
     constructor(
         private val habitDao: HabitDao,
     ) {
-        fun getHabits(): Flow<List<HabitEntity>> {
+        fun getHabitsFlow(): Flow<List<HabitEntity>> {
             return habitDao.getHabitsFlow()
         }
 
-        suspend fun addHabit(
-            habitName: String,
-            daysToRepeat: List<DaysOfWeek>,
-            repetitionsPerDay: Int,
-            priorityLevel: HabitPriorityLevel,
-        ) {
-            val habitEntity =
-                HabitEntity(
-                    name = habitName,
-                    timeOfTheDay = TimeOfTheDay.ALL_DAY,
-                    repetitionsPerDay = repetitionsPerDay,
-                    daysToRepeat = daysToRepeat,
-                    completedRepetitions = 0,
-                    priorityLevel = priorityLevel,
-                )
-            habitDao.addHabit(habitEntity)
+        fun getHabit(habitId: Int): HabitEntity {
+            return habitDao.getHabit(habitId)
         }
 
-        suspend fun addMockHabit() {
-            val mockHabit = generateMockHabit()
-            habitDao.addHabit(mockHabit)
+        suspend fun createHabit(habitEntity: HabitEntity) {
+            habitDao.createHabit(habitEntity)
         }
 
         suspend fun deleteHabits() {
@@ -49,19 +30,7 @@ class HabitsRepository
             habitDao.deleteHabit(habitId)
         }
 
-        suspend fun updateProgress(
-            habitId: Int,
-            progressUpdateValue: Int,
-        ) {
-            val entity = habitDao.getHabit(habitId)
-            if (entity.completedRepetitions == 0 && progressUpdateValue < 0) {
-                return
-            }
-            val updatedProgress = entity.completedRepetitions + progressUpdateValue
-            if (updatedProgress > entity.repetitionsPerDay) {
-                return
-            }
-            val updatedEntity = entity.copy(completedRepetitions = updatedProgress)
-            habitDao.updateHabit(updatedEntity)
+        suspend fun updateHabit(updatedHabitEntity: HabitEntity) {
+            habitDao.updateHabit(updatedHabitEntity)
         }
     }
