@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
@@ -38,7 +39,7 @@ fun RepetitionsPerDayComponent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Times per day",
+                text = stringResource(R.string.times_per_day),
                 modifier =
                     Modifier
                         .padding(start = 16.dp)

@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,7 +32,7 @@ fun CreateHabitButton(
             ),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
     ) {
-        Text(text = "Create habit", fontSize = 18.sp)
+        Text(text = stringResource(R.string.create_habit), fontSize = 18.sp)
     }
 }
 

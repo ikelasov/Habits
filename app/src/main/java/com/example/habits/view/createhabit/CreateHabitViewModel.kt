@@ -2,6 +2,7 @@ package com.example.habits.view.createhabit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.domain.HabitsUseCase
@@ -36,7 +37,7 @@ class CreateHabitViewModel
                     }
                     _viewState.update { it.copy(habitCreated = true) }
                 } catch (missingFieldsException: CreateHabitMissingFieldsException) {
-                    _viewState.update { it.copy(errorMessage = "All fields must be filled") }
+                    _viewState.update { it.copy(errorMessage = R.string.create_habit_missing_fields_error) }
                 }
             }
         }
@@ -79,6 +80,6 @@ data class ViewState(
     val daysToRepeat: List<DaysOfWeek> = listOf(),
     val repetitionsPerDay: Int = 1,
     val priorityLevel: HabitPriorityLevel = HabitPriorityLevel.TOP_PRIORITY,
-    val errorMessage: String? = null,
+    val errorMessage: Int? = null,
     val habitCreated: Boolean = false,
 )

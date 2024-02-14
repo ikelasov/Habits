@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,13 +50,14 @@ fun CreateHabitScreen(
         onHabitCreated()
     }
 
+    val context = LocalContext.current
     LaunchedEffect(viewState.errorMessage) {
         with(viewState.errorMessage) {
             if (this == null) {
                 return@LaunchedEffect
             }
 
-            snackBarHostState.showSnackbar(message = this)
+            snackBarHostState.showSnackbar(message = context.getString(this))
             viewModel.onSnackbarDismissed()
         }
     }
