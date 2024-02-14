@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit.screencomponents
+package com.example.habits.view.createhabit.screencomponents
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,7 +18,7 @@ import com.example.habits.ui.theme.HabitsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddHabitTopBar(
+fun CreateHabitTopBar(
     onBackArrowClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -39,8 +39,8 @@ fun AddHabitTopBar(
 
 @Preview(showBackground = true)
 @Composable
-fun AddHabitTopBarPreview() {
+fun CreateHabitTopBarPreview() {
     HabitsTheme {
-        AddHabitTopBar(onBackArrowClicked = { })
+        CreateHabitTopBar(onBackArrowClicked = { })
     }
 }

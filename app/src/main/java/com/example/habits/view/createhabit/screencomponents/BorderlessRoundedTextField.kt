@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit.screencomponents
+package com.example.habits.view.createhabit.screencomponents
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api

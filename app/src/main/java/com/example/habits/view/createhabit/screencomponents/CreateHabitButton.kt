@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit.screencomponents
+package com.example.habits.view.createhabit.screencomponents
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,11 +17,11 @@ import com.example.habits.ui.theme.HabitsTheme
 
 @Composable
 fun CreateHabitButton(
-    onAddHabitClicked: () -> Unit,
+    onCreateHabitClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Button(
-        onClick = { onAddHabitClicked() },
+        onClick = { onCreateHabitClicked() },
         modifier =
             modifier
                 .height(60.dp),
@@ -37,7 +37,7 @@ fun CreateHabitButton(
 
 @Preview
 @Composable
-fun AddHabitButtonPreview() {
+fun CreateHabitButtonPreview() {
     HabitsTheme {
         CreateHabitButton(
             {},

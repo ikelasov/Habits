@@ -10,7 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.habits.view.addhabit.AddHabitScreen
+import com.example.habits.view.createhabit.CreateHabitScreen
 import com.example.habits.view.habits.HabitsScreen
 
 @Composable
@@ -25,13 +25,13 @@ fun HabitsNavHost(
     ) {
         composableWithAnimation(HabitsDestinations.HabitsScreen.route) {
             HabitsScreen(
-                onAddHabitClicked = {
-                    navController.navigate(HabitsDestinations.AddHabitScreen.route)
+                onCreateHabitClicked = {
+                    navController.navigate(HabitsDestinations.CreateHabitScreen.route)
                 },
             )
         }
-        composableWithAnimation(HabitsDestinations.AddHabitScreen.route) {
-            AddHabitScreen(
+        composableWithAnimation(HabitsDestinations.CreateHabitScreen.route) {
+            CreateHabitScreen(
                 onBackArrowClicked = {
                     navController.popBackStack()
                 },

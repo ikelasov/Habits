@@ -1,7 +1,7 @@
 package com.example.habits.view.habits;
 
-import com.example.habits.data.repository.HabitsRepository;
 import com.example.habits.data.repository.StatisticsRepository;
+import com.example.habits.domain.HabitsUseCase;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;
@@ -23,28 +23,28 @@ import javax.inject.Provider;
     "KotlinInternalInJava"
 })
 public final class HabitsViewModel_Factory implements Factory<HabitsViewModel> {
-  private final Provider<HabitsRepository> habitsRepositoryProvider;
+  private final Provider<HabitsUseCase> habitsUseCaseProvider;
 
   private final Provider<StatisticsRepository> statisticsRepositoryProvider;
 
-  public HabitsViewModel_Factory(Provider<HabitsRepository> habitsRepositoryProvider,
+  public HabitsViewModel_Factory(Provider<HabitsUseCase> habitsUseCaseProvider,
       Provider<StatisticsRepository> statisticsRepositoryProvider) {
-    this.habitsRepositoryProvider = habitsRepositoryProvider;
+    this.habitsUseCaseProvider = habitsUseCaseProvider;
     this.statisticsRepositoryProvider = statisticsRepositoryProvider;
   }
 
   @Override
   public HabitsViewModel get() {
-    return newInstance(habitsRepositoryProvider.get(), statisticsRepositoryProvider.get());
+    return newInstance(habitsUseCaseProvider.get(), statisticsRepositoryProvider.get());
   }
 
-  public static HabitsViewModel_Factory create(Provider<HabitsRepository> habitsRepositoryProvider,
+  public static HabitsViewModel_Factory create(Provider<HabitsUseCase> habitsUseCaseProvider,
       Provider<StatisticsRepository> statisticsRepositoryProvider) {
-    return new HabitsViewModel_Factory(habitsRepositoryProvider, statisticsRepositoryProvider);
+    return new HabitsViewModel_Factory(habitsUseCaseProvider, statisticsRepositoryProvider);
   }
 
-  public static HabitsViewModel newInstance(HabitsRepository habitsRepository,
+  public static HabitsViewModel newInstance(HabitsUseCase habitsUseCase,
       StatisticsRepository statisticsRepository) {
-    return new HabitsViewModel(habitsRepository, statisticsRepository);
+    return new HabitsViewModel(habitsUseCase, statisticsRepository);
   }
 }

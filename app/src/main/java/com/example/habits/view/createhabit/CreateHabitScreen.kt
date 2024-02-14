@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit
+package com.example.habits.view.createhabit
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -29,18 +29,18 @@ import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.ui.theme.HabitsTheme
-import com.example.habits.view.addhabit.screencomponents.AddHabitTopBar
-import com.example.habits.view.addhabit.screencomponents.CreateHabitButton
-import com.example.habits.view.addhabit.screencomponents.DayPicker
-import com.example.habits.view.addhabit.screencomponents.HabitNameInput
-import com.example.habits.view.addhabit.screencomponents.PriorityPicker
-import com.example.habits.view.addhabit.screencomponents.RepetitionsPerDayComponent
+import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
+import com.example.habits.view.createhabit.screencomponents.CreateHabitButton
+import com.example.habits.view.createhabit.screencomponents.DayPicker
+import com.example.habits.view.createhabit.screencomponents.HabitNameInput
+import com.example.habits.view.createhabit.screencomponents.PriorityPicker
+import com.example.habits.view.createhabit.screencomponents.RepetitionsPerDayComponent
 
 @Composable
-fun AddHabitScreen(
+fun CreateHabitScreen(
     onBackArrowClicked: () -> Unit,
     onHabitCreated: () -> Unit,
-    viewModel: AddHabitViewModel = hiltViewModel(),
+    viewModel: CreateHabitViewModel = hiltViewModel(),
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val snackBarHostState = remember { SnackbarHostState() }
@@ -92,14 +92,14 @@ private fun ScreenContent(
 ) {
     Scaffold(
         topBar = {
-            AddHabitTopBar(
+            CreateHabitTopBar(
                 onBackArrowClicked = { onBackArrowClicked() },
                 modifier = Modifier.padding(top = 8.dp),
             )
         },
         bottomBar = {
             CreateHabitButton(
-                onAddHabitClicked = { attemptCreateHabit() },
+                onCreateHabitClicked = { attemptCreateHabit() },
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -186,7 +186,7 @@ private fun Content(
 
 @Preview(showBackground = true)
 @Composable
-fun AddHabitScreenPreview() {
+fun CreateHabitScreenPreview() {
     HabitsTheme {
         Surface(color = colorResource(R.color.background), modifier = Modifier.fillMaxSize()) {
             val snackBarHostState = remember { SnackbarHostState() }

@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit.screencomponents
+package com.example.habits.view.createhabit.screencomponents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

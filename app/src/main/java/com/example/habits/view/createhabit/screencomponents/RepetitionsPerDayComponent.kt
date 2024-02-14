@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit.screencomponents
+package com.example.habits.view.createhabit.screencomponents
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -3,5 +3,5 @@ package com.example.habits
 sealed class HabitsDestinations(val route: String) {
     data object HabitsScreen : HabitsDestinations(route = "habits")
 
-    data object AddHabitScreen : HabitsDestinations(route = "add_habit")
+    data object CreateHabitScreen : HabitsDestinations(route = "add_habit")
 }

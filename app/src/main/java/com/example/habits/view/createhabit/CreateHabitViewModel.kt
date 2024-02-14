@@ -1,4 +1,4 @@
-package com.example.habits.view.addhabit
+package com.example.habits.view.createhabit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddHabitViewModel
+class CreateHabitViewModel
     @Inject
     constructor(
         private val habitsUseCase: HabitsUseCase,

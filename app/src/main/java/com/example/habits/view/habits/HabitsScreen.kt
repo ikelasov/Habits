@@ -37,7 +37,7 @@ import com.example.habits.view.habits.utils.getDaysOfMonth
 
 @Composable
 fun HabitsScreen(
-    onAddHabitClicked: () -> Unit,
+    onCreateHabitClicked: () -> Unit,
     habitsViewModel: HabitsViewModel = hiltViewModel(),
 ) {
     val viewState by habitsViewModel.viewState
@@ -50,12 +50,12 @@ fun HabitsScreen(
             habits = viewState.habits,
             statistics = viewState.statisticsDataUi,
             calendarDataUi = viewState.calendarDataUi,
-            onAddHabitClicked = onAddHabitClicked,
+            onCreateHabitClicked = onCreateHabitClicked,
             onNextMonthClicked = habitsViewModel::onNextMonthClicked,
             onPreviousMonthClicked = habitsViewModel::onPreviousMonthClicked,
             onCurrentDateClicked = habitsViewModel::onCurrentDateClicked,
             onDayClicked = habitsViewModel::onDayClicked,
-            addHabit = habitsViewModel::addMockHabit,
+            createHabit = habitsViewModel::addMockHabit,
             deleteHabits = habitsViewModel::deleteHabits,
             onHabitItemDragged = habitsViewModel::onHabitItemDragged,
         )
@@ -67,18 +67,18 @@ private fun ScreenContent(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
     calendarDataUi: CalendarDataUi,
-    onAddHabitClicked: () -> Unit,
+    onCreateHabitClicked: () -> Unit,
     onNextMonthClicked: () -> Unit,
     onPreviousMonthClicked: () -> Unit,
     onCurrentDateClicked: () -> Unit,
     onDayClicked: (Int) -> Unit,
-    addHabit: () -> Unit,
+    createHabit: () -> Unit,
     deleteHabits: () -> Unit,
     onHabitItemDragged: (Int, DraggedDirection) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { onAddHabitClicked() }) {
+            FloatingActionButton(onClick = { onCreateHabitClicked() }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         },
@@ -95,7 +95,7 @@ private fun ScreenContent(
             onPreviousMonthClicked = onPreviousMonthClicked,
             onCurrentDateClicked = onCurrentDateClicked,
             onDayClicked = onDayClicked,
-            onAddHabitClicked = addHabit,
+            onCreateHabitClicked = createHabit,
             onDeleteClicked = deleteHabits,
             onHabitItemDragged = onHabitItemDragged,
             listState = listState,
@@ -113,7 +113,7 @@ private fun Content(
     onPreviousMonthClicked: () -> Unit,
     onCurrentDateClicked: () -> Unit,
     onDayClicked: (Int) -> Unit,
-    onAddHabitClicked: () -> Unit,
+    onCreateHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
     onHabitItemDragged: (Int, DraggedDirection) -> Unit,
     listState: LazyListState,
@@ -148,7 +148,7 @@ private fun Content(
         }
 
         item {
-            AddHabitButton(onButtonClick = { onAddHabitClicked() })
+            CreateHabitButton(onButtonClick = { onCreateHabitClicked() })
         }
         item {
             DeleteHabitsButton(onButtonClicked = { onDeleteClicked() })
@@ -157,7 +157,7 @@ private fun Content(
 }
 
 @Composable
-private fun AddHabitButton(
+private fun CreateHabitButton(
     onButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -237,13 +237,16 @@ fun ScreenPreview() {
     ScreenContent(
         habits = listOf(element = mockHabit),
         statistics = getMockStatisticsDate(),
-        calendarDataUi = CalendarDataUi(selectedMonth = "February 2024", daysOfMonth = getDaysOfMonth(2024, 2)),
-        onAddHabitClicked = {},
+        calendarDataUi = CalendarDataUi(
+            selectedMonth = "February 2024",
+            daysOfMonth = getDaysOfMonth(2024, 2)
+        ),
+        onCreateHabitClicked = {},
         onNextMonthClicked = {},
         onPreviousMonthClicked = {},
         onCurrentDateClicked = {},
         onDayClicked = {},
-        addHabit = {},
+        createHabit = {},
         deleteHabits = {},
         onHabitItemDragged = { _, _ -> },
     )
