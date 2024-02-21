@@ -70,6 +70,24 @@ class CreateHabitViewModel
             _viewState.update { it.copy(repetitionsPerDay = newRepetitionsPerDay) }
         }
 
+        fun onChooseTimeClicked() {
+            _viewState.update { it.copy(shouldShowTimePicker = true) }
+        }
+
+        fun onTimeChosen(
+            hour: Int,
+            minute: Int,
+        ) {
+            val minuteModified = if (minute < 10) "0$minute" else minute
+            _viewState.update {
+                it.copy(shouldShowTimePicker = false, habitExecutionTime = "$hour:$minuteModified")
+            }
+        }
+
+        fun onDialogDismissed() {
+            _viewState.update { it.copy(shouldShowTimePicker = false) }
+        }
+
         fun onPriorityLevelChanged(newPriorityLevel: HabitPriorityLevel) {
             _viewState.update { it.copy(priorityLevel = newPriorityLevel) }
         }
@@ -80,6 +98,8 @@ data class ViewState(
     val daysToRepeat: List<DaysOfWeek> = listOf(),
     val repetitionsPerDay: Int = 1,
     val priorityLevel: HabitPriorityLevel = HabitPriorityLevel.TOP_PRIORITY,
+    val shouldShowTimePicker: Boolean = false,
+    val habitExecutionTime: String = "9:00",
     val errorMessage: Int? = null,
     val habitCreated: Boolean = false,
 )
