@@ -1,5 +1,6 @@
 package com.example.habits.view.createhabit
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -33,9 +33,11 @@ import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.createhabit.screencomponents.CreateHabitButton
 import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
 import com.example.habits.view.createhabit.screencomponents.DayPicker
+import com.example.habits.view.createhabit.screencomponents.HabitExecutionTime
 import com.example.habits.view.createhabit.screencomponents.HabitNameInput
 import com.example.habits.view.createhabit.screencomponents.PriorityPicker
 import com.example.habits.view.createhabit.screencomponents.RepetitionsPerDayComponent
+import com.example.habits.view.createhabit.screencomponents.TimePickerWithDialog
 
 @Composable
 fun CreateHabitScreen(
@@ -63,34 +65,43 @@ fun CreateHabitScreen(
     }
 
     ScreenContent(
-        onBackArrowClicked,
-        viewModel::attemptCreateHabit,
-        viewModel::onHabitNameChanged,
-        viewModel::onDaysToRepeatChanged,
-        viewModel::onRepetitionsNumberPerDayChanged,
-        viewModel::onPriorityLevelChanged,
-        snackBarHostState,
-        viewState.habitName,
-        viewState.daysToRepeat,
-        viewState.repetitionsPerDay,
-        viewState.priorityLevel,
+        habitName = viewState.habitName,
+        daysToRepeat = viewState.daysToRepeat,
+        repetitionsPerDay = viewState.repetitionsPerDay,
+        priorityLevel = viewState.priorityLevel,
+        habitExecutionTime = viewState.habitExecutionTime,
+        shouldShowTimePicker = viewState.shouldShowTimePicker,
+        onBackArrowClicked = onBackArrowClicked,
+        attemptCreateHabit = viewModel::attemptCreateHabit,
+        onHabitNameChanged = viewModel::onHabitNameChanged,
+        onDaysToRepeatChanged = viewModel::onDaysToRepeatChanged,
+        onRepetitionsNumberPerDayChanged = viewModel::onRepetitionsNumberPerDayChanged,
+        onChooseTimeClicked = viewModel::onChooseTimeClicked,
+        onTimeChosen = viewModel::onTimeChosen,
+        onDialogDismissed = viewModel::onDialogDismissed,
+        onPriorityLevelChanged = viewModel::onPriorityLevelChanged,
+        snackBarHostState = snackBarHostState,
     )
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun ScreenContent(
+    habitName: String,
+    daysToRepeat: List<DaysOfWeek>,
+    repetitionsPerDay: Int,
+    priorityLevel: HabitPriorityLevel,
+    habitExecutionTime: String,
+    shouldShowTimePicker: Boolean,
     onBackArrowClicked: () -> Unit,
     attemptCreateHabit: () -> Unit,
     onHabitNameChanged: (String) -> Unit,
     onDaysToRepeatChanged: (DaysOfWeek, Boolean) -> Unit,
     onRepetitionsNumberPerDayChanged: (Int) -> Unit,
+    onChooseTimeClicked: () -> Unit,
+    onTimeChosen: (Int, Int) -> Unit,
+    onDialogDismissed: () -> Unit,
     onPriorityLevelChanged: (HabitPriorityLevel) -> Unit,
     snackBarHostState: SnackbarHostState,
-    habitName: String,
-    daysToRepeat: List<DaysOfWeek>,
-    repetitionsPerDay: Int,
-    priorityLevel: HabitPriorityLevel,
 ) {
     Scaffold(
         topBar = {
@@ -113,15 +124,20 @@ private fun ScreenContent(
         },
     ) { paddingValues ->
         Content(
-            habitName,
-            daysToRepeat,
-            repetitionsPerDay,
-            priorityLevel,
-            onHabitNameChanged,
-            onDaysToRepeatChanged,
-            onRepetitionsNumberPerDayChanged,
-            onPriorityLevelChanged,
-            Modifier.padding(paddingValues),
+            habitName = habitName,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            habitExecutionTime = habitExecutionTime,
+            onHabitNameChanged = onHabitNameChanged,
+            onDaysToRepeatChanged = onDaysToRepeatChanged,
+            onChooseTimeClicked = onChooseTimeClicked,
+            onTimeChosen = onTimeChosen,
+            onDialogDismissed = onDialogDismissed,
+            onRepetitionsNumberPerDayChanged = onRepetitionsNumberPerDayChanged,
+            onPriorityLevelChanged = onPriorityLevelChanged,
+            shouldShowTimePicker = shouldShowTimePicker,
+            modifier = Modifier.padding(paddingValues),
         )
     }
 }
@@ -132,57 +148,82 @@ private fun Content(
     daysToRepeat: List<DaysOfWeek>,
     repetitionsPerDay: Int,
     priorityLevel: HabitPriorityLevel,
+    habitExecutionTime: String,
     onHabitNameChanged: (String) -> Unit,
     onDaysToRepeatChanged: (DaysOfWeek, Boolean) -> Unit,
+    onChooseTimeClicked: () -> Unit,
+    onTimeChosen: (Int, Int) -> Unit,
+    onDialogDismissed: () -> Unit,
     onRepetitionsNumberPerDayChanged: (Int) -> Unit,
     onPriorityLevelChanged: (HabitPriorityLevel) -> Unit,
+    shouldShowTimePicker: Boolean,
     modifier: Modifier,
 ) {
-    Column(
-        modifier =
-            modifier
-                .verticalScroll(
-                    rememberScrollState(),
-                )
-                .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        HabitNameInput(
-            habitName,
-            onHabitNameValueChanged = onHabitNameChanged,
+    Box {
+        if (shouldShowTimePicker) {
+            TimePickerWithDialog(
+                onTimeChosen = onTimeChosen,
+                onDialogDismissed = onDialogDismissed,
+            )
+        }
+
+        Column(
             modifier =
-                Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        DayPicker(
-            daysToRepeat,
-            onDayChecked = onDaysToRepeatChanged,
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        RepetitionsPerDayComponent(
-            repetitionsPerDay,
-            onRepetitionsNumberPerDayChanged,
-            modifier =
-                Modifier
-                    .padding(horizontal = 16.dp)
-                    .heightIn(60.dp),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        PriorityPicker(
-            priorityLevel,
-            onPriorityLevelChanged,
-            modifier =
-                Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth(),
-        )
+                modifier
+                    .verticalScroll(
+                        rememberScrollState(),
+                    )
+                    .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            if (shouldShowTimePicker) {
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            HabitNameInput(
+                habitName = habitName,
+                onHabitNameValueChanged = onHabitNameChanged,
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            DayPicker(
+                daysToRepeat = daysToRepeat,
+                onDayChecked = onDaysToRepeatChanged,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            RepetitionsPerDayComponent(
+                repetitionsPerDay = repetitionsPerDay,
+                onRepetitionsNumberPerDayChanged = onRepetitionsNumberPerDayChanged,
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .heightIn(60.dp),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            HabitExecutionTime(
+                habitExecutionTime = habitExecutionTime,
+                onChooseTimeClicked = onChooseTimeClicked,
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .heightIn(60.dp),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            PriorityPicker(
+                priorityLevel = priorityLevel,
+                onPriorityLevelChanged = onPriorityLevelChanged,
+                modifier =
+                    Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+            )
+        }
     }
 }
 
@@ -193,16 +234,48 @@ fun CreateHabitScreenPreview() {
         Surface(color = colorResource(R.color.background), modifier = Modifier.fillMaxSize()) {
             val snackBarHostState = remember { SnackbarHostState() }
             ScreenContent(
-                {},
-                {},
-                { _ -> },
-                { _, _ -> },
-                { _ -> },
-                { _ -> },
-                snackBarHostState,
-                "",
-                listOf(DaysOfWeek.MONDAY),
-                3, HabitPriorityLevel.MEDIUM_PRIORITY,
+                onBackArrowClicked = {},
+                attemptCreateHabit = {},
+                onHabitNameChanged = { _ -> },
+                onDaysToRepeatChanged = { _, _ -> },
+                onRepetitionsNumberPerDayChanged = { _ -> },
+                onChooseTimeClicked = { },
+                onTimeChosen = { _, _ -> },
+                onDialogDismissed = { },
+                onPriorityLevelChanged = { _ -> },
+                snackBarHostState = snackBarHostState,
+                habitName = "",
+                daysToRepeat = listOf(DaysOfWeek.MONDAY),
+                repetitionsPerDay = 3, priorityLevel = HabitPriorityLevel.MEDIUM_PRIORITY,
+                habitExecutionTime = "8:00",
+                shouldShowTimePicker = false,
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun CreateHabitScreenWithTimePickerPreview() {
+    HabitsTheme {
+        Surface(color = colorResource(R.color.background), modifier = Modifier.fillMaxSize()) {
+            val snackBarHostState = remember { SnackbarHostState() }
+            ScreenContent(
+                onBackArrowClicked = {},
+                attemptCreateHabit = {},
+                onHabitNameChanged = { _ -> },
+                onDaysToRepeatChanged = { _, _ -> },
+                onRepetitionsNumberPerDayChanged = { _ -> },
+                onChooseTimeClicked = { },
+                onTimeChosen = { _, _ -> },
+                onDialogDismissed = { },
+                onPriorityLevelChanged = { _ -> },
+                snackBarHostState = snackBarHostState,
+                habitName = "",
+                daysToRepeat = listOf(DaysOfWeek.MONDAY),
+                repetitionsPerDay = 3, priorityLevel = HabitPriorityLevel.MEDIUM_PRIORITY,
+                habitExecutionTime = "8:00",
+                shouldShowTimePicker = true,
             )
         }
     }
