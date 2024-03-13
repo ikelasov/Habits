@@ -3,6 +3,7 @@ package com.example.habits.data.localdatasource.habits
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.DayOfWeek
+import java.time.LocalTime
 
 @Entity(tableName = "habits_table")
 data class HabitEntity(
@@ -13,6 +14,8 @@ data class HabitEntity(
     val repetitionsPerDay: Int,
     val completedRepetitions: Int,
     val priorityLevel: HabitPriorityLevel,
+    val hasSetReminder: Boolean = false,
+    val reminderTimes: List<LocalTime>,
 )
 
 enum class DaysOfWeek(val value: String) {
