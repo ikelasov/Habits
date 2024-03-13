@@ -4,7 +4,9 @@ import com.example.habits.data.localdatasource.habits.HabitDao
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class HabitsRepository
     @Inject
     constructor(
@@ -14,7 +16,11 @@ class HabitsRepository
             return habitDao.getHabitsFlow()
         }
 
-        fun getHabit(habitId: Int): HabitEntity {
+        suspend fun getHabitsWithoutRemindersSet(): List<HabitEntity> {
+            return habitDao.getHabitsWithoutRemindersSet()
+        }
+
+        suspend fun getHabit(habitId: Int): HabitEntity {
             return habitDao.getHabit(habitId)
         }
 
