@@ -8,9 +8,10 @@ import androidx.room.TypeConverters
 import com.example.habits.data.localdatasource.habits.HabitDao
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.typeconverters.DaysOfWeekTypeConverter
+import com.example.habits.data.localdatasource.typeconverters.ReminderTimeTypeConverter
 
 @Database(entities = [HabitEntity::class], version = 1, exportSchema = false)
-@TypeConverters(DaysOfWeekTypeConverter::class)
+@TypeConverters(DaysOfWeekTypeConverter::class, ReminderTimeTypeConverter::class)
 abstract class HabitsRoomDatabase : RoomDatabase() {
     abstract fun habitDao(): HabitDao
 
