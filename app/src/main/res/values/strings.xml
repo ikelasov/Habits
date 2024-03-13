@@ -7,4 +7,5 @@
     <string name="create_a_new_habit">Create a new habit</string>
     <string name="take_proteins">Take proteins</string>
     <string name="times_per_day">Times per day</string>
+    <string name="time_for_progress">Time for progress!</string>
 </resources>
