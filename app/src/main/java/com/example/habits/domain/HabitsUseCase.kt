@@ -5,6 +5,7 @@ import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habits.TimeOfTheDay
+import com.example.habits.data.repository.HabitRemindersRepository
 import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.exception.CreateHabitMissingFields
 import com.example.habits.exception.CreateHabitMissingFieldsException
@@ -15,6 +16,7 @@ class HabitsUseCase
     @Inject
     constructor(
         private val habitsRepository: HabitsRepository,
+        private val habitRemindersRepository: HabitRemindersRepository,
     ) {
         fun getHabitsFlow(): Flow<List<HabitEntity>> {
             return habitsRepository.getHabitsFlow()
@@ -36,13 +38,18 @@ class HabitsUseCase
                     daysToRepeat = daysToRepeat,
                     completedRepetitions = 0,
                     priorityLevel = priorityLevel,
+                    reminderTimes = emptyList(),
                 )
+
             habitsRepository.createHabit(habitEntity)
+            habitRemindersRepository.createNonSetReminders()
         }
 
         suspend fun addMockHabit() {
             val mockHabit = generateMockHabit()
             habitsRepository.createHabit(mockHabit)
+
+            habitRemindersRepository.createNonSetReminders()
         }
 
         suspend fun deleteHabits() {
