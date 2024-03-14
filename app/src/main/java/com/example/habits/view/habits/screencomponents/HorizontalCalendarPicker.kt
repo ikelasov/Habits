@@ -77,7 +77,7 @@ private fun CalendarMonthSection(
             onClick = { onPreviousMonthClicked() },
         ) {
             Icon(
-                Icons.Default.KeyboardArrowLeft,
+                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 contentDescription = null,
             )
         }
@@ -92,7 +92,7 @@ private fun CalendarMonthSection(
         )
         IconButton(onClick = { onNextMonthClicked() }) {
             Icon(
-                Icons.Default.KeyboardArrowRight,
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
             )
         }
