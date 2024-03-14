@@ -1,5 +1,6 @@
 package com.example.habits.view.habits.screencomponents
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,10 +13,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
-import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,18 +45,21 @@ fun HorizontalCalendar(
     onDayClicked: (Int) -> Unit,
     modifier: Modifier,
 ) {
-    Column(
+    Surface(
         modifier =
             modifier
+                .background(colorResource(R.color.background))
                 .fillMaxWidth(),
     ) {
-        CalendarMonthSection(
-            selectedMonth,
-            onNextMonthClicked,
-            onPreviousMonthClicked,
-            onCurrentDateClicked,
-        )
-        DaysOfMonthSection(daysOfMonth, selectedMonth, onDayClicked)
+        Column {
+            CalendarMonthSection(
+                selectedMonth,
+                onNextMonthClicked,
+                onPreviousMonthClicked,
+                onCurrentDateClicked,
+            )
+            DaysOfMonthSection(daysOfMonth, selectedMonth, onDayClicked)
+        }
     }
 }
 
@@ -72,7 +77,7 @@ private fun CalendarMonthSection(
             onClick = { onPreviousMonthClicked() },
         ) {
             Icon(
-                Icons.Default.KeyboardArrowLeft,
+                Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                 contentDescription = null,
             )
         }
@@ -87,7 +92,7 @@ private fun CalendarMonthSection(
         )
         IconButton(onClick = { onNextMonthClicked() }) {
             Icon(
-                Icons.Default.KeyboardArrowRight,
+                Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
             )
         }

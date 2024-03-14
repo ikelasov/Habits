@@ -2,6 +2,7 @@
 
 package com.example.habits.view.habits
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -104,6 +105,7 @@ private fun ScreenContent(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun Content(
     habits: List<HabitUi>,
@@ -125,7 +127,7 @@ private fun Content(
     ) {
         item { StatisticsContent(statistics) }
         item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
-        item {
+        stickyHeader {
             HorizontalCalendar(
                 selectedMonth = calendarDataUi.selectedMonth,
                 onNextMonthClicked = onNextMonthClicked,
