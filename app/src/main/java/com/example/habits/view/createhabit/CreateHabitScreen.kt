@@ -176,8 +176,6 @@ private fun Content(
                     .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (shouldShowTimePicker) {
-            }
             Spacer(modifier = Modifier.height(16.dp))
             HabitNameInput(
                 habitName = habitName,
