@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
+import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase
 import com.example.habits.exception.CreateHabitMissingFieldsException
 import com.example.habits.view.common.toLocalTime
@@ -17,14 +19,17 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class CreateHabitViewModel
-@Inject
-constructor(
+class CreateHabitViewModel @Inject constructor(
     private val habitsUseCase: HabitsUseCase,
+    private val habitCategoryUseCase: HabitCategoryUseCase
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(ViewState())
     val viewState: StateFlow<ViewState>
         get() = _viewState
+
+    init {
+        loadCategories()
+    }
 
     fun attemptCreateHabit() {
         viewModelScope.launch {
@@ -32,10 +37,11 @@ constructor(
                 with(_viewState.value) {
                     habitsUseCase.createHabit(
                         habitName,
+                        selectedCategory?.id,
                         daysToRepeat,
                         repetitionsPerDay,
                         priorityLevel,
-                        habitExecutionTime
+                        habitExecutionTime,
                     )
                 }
                 _viewState.update { it.copy(habitCreated = true) }
@@ -53,6 +59,16 @@ constructor(
         _viewState.update {
             it.copy(habitName = newName)
         }
+    }
+
+    fun createCategory(name: String) {
+        viewModelScope.launch {
+            habitCategoryUseCase.createCategory(name)
+        }
+    }
+
+    fun onCategorySelected(category: HabitCategoryEntity) {
+        _viewState.update { it.copy(selectedCategory = category) }
     }
 
     fun onDaysToRepeatChanged(
@@ -77,10 +93,7 @@ constructor(
         _viewState.update { it.copy(shouldShowTimePicker = true) }
     }
 
-    fun onTimeChosen(
-        hour: Int,
-        minute: Int,
-    ) {
+    fun onTimeChosen(hour: Int, minute: Int) {
         _viewState.update {
             it.copy(shouldShowTimePicker = false, habitExecutionTime = toLocalTime(hour, minute))
         }
@@ -93,6 +106,14 @@ constructor(
     fun onPriorityLevelChanged(newPriorityLevel: HabitPriorityLevel) {
         _viewState.update { it.copy(priorityLevel = newPriorityLevel) }
     }
+
+    private fun loadCategories() {
+        viewModelScope.launch {
+            habitCategoryUseCase.getCategoriesFlow().collect { categories ->
+                _viewState.update { it.copy(allCategories = categories) }
+            }
+        }
+    }
 }
 
 data class ViewState(
@@ -104,4 +125,6 @@ data class ViewState(
     val habitExecutionTime: LocalTime? = null,
     val errorMessage: Int? = null,
     val habitCreated: Boolean = false,
+    val allCategories: List<HabitCategoryEntity> = emptyList(),
+    val selectedCategory: HabitCategoryEntity? = null
 )
