@@ -3,6 +3,7 @@ package com.example.habits.di
 import android.content.Context
 import com.example.habits.data.HabitsRoomDatabase
 import com.example.habits.data.localdatasource.habits.HabitDao
+import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +17,11 @@ class DatabaseModule {
     @Provides
     fun provideHabitsDao(habitsDatabase: HabitsRoomDatabase): HabitDao {
         return habitsDatabase.habitDao()
+    }
+
+    @Provides
+    fun provideHabitsCategoriesDao(habitsDatabase: HabitsRoomDatabase): HabitCategoryDao {
+        return habitsDatabase.habitCategoryDao()
     }
 
     @Provides
