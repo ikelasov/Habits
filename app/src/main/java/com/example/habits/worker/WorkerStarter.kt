@@ -14,40 +14,38 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WorkerStarter
-    @Inject
-    constructor(context: Context) {
-        private val workManager = WorkManager.getInstance(context)
+class WorkerStarter @Inject constructor(context: Context) {
+    private val workManager = WorkManager.getInstance(context)
 
-        fun startWork(habitToSetReminder: HabitEntity) {
-            val inputData = Data.Builder()
-            inputData.putInt(INPUT_DATA_HABIT_ID, habitToSetReminder.id)
+    fun startWork(habitToSetReminder: HabitEntity) {
+        val inputData = Data.Builder()
+        inputData.putInt(INPUT_DATA_HABIT_ID, habitToSetReminder.id)
 
-            val initialDelayInSeconds =
-                findNextRemindersOffsetFromNow(
-                    habitToSetReminder.daysToRepeat,
-                    habitToSetReminder.reminderTimes,
-                )
+        val initialDelayInSeconds =
+            findNextRemindersOffsetFromNow(
+                habitToSetReminder.daysToRepeat,
+                habitToSetReminder.reminderTimes,
+            )
 
-            buildWorkRequest(
-                initialDelayInSeconds,
-                inputData,
-                habitToSetReminder.id,
-            ).enqueue()
-        }
-
-        private fun OneTimeWorkRequest.enqueue() {
-            workManager.enqueue(this)
-        }
-
-        private fun buildWorkRequest(
-            initialDelayInSeconds: Long,
-            inputData: Data.Builder,
-            habitId: Int,
-        ): OneTimeWorkRequest =
-            OneTimeWorkRequestBuilder<HabitRemindersWorker>()
-                .setInitialDelay(Duration.ofSeconds(initialDelayInSeconds))
-                .setInputData(inputData.build())
-                .addTag(WORK_MANAGER_REMINDER_TAG + habitId)
-                .build()
+        buildWorkRequest(
+            initialDelayInSeconds,
+            inputData,
+            habitToSetReminder.id,
+        ).enqueue()
     }
+
+    private fun OneTimeWorkRequest.enqueue() {
+        workManager.enqueue(this)
+    }
+
+    private fun buildWorkRequest(
+        initialDelayInSeconds: Long,
+        inputData: Data.Builder,
+        habitId: Int,
+    ): OneTimeWorkRequest =
+        OneTimeWorkRequestBuilder<HabitRemindersWorker>()
+            .setInitialDelay(Duration.ofSeconds(initialDelayInSeconds))
+            .setInputData(inputData.build())
+            .addTag(WORK_MANAGER_REMINDER_TAG + habitId)
+            .build()
+}

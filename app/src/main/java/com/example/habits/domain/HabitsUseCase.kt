@@ -10,82 +10,84 @@ import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.exception.CreateHabitMissingFields
 import com.example.habits.exception.CreateHabitMissingFieldsException
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalTime
 import javax.inject.Inject
 
 class HabitsUseCase
-    @Inject
-    constructor(
-        private val habitsRepository: HabitsRepository,
-        private val habitRemindersRepository: HabitRemindersRepository,
+@Inject
+constructor(
+    private val habitsRepository: HabitsRepository,
+    private val habitRemindersRepository: HabitRemindersRepository,
+) {
+    fun getHabitsFlow(): Flow<List<HabitEntity>> {
+        return habitsRepository.getHabitsFlow()
+    }
+
+    suspend fun createHabit(
+        habitName: String,
+        daysToRepeat: List<DaysOfWeek>,
+        repetitionsPerDay: Int,
+        priorityLevel: HabitPriorityLevel,
+        reminderTime: LocalTime?
     ) {
-        fun getHabitsFlow(): Flow<List<HabitEntity>> {
-            return habitsRepository.getHabitsFlow()
+        throwIfMissingFields(habitName, daysToRepeat)
+
+        val habitEntity =
+            HabitEntity(
+                name = habitName,
+                timeOfTheDay = TimeOfTheDay.ALL_DAY,
+                repetitionsPerDay = repetitionsPerDay,
+                daysToRepeat = daysToRepeat,
+                completedRepetitions = 0,
+                priorityLevel = priorityLevel,
+                reminderTimes = listOfNotNull(reminderTime),
+            )
+
+        habitsRepository.createHabit(habitEntity)
+        habitRemindersRepository.createNonSetReminders()
+    }
+
+    suspend fun addMockHabit() {
+        val mockHabit = generateMockHabit()
+        habitsRepository.createHabit(mockHabit)
+
+        habitRemindersRepository.createNonSetReminders()
+    }
+
+    suspend fun deleteHabits() {
+        habitsRepository.deleteHabits()
+    }
+
+    suspend fun updateProgress(
+        habitId: Int,
+        progressUpdateValue: Int,
+    ) {
+        val habit = habitsRepository.getHabit(habitId)
+        if (habit.completedRepetitions == 0 && progressUpdateValue < 0) {
+            return
+        }
+        val updatedProgress = habit.completedRepetitions + progressUpdateValue
+        if (updatedProgress > habit.repetitionsPerDay) {
+            return
+        }
+        val updatedEntity = habit.copy(completedRepetitions = updatedProgress)
+        habitsRepository.updateHabit(updatedEntity)
+    }
+
+    private fun throwIfMissingFields(
+        habitName: String,
+        daysToRepeat: List<DaysOfWeek>,
+    ) {
+        val missingFields = mutableListOf<CreateHabitMissingFields>()
+        if (habitName.isEmpty()) {
+            missingFields.add(CreateHabitMissingFields.HABIT_NAME)
+        }
+        if (daysToRepeat.isEmpty()) {
+            missingFields.add(CreateHabitMissingFields.DAYS_TO_REPEAT)
         }
 
-        suspend fun createHabit(
-            habitName: String,
-            daysToRepeat: List<DaysOfWeek>,
-            repetitionsPerDay: Int,
-            priorityLevel: HabitPriorityLevel,
-        ) {
-            throwIfMissingFields(habitName, daysToRepeat)
-
-            val habitEntity =
-                HabitEntity(
-                    name = habitName,
-                    timeOfTheDay = TimeOfTheDay.ALL_DAY,
-                    repetitionsPerDay = repetitionsPerDay,
-                    daysToRepeat = daysToRepeat,
-                    completedRepetitions = 0,
-                    priorityLevel = priorityLevel,
-                    reminderTimes = emptyList(),
-                )
-
-            habitsRepository.createHabit(habitEntity)
-            habitRemindersRepository.createNonSetReminders()
-        }
-
-        suspend fun addMockHabit() {
-            val mockHabit = generateMockHabit()
-            habitsRepository.createHabit(mockHabit)
-
-            habitRemindersRepository.createNonSetReminders()
-        }
-
-        suspend fun deleteHabits() {
-            habitsRepository.deleteHabits()
-        }
-
-        suspend fun updateProgress(
-            habitId: Int,
-            progressUpdateValue: Int,
-        ) {
-            val habit = habitsRepository.getHabit(habitId)
-            if (habit.completedRepetitions == 0 && progressUpdateValue < 0) {
-                return
-            }
-            val updatedProgress = habit.completedRepetitions + progressUpdateValue
-            if (updatedProgress > habit.repetitionsPerDay) {
-                return
-            }
-            val updatedEntity = habit.copy(completedRepetitions = updatedProgress)
-            habitsRepository.updateHabit(updatedEntity)
-        }
-
-        private fun throwIfMissingFields(
-            habitName: String,
-            daysToRepeat: List<DaysOfWeek>,
-        ) {
-            val missingFields = mutableListOf<CreateHabitMissingFields>()
-            if (habitName.isEmpty()) {
-                missingFields.add(CreateHabitMissingFields.HABIT_NAME)
-            }
-            if (daysToRepeat.isEmpty()) {
-                missingFields.add(CreateHabitMissingFields.DAYS_TO_REPEAT)
-            }
-
-            if (missingFields.isNotEmpty()) {
-                throw CreateHabitMissingFieldsException(missingFields)
-            }
+        if (missingFields.isNotEmpty()) {
+            throw CreateHabitMissingFieldsException(missingFields)
         }
     }
+}
