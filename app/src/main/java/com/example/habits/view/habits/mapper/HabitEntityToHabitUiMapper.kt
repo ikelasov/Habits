@@ -3,15 +3,17 @@ package com.example.habits.view.habits.mapper
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
+import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.view.habits.HabitUi
 
-fun List<HabitEntity>.mapHabitEntityListToHabitUIList(): List<HabitUi> {
+fun List<HabitEntity>.mapHabitEntityListToHabitUIList(categories: List<HabitCategoryEntity>): List<HabitUi> {
     return this.map {
-        it.mapHabitEntityToHabitUI()
+        val categoryName = categories.find { category -> category.id == it.categoryId }?.name ?: ""
+        it.mapHabitEntityToHabitUI(categoryName)
     }
 }
 
-fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
+fun HabitEntity.mapHabitEntityToHabitUI(categoryName: String): HabitUi {
     val timeToDoIndication = this.timeOfTheDay.value
 
     val repetitionIndication =
@@ -39,6 +41,7 @@ fun HabitEntity.mapHabitEntityToHabitUI(): HabitUi {
     return HabitUi(
         id = this.id,
         name = this.name,
+        category = categoryName,
         timeToDoIndication = timeToDoIndication,
         daysToRepeat = daysToRepeat,
         repetitionIndication = repetitionIndication,

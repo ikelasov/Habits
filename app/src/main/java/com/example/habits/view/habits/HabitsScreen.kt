@@ -196,6 +196,7 @@ fun HabitItemPreview() {
         HabitUi(
             id = 0,
             name = "Go to the gym",
+            category = "Some",
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
@@ -230,6 +231,7 @@ fun ScreenPreview() {
         HabitUi(
             id = 0,
             name = "Go to the gym",
+            category = "Some other",
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",

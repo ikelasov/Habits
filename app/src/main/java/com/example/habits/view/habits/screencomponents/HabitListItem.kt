@@ -8,6 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -63,7 +64,6 @@ fun HabitItem(
             modifier
                 .padding(vertical = 8.dp, horizontal = 24.dp)
                 .fillMaxWidth()
-                .height(90.dp)
                 .offset {
                     IntOffset(
                         x = offsetX.roundToInt(),
@@ -94,10 +94,13 @@ fun HabitItem(
                     }
                 },
     ) {
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)) {
             HabitPriorityIndication(habit = habit)
             HabitMainInfo(
                 habitName = habit.name,
+                categoryName = habit.category,
                 timeToDoIndication = habit.timeToDoIndication,
                 daysToRepeat = habit.daysToRepeat,
                 repetitionIndication = habit.repetitionIndication,
@@ -118,7 +121,7 @@ private fun HabitPriorityIndication(habit: HabitUi) {
             Modifier
                 .padding(end = 12.dp)
                 .width(16.dp)
-                .fillMaxHeight(1f),
+                .fillMaxHeight(),
         color = colorResource(habit.priorityIndicationColor),
     ) {}
 }
@@ -126,6 +129,7 @@ private fun HabitPriorityIndication(habit: HabitUi) {
 @Composable
 private fun HabitMainInfo(
     habitName: String,
+    categoryName: String,
     timeToDoIndication: String,
     daysToRepeat: String,
     repetitionIndication: String,
@@ -159,6 +163,9 @@ private fun HabitMainInfo(
             text = habitName,
             style = MaterialTheme.typography.titleLarge,
         )
+        if (categoryName.isNotBlank()) {
+            Text(text = categoryName, style = MaterialTheme.typography.labelSmall)
+        }
         Surface(
             shape = MaterialTheme.shapes.large,
             color = MaterialTheme.colorScheme.secondaryContainer,
@@ -211,6 +218,7 @@ fun HabitItemPreview() {
         HabitUi(
             id = 0,
             name = "Go to the gym",
+            category = "Category",
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
