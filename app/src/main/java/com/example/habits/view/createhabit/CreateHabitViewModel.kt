@@ -61,10 +61,19 @@ class CreateHabitViewModel @Inject constructor(
         }
     }
 
+    fun onCreateCategoryClicked() = _viewState.update {
+        it.copy(shouldShowCreateCategoryDialog = true)
+    }
+
+    fun onNewCategoryDialogDismissed() = _viewState.update {
+        it.copy(shouldShowCreateCategoryDialog = false)
+    }
+
     fun createCategory(name: String) {
         viewModelScope.launch {
             habitCategoryUseCase.createCategory(name)
         }
+        onNewCategoryDialogDismissed()
     }
 
     fun onCategorySelected(category: HabitCategoryEntity) {
@@ -122,6 +131,7 @@ data class ViewState(
     val repetitionsPerDay: Int = 1,
     val priorityLevel: HabitPriorityLevel = HabitPriorityLevel.TOP_PRIORITY,
     val shouldShowTimePicker: Boolean = false,
+    val shouldShowCreateCategoryDialog: Boolean = false,
     val habitExecutionTime: LocalTime? = null,
     val errorMessage: Int? = null,
     val habitCreated: Boolean = false,
