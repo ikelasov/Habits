@@ -30,6 +30,7 @@ import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
 import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.view.common.formatAsHHmm
 import com.example.habits.view.createhabit.screencomponents.CreateHabitButton
 import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
 import com.example.habits.view.createhabit.screencomponents.DayPicker
@@ -69,7 +70,7 @@ fun CreateHabitScreen(
         daysToRepeat = viewState.daysToRepeat,
         repetitionsPerDay = viewState.repetitionsPerDay,
         priorityLevel = viewState.priorityLevel,
-        habitExecutionTime = viewState.habitExecutionTime,
+        habitExecutionTime = viewState.habitExecutionTime?.formatAsHHmm() ?: "",
         shouldShowTimePicker = viewState.shouldShowTimePicker,
         onBackArrowClicked = onBackArrowClicked,
         attemptCreateHabit = viewModel::attemptCreateHabit,
