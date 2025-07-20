@@ -1,11 +1,9 @@
 package com.example.habits.view.createhabit.screencomponents
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -13,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +26,7 @@ fun RepetitionsPerDayComponent(
     onRepetitionsNumberPerDayChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconButtonsBackgroundColor = colorResource(R.color.light_gray)
+    val iconButtonsBackgroundColor = colorResource(R.color.black)
     Surface(
         shape = MaterialTheme.shapes.large,
         modifier = modifier,
@@ -41,9 +39,9 @@ fun RepetitionsPerDayComponent(
             Text(
                 text = stringResource(R.string.times_per_day),
                 modifier =
-                    Modifier
-                        .padding(start = 16.dp)
-                        .weight(1f),
+                Modifier
+                    .padding(start = 16.dp)
+                    .weight(1f),
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -55,13 +53,14 @@ fun RepetitionsPerDayComponent(
                     },
                     enabled = repetitionsPerDay > 1,
                 ) {
-                    Icon(
-                        Icons.Default.Add,
+                    Image(
+                        painterResource(
+                            if (repetitionsPerDay > 1)
+                                R.drawable.minus_with_background
+                            else
+                                R.drawable.minus_with_background_disabled
+                        ),
                         contentDescription = null,
-                        modifier =
-                            Modifier.drawBehind {
-                                drawCircle(iconButtonsBackgroundColor)
-                            },
                     )
                 }
                 Text(
@@ -73,13 +72,9 @@ fun RepetitionsPerDayComponent(
                         onRepetitionsNumberPerDayChanged(repetitionsPerDay + 1)
                     },
                 ) {
-                    Icon(
-                        Icons.Default.Add,
+                    Image(
+                        painterResource(R.drawable.plus_with_background),
                         contentDescription = null,
-                        modifier =
-                            Modifier.drawBehind {
-                                drawCircle(iconButtonsBackgroundColor)
-                            },
                     )
                 }
             }
