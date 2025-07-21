@@ -2,6 +2,7 @@
 
 package com.example.habits.view.habits.screencomponents
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -33,6 +35,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onPlaced
@@ -210,11 +214,30 @@ private fun HabitProgressIndicator(
     progress: Float,
     modifier: Modifier = Modifier,
 ) {
-    val anim by animateFloatAsState(
-        targetValue = progress,
-        label = "",
+    val isCompleted = progress >= 1f
+    val completedColor = remember { Color(0xFFA5D6A7) }
+    val animatedProgressColor by animateColorAsState(
+        targetValue = if (isCompleted) completedColor else MaterialTheme.colorScheme.tertiary,
         animationSpec = tween(500),
+        label = "progressColor"
     )
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        label = "progressValue",
+        animationSpec = tween(500)
+    )
+
+    val checkmarkScale by animateFloatAsState(
+        targetValue = if (isCompleted) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 200),
+        label = "checkmarkScale"
+    )
+    val checkmarkAlpha by animateFloatAsState(
+        targetValue = if (isCompleted) 1f else 0f,
+        animationSpec = tween(durationMillis = 400, delayMillis = 200),
+        label = "checkmarkAlpha"
+    )
+
     Box(
         modifier =
             modifier
@@ -226,8 +249,17 @@ private fun HabitProgressIndicator(
             color = MaterialTheme.colorScheme.surfaceVariant,
         )
         CircularProgressIndicator(
-            progress = { anim },
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            progress = { animatedProgress },
+            color = animatedProgressColor,
+        )
+        Icon(
+            imageVector = Icons.Default.Check,
+            contentDescription = "Completed",
+            tint = completedColor,
+            modifier = Modifier
+                .scale(checkmarkScale)
+                .alpha(checkmarkAlpha)
+                .align(Alignment.Center)
         )
     }
 }
