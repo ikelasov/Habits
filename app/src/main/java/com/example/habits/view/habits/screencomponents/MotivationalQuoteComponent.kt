@@ -27,10 +27,10 @@ fun MotivationalQuoteComponent(
     quote?.let {
         Surface(
             shape = MaterialTheme.shapes.large,
-            color = Color.White,
+            color = MaterialTheme.colorScheme.surfaceVariant,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, start = 24.dp, end = 24.dp)
+                .padding(horizontal = 24.dp, vertical = 4.dp)
         ) {
             Column(
                 modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp),

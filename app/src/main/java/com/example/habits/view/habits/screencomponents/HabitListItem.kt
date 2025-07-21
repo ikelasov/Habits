@@ -60,7 +60,7 @@ fun HabitItem(
 
     Surface(
         shape = MaterialTheme.shapes.large,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
         modifier =
             modifier
                 .padding(vertical = 8.dp, horizontal = 24.dp)

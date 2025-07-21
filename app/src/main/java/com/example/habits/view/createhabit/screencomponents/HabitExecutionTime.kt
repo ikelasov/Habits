@@ -32,13 +32,11 @@ fun HabitExecutionTime(
             modifier.clickable {
                 onChooseTimeClicked()
             },
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier =
-                Modifier
-                    .padding(horizontal = 16.dp),
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             Text(text = stringResource(R.string.time), Modifier.weight(1f))
             Text(text = habitExecutionTime)
