@@ -5,6 +5,7 @@ package com.example.habits.view.habits.screencomponents
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -94,13 +95,16 @@ fun HabitItem(
                     }
                 },
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+        ) {
             HabitPriorityIndication(habit = habit)
             HabitMainInfo(
                 habitName = habit.name,
                 categoryName = habit.category,
+                categoryColor = habit.categoryColor,
                 timeToDoIndication = habit.timeToDoIndication,
                 daysToRepeat = habit.daysToRepeat,
                 repetitionIndication = habit.repetitionIndication,
@@ -130,6 +134,7 @@ private fun HabitPriorityIndication(habit: HabitUi) {
 private fun HabitMainInfo(
     habitName: String,
     categoryName: String,
+    categoryColor: Color?,
     timeToDoIndication: String,
     daysToRepeat: String,
     repetitionIndication: String,
@@ -163,15 +168,30 @@ private fun HabitMainInfo(
             text = habitName,
             style = MaterialTheme.typography.titleLarge,
         )
-        if (categoryName.isNotBlank()) {
-            Text(text = categoryName, style = MaterialTheme.typography.labelSmall)
+        if (categoryName.isNotBlank() && categoryColor != null) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .border(
+                        width = 1.dp,
+                        color = categoryColor,
+                        shape = MaterialTheme.shapes.small
+                    )
+                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = categoryName,
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
         }
         Surface(
             shape = MaterialTheme.shapes.large,
             color = MaterialTheme.colorScheme.secondaryContainer,
             modifier =
                 Modifier
-                    .padding(top = 4.dp, bottom = 12.dp),
+                    .padding(top = 8.dp, bottom = 8.dp),
         ) {
             Text(
                 text = repetitionIndication,
@@ -219,6 +239,7 @@ fun HabitItemPreview() {
             id = 0,
             name = "Go to the gym",
             category = "Category",
+            categoryColor = Color.Red,
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",

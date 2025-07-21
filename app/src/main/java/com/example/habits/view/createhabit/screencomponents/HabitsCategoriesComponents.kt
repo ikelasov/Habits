@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,6 +61,7 @@ fun HabitsCategoriesComponent(
                 allCategories.forEach { category ->
                     CategoryChip(
                         text = category.name,
+                        categoryColor = Color(category.color),
                         isSelected = category.id == selectedCategory?.id,
                         onClick = { onCategorySelected(category) }
                     )
@@ -74,6 +76,7 @@ fun HabitsCategoriesComponent(
 @Composable
 fun CategoryChip(
     text: String,
+    categoryColor: Color,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -84,8 +87,8 @@ fun CategoryChip(
             .clickable(onClick = onClick),
         shape = CircleShape,
         border = BorderStroke(
-            width = 2.dp,
-            color = if (isSelected) colorResource(R.color.orange) else colorResource(R.color.light_gray)
+            width = 1.dp,
+            color = if (isSelected) categoryColor else colorResource(R.color.light_gray)
         ),
         color = Color.Transparent
     ) {
@@ -128,13 +131,10 @@ fun AddCategoryChip(
 }
 
 val categories = listOf(
-    HabitCategoryEntity(1, "Fitness"),
-    HabitCategoryEntity(2, "Work"),
-    HabitCategoryEntity(3, "Reading"),
-    HabitCategoryEntity(4, "Health"),
-    HabitCategoryEntity(5, "Hobbies"),
-    HabitCategoryEntity(6, "Personal Growth"),
-    HabitCategoryEntity(7, "Finance")
+    HabitCategoryEntity(1, "Fitness", Color.Red.toArgb()),
+    HabitCategoryEntity(2, "Work", Color.Yellow.toArgb()),
+    HabitCategoryEntity(3, "Reading", Color.Green.toArgb()),
+    HabitCategoryEntity(4, "Health", Color.Blue.toArgb())
 )
 
 @Preview(showBackground = true, backgroundColor = 0xFFF6F7FB)
@@ -158,8 +158,16 @@ private fun HabitsCategoriesComponentPreview() {
 private fun CategoryChipPreview() {
     HabitsTheme {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            CategoryChip(text = "Selected", isSelected = true, onClick = {})
-            CategoryChip(text = "Normal", isSelected = false, onClick = {})
+            CategoryChip(
+                text = "Selected",
+                categoryColor = Color.Green,
+                isSelected = true,
+                onClick = {})
+            CategoryChip(
+                text = "Normal",
+                categoryColor = Color.Cyan,
+                isSelected = false,
+                onClick = {})
             AddCategoryChip(onClick = {})
         }
     }

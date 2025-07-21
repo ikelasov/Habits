@@ -2,6 +2,7 @@ package com.example.habits.view.habits
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
@@ -150,6 +151,7 @@ data class HabitUi(
     val id: Int,
     val name: String,
     val category: String,
+    val categoryColor: Color?,
     val timeToDoIndication: String,
     val daysToRepeat: String,
     val repetitionIndication: String,

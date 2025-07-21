@@ -1,6 +1,8 @@
 package com.example.habits.data
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -60,11 +62,11 @@ abstract class HabitsRoomDatabase : RoomDatabase() {
         suspend fun populateCategories(habitCategoryDao: HabitCategoryDao) {
             // 3. Define the list of default categories.
             val defaultCategories = listOf(
-                HabitCategoryEntity(name = "Fitness"),
-                HabitCategoryEntity(name = "Health"),
-                HabitCategoryEntity(name = "Work"),
-                HabitCategoryEntity(name = "Hobbies"),
-                HabitCategoryEntity(name = "Personal Growth")
+                HabitCategoryEntity(name = "Fitness", color = Color.Red.toArgb()),
+                HabitCategoryEntity(name = "Health", color = Color.Blue.toArgb()),
+                HabitCategoryEntity(name = "Work", color = Color.Yellow.toArgb()),
+                HabitCategoryEntity(name = "Hobbies", color = Color.Cyan.toArgb()),
+                HabitCategoryEntity(name = "Personal Growth", color = Color.Green.toArgb())
             )
 
             // 4. Insert them into the database.

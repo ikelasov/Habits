@@ -1,5 +1,7 @@
 package com.example.habits.domain
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.data.repository.HabitsRepository
 import kotlinx.coroutines.flow.Flow
@@ -13,10 +15,10 @@ class HabitCategoryUseCase @Inject constructor(
         return habitsRepository.getCategories()
     }
 
-    suspend fun createCategory(categoryName: String) {
+    suspend fun createCategory(categoryName: String, color: Color) {
         if (categoryName.isBlank()) return
 
-        val newCategory = HabitCategoryEntity(name = categoryName)
+        val newCategory = HabitCategoryEntity(name = categoryName, color = color.toArgb())
         habitsRepository.insertCategory(newCategory)
     }
 }

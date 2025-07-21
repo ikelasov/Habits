@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -197,6 +198,7 @@ fun HabitItemPreview() {
             id = 0,
             name = "Go to the gym",
             category = "Some",
+            categoryColor = Color.Yellow,
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
@@ -232,6 +234,7 @@ fun ScreenPreview() {
             id = 0,
             name = "Go to the gym",
             category = "Some other",
+            categoryColor = Color.Cyan,
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",

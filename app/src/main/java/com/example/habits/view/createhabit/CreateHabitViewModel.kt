@@ -1,5 +1,6 @@
 package com.example.habits.view.createhabit
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.R
@@ -69,9 +70,9 @@ class CreateHabitViewModel @Inject constructor(
         it.copy(shouldShowCreateCategoryDialog = false)
     }
 
-    fun createCategory(name: String) {
+    fun createCategory(name: String, color: Color) {
         viewModelScope.launch {
-            habitCategoryUseCase.createCategory(name)
+            habitCategoryUseCase.createCategory(name, color)
         }
         onNewCategoryDialogDismissed()
     }

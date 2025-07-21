@@ -1,5 +1,6 @@
 package com.example.habits.view.habits.mapper
 
+import androidx.compose.ui.graphics.Color
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
@@ -8,12 +9,12 @@ import com.example.habits.view.habits.HabitUi
 
 fun List<HabitEntity>.mapHabitEntityListToHabitUIList(categories: List<HabitCategoryEntity>): List<HabitUi> {
     return this.map {
-        val categoryName = categories.find { category -> category.id == it.categoryId }?.name ?: ""
-        it.mapHabitEntityToHabitUI(categoryName)
+        val category = categories.find { category -> category.id == it.categoryId }
+        it.mapHabitEntityToHabitUI(category)
     }
 }
 
-fun HabitEntity.mapHabitEntityToHabitUI(categoryName: String): HabitUi {
+fun HabitEntity.mapHabitEntityToHabitUI(category: HabitCategoryEntity?): HabitUi {
     val timeToDoIndication = this.timeOfTheDay.value
 
     val repetitionIndication =
@@ -41,7 +42,8 @@ fun HabitEntity.mapHabitEntityToHabitUI(categoryName: String): HabitUi {
     return HabitUi(
         id = this.id,
         name = this.name,
-        category = categoryName,
+        category = category?.name ?: "",
+        categoryColor = if (category?.color != null) Color(category.color) else null,
         timeToDoIndication = timeToDoIndication,
         daysToRepeat = daysToRepeat,
         repetitionIndication = repetitionIndication,
