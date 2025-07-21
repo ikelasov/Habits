@@ -1,5 +1,6 @@
 package com.example.habits.view.createhabit
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -20,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -139,6 +143,7 @@ private fun ScreenContent(
         snackbarHost = {
             SnackbarHost(snackBarHostState)
         },
+        contentColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         Content(
             habitName = habitName,
@@ -253,7 +258,12 @@ private fun Content(
                 modifier =
                     Modifier
                         .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                        .padding(bottom = 16.dp)
+                        .fillMaxWidth()
+                        .background(
+                            MaterialTheme.colorScheme.surfaceContainer,
+                            RoundedCornerShape(16.dp)
+                        )
             )
         }
     }

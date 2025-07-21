@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +26,11 @@ fun HabitNameInput(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
-        Text(text = stringResource(R.string.habit_name), fontSize = 16.sp)
+        Text(
+            text = stringResource(R.string.habit_name),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurface
+        )
         Spacer(modifier = Modifier.height(8.dp))
         BorderlessRoundedTextField(
             habitName,

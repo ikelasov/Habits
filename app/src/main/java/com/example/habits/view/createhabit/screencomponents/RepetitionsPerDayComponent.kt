@@ -11,8 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,11 +24,11 @@ fun RepetitionsPerDayComponent(
     onRepetitionsNumberPerDayChanged: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconButtonsBackgroundColor = colorResource(R.color.black)
+
     Surface(
         shape = MaterialTheme.shapes.large,
         modifier = modifier,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -39,9 +37,9 @@ fun RepetitionsPerDayComponent(
             Text(
                 text = stringResource(R.string.times_per_day),
                 modifier =
-                Modifier
-                    .padding(start = 16.dp)
-                    .weight(1f),
+                    Modifier
+                        .padding(start = 16.dp)
+                        .weight(1f),
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,

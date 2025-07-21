@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -84,7 +86,10 @@ private fun ScreenContent(
 ) {
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { onCreateHabitClicked() }) {
+            FloatingActionButton(
+                onClick = { onCreateHabitClicked() },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         },
@@ -130,12 +135,12 @@ private fun Content(
 ) {
     LazyColumn(
         state = listState,
-        modifier = modifier.background(colorResource(R.color.background)),
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
     ) {
         item { StatisticsContent(statistics) }
-        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
+        item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
         item { MotivationalQuoteComponent(quote) }
-        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
+        item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
         stickyHeader {
             HorizontalCalendar(
                 selectedMonth = calendarDataUi.selectedMonth,
@@ -234,7 +239,7 @@ fun StatisticsContentPreview() {
     StatisticsContent(getMockStatisticsDate())
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun ScreenPreview() {
     val mockHabit =

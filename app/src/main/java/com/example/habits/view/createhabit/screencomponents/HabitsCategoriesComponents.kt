@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
@@ -48,7 +49,7 @@ fun HabitsCategoriesComponent(
     Surface(
         shape = MaterialTheme.shapes.large,
         modifier = modifier,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = "Category")
@@ -137,7 +138,7 @@ val categories = listOf(
     HabitCategoryEntity(4, "Health", Color.Blue.toArgb())
 )
 
-@Preview(showBackground = true, backgroundColor = 0xFFF6F7FB)
+@PreviewLightDark
 @Composable
 private fun HabitsCategoriesComponentPreview() {
     var selectedCategory by remember { mutableStateOf(categories[1]) }

@@ -34,7 +34,7 @@ fun DayPicker(
     Surface(
         shape = MaterialTheme.shapes.large,
         modifier = modifier,
-        color = Color.White,
+        color = MaterialTheme.colorScheme.surfaceContainer,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = stringResource(R.string.task_repeat))

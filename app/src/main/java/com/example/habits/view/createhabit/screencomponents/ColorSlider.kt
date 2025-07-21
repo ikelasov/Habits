@@ -25,8 +25,8 @@ fun ColorPickerSlider(
     val selectedColor = Color.hsv(sliderPosition * 360f, 1f, 1f)
 
     Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier.background(MaterialTheme.colorScheme.surfaceContainer),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // Color preview box
         Box(

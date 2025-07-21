@@ -24,8 +24,8 @@ import com.example.habits.view.habits.getMockStatisticsDate
 fun StatisticsContent(statistics: StatisticsDataUi) {
     Surface(
         shape = MaterialTheme.shapes.large,
-        color = Color.White,
-        modifier = Modifier.padding(horizontal = 24.dp),
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        modifier = Modifier.padding(horizontal = 16.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
