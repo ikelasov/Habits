@@ -2,10 +2,12 @@ package com.example.habits.view.habits
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.repository.StatisticsRepository
+import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase
 import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
@@ -24,111 +26,113 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HabitsViewModel
-    @Inject
-    constructor(
-        private val habitsUseCase: HabitsUseCase,
-        private val statisticsRepository: StatisticsRepository,
-    ) : ViewModel() {
-        private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
-        private val selectedDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
+@Inject
+constructor(
+    private val habitsUseCase: HabitsUseCase,
+    private val categoryUseCase: HabitCategoryUseCase,
+    private val statisticsRepository: StatisticsRepository,
+) : ViewModel() {
+    private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
+    private val selectedDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
 
-        private val _viewState = MutableStateFlow(HabitsViewState(loading = true))
-        val viewState: StateFlow<HabitsViewState>
-            get() = _viewState
+    private val _viewState = MutableStateFlow(HabitsViewState(loading = true))
+    val viewState: StateFlow<HabitsViewState>
+        get() = _viewState
 
-        init {
-            viewModelScope.launch {
-                combine(
-                    habitsUseCase.getHabitsFlow(),
-                    statisticsRepository.getStatistics(),
-                    selectedMonth,
-                    selectedDay,
-                ) { habits, statistics, selectedDate, selectedDay ->
-                    val habitsUiList =
-                        habits
-                            .filter { it.daysToRepeat.contains(DaysOfWeek.fromLocalDate(selectedDay.dayOfWeek)) }
-                            .mapHabitEntityListToHabitUIList()
-                    val statisticsUi = statistics.mapToStatisticsDataUi()
-                    val calendarItemsUi =
-                        getDaysOfMonthAbbreviated(
-                            selectedDate.year,
-                            selectedDate.monthValue,
-                            selectedDay,
-                        )
-                    val calendarDataUi =
-                        CalendarDataUi(
-                            selectedDate.formatMonthYear(),
-                            calendarItemsUi,
-                        )
-
-                    HabitsViewState(
-                        habits = habitsUiList,
-                        statisticsDataUi = statisticsUi,
-                        calendarDataUi = calendarDataUi,
-                        loading = false,
+    init {
+        viewModelScope.launch {
+            combine(
+                habitsUseCase.getHabitsFlow(),
+                categoryUseCase.getCategoriesFlow(),
+                statisticsRepository.getStatistics(),
+                selectedMonth,
+                selectedDay,
+            ) { habits, categories, statistics, selectedDate, selectedDay ->
+                val habitsUiList =
+                    habits
+                        .filter { it.daysToRepeat.contains(DaysOfWeek.fromLocalDate(selectedDay.dayOfWeek)) }
+                        .mapHabitEntityListToHabitUIList(categories)
+                val statisticsUi = statistics.mapToStatisticsDataUi()
+                val calendarItemsUi =
+                    getDaysOfMonthAbbreviated(
+                        selectedDate.year,
+                        selectedDate.monthValue,
+                        selectedDay,
                     )
-                }.catch { throwable ->
-                    // TODO: Implement emitting UI error. For now just rethrow
-                    throw throwable
-                }.collectLatest {
-                    _viewState.value = it
-                }
+                val calendarDataUi =
+                    CalendarDataUi(
+                        selectedDate.formatMonthYear(),
+                        calendarItemsUi,
+                    )
+
+                HabitsViewState(
+                    habits = habitsUiList,
+                    statisticsDataUi = statisticsUi,
+                    calendarDataUi = calendarDataUi,
+                    loading = false,
+                )
+            }.catch { throwable ->
+                // TODO: Implement emitting UI error. For now just rethrow
+                throw throwable
+            }.collectLatest {
+                _viewState.value = it
             }
         }
-
-        // region Habits actions
-        fun addMockHabit() {
-            viewModelScope.launch {
-                habitsUseCase.addMockHabit()
-            }
-        }
-
-        fun deleteHabits() {
-            viewModelScope.launch {
-                habitsUseCase.deleteHabits()
-            }
-        }
-
-        fun onHabitItemDragged(
-            habitId: Int,
-            draggedDirection: DraggedDirection,
-        ) {
-            viewModelScope.launch(Dispatchers.IO) {
-                val valueToUpdate =
-                    when (draggedDirection) {
-                        DraggedDirection.StartToEnd -> 1
-                        DraggedDirection.EndToStart -> -1
-                    }
-                habitsUseCase.updateProgress(habitId, valueToUpdate)
-            }
-        }
-
-        // endregion
-
-        // region Date picker actions
-
-        fun onNextMonthClicked() {
-            selectedMonth.value = selectedMonth.value.plusMonths(1)
-        }
-
-        fun onPreviousMonthClicked() {
-            selectedMonth.value = selectedMonth.value.minusMonths(1)
-        }
-
-        fun onCurrentDateClicked() {
-            val currentDate = LocalDate.now()
-            selectedDay.value = currentDate
-            selectedMonth.value = currentDate
-        }
-
-        fun onDayClicked(dayOfMonth: Int) {
-            val selectedMonth = selectedMonth.value
-            val adjustedDate = selectedMonth.withDayOfMonth(dayOfMonth)
-            selectedDay.value = adjustedDate
-        }
-
-        // endregion
     }
+
+    // region Habits actions
+    fun addMockHabit() {
+        viewModelScope.launch {
+            habitsUseCase.addMockHabit()
+        }
+    }
+
+    fun deleteHabits() {
+        viewModelScope.launch {
+            habitsUseCase.deleteHabits()
+        }
+    }
+
+    fun onHabitItemDragged(
+        habitId: Int,
+        draggedDirection: DraggedDirection,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val valueToUpdate =
+                when (draggedDirection) {
+                    DraggedDirection.StartToEnd -> 1
+                    DraggedDirection.EndToStart -> -1
+                }
+            habitsUseCase.updateProgress(habitId, valueToUpdate)
+        }
+    }
+
+    // endregion
+
+    // region Date picker actions
+
+    fun onNextMonthClicked() {
+        selectedMonth.value = selectedMonth.value.plusMonths(1)
+    }
+
+    fun onPreviousMonthClicked() {
+        selectedMonth.value = selectedMonth.value.minusMonths(1)
+    }
+
+    fun onCurrentDateClicked() {
+        val currentDate = LocalDate.now()
+        selectedDay.value = currentDate
+        selectedMonth.value = currentDate
+    }
+
+    fun onDayClicked(dayOfMonth: Int) {
+        val selectedMonth = selectedMonth.value
+        val adjustedDate = selectedMonth.withDayOfMonth(dayOfMonth)
+        selectedDay.value = adjustedDate
+    }
+
+    // endregion
+}
 
 // region ViewState data model
 data class HabitsViewState(
@@ -146,6 +150,8 @@ data class HabitsViewState(
 data class HabitUi(
     val id: Int,
     val name: String,
+    val category: String,
+    val categoryColor: Color?,
     val timeToDoIndication: String,
     val daysToRepeat: String,
     val repetitionIndication: String,

@@ -237,7 +237,7 @@ fun HabitsTheme(
 //            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 //        }
 
-            darkTheme -> darkScheme
+//            darkTheme -> darkScheme
             else -> lightScheme
         }
     val view = LocalView.current

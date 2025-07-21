@@ -25,6 +25,7 @@ constructor(
 
     suspend fun createHabit(
         habitName: String,
+        categoryId: Int?,
         daysToRepeat: List<DaysOfWeek>,
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
@@ -41,6 +42,7 @@ constructor(
                 completedRepetitions = 0,
                 priorityLevel = priorityLevel,
                 reminderTimes = listOfNotNull(reminderTime),
+                categoryId = categoryId
             )
 
         habitsRepository.createHabit(habitEntity)

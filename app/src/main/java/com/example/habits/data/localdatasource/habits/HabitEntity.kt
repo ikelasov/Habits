@@ -1,13 +1,26 @@
 package com.example.habits.data.localdatasource.habits
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import java.time.DayOfWeek
 import java.time.LocalTime
 
-@Entity(tableName = "habits_table")
+@Entity(
+    tableName = "habits_table",
+    foreignKeys = [
+        ForeignKey(
+            entity = HabitCategoryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.SET_NULL
+        )
+    ]
+)
 data class HabitEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val categoryId: Int?,
     val name: String,
     val timeOfTheDay: TimeOfTheDay,
     val daysToRepeat: List<DaysOfWeek>,

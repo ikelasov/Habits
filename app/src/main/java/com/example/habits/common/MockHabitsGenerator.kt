@@ -33,6 +33,7 @@ fun generateMockHabit(): HabitEntity {
         completedRepetitions = completedRepetitions,
         priorityLevel = habitPriorityLevel,
         reminderTimes = reminderTimes,
+        categoryId = 0
     )
 }
 

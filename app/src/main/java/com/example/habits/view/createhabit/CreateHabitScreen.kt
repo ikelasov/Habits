@@ -29,16 +29,20 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
+import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.common.formatAsHHmm
+import com.example.habits.view.createhabit.screencomponents.CreateCategoryDialog
 import com.example.habits.view.createhabit.screencomponents.CreateHabitButton
 import com.example.habits.view.createhabit.screencomponents.CreateHabitTopBar
 import com.example.habits.view.createhabit.screencomponents.DayPicker
 import com.example.habits.view.createhabit.screencomponents.HabitExecutionTime
 import com.example.habits.view.createhabit.screencomponents.HabitNameInput
+import com.example.habits.view.createhabit.screencomponents.HabitsCategoriesComponent
 import com.example.habits.view.createhabit.screencomponents.PriorityPicker
 import com.example.habits.view.createhabit.screencomponents.RepetitionsPerDayComponent
 import com.example.habits.view.createhabit.screencomponents.TimePickerWithDialog
+import com.example.habits.view.createhabit.screencomponents.categories
 
 @Composable
 fun CreateHabitScreen(
@@ -51,6 +55,10 @@ fun CreateHabitScreen(
 
     if (viewState.habitCreated) {
         onHabitCreated()
+    }
+
+    if (viewState.shouldShowCreateCategoryDialog) {
+        CreateCategoryDialog(viewModel::createCategory, viewModel::onNewCategoryDialogDismissed)
     }
 
     val context = LocalContext.current
@@ -67,6 +75,10 @@ fun CreateHabitScreen(
 
     ScreenContent(
         habitName = viewState.habitName,
+        categories = viewState.allCategories,
+        selectedCategory = viewState.selectedCategory,
+        onCategorySelected = viewModel::onCategorySelected,
+        onNewCategoryClicked = viewModel::onCreateCategoryClicked,
         daysToRepeat = viewState.daysToRepeat,
         repetitionsPerDay = viewState.repetitionsPerDay,
         priorityLevel = viewState.priorityLevel,
@@ -88,6 +100,10 @@ fun CreateHabitScreen(
 @Composable
 private fun ScreenContent(
     habitName: String,
+    categories: List<HabitCategoryEntity>,
+    selectedCategory: HabitCategoryEntity?,
+    onCategorySelected: (HabitCategoryEntity) -> Unit,
+    onNewCategoryClicked: () -> Unit,
     daysToRepeat: List<DaysOfWeek>,
     repetitionsPerDay: Int,
     priorityLevel: HabitPriorityLevel,
@@ -126,6 +142,10 @@ private fun ScreenContent(
     ) { paddingValues ->
         Content(
             habitName = habitName,
+            categories = categories,
+            selectedCategory = selectedCategory,
+            onCategorySelected = onCategorySelected,
+            onNewCategoryClicked = onNewCategoryClicked,
             daysToRepeat = daysToRepeat,
             repetitionsPerDay = repetitionsPerDay,
             priorityLevel = priorityLevel,
@@ -146,6 +166,10 @@ private fun ScreenContent(
 @Composable
 private fun Content(
     habitName: String,
+    categories: List<HabitCategoryEntity>,
+    selectedCategory: HabitCategoryEntity?,
+    onCategorySelected: (HabitCategoryEntity) -> Unit,
+    onNewCategoryClicked: () -> Unit,
     daysToRepeat: List<DaysOfWeek>,
     repetitionsPerDay: Int,
     priorityLevel: HabitPriorityLevel,
@@ -181,10 +205,19 @@ private fun Content(
             HabitNameInput(
                 habitName = habitName,
                 onHabitNameValueChanged = onHabitNameChanged,
-                modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            HabitsCategoriesComponent(
+                categories,
+                selectedCategory,
+                onCategorySelected,
+                onNewCategoryClicked,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
             DayPicker(
@@ -234,6 +267,10 @@ fun CreateHabitScreenPreview() {
             val snackBarHostState = remember { SnackbarHostState() }
             ScreenContent(
                 onBackArrowClicked = {},
+                categories = categories,
+                selectedCategory = categories.first(),
+                onCategorySelected = {},
+                onNewCategoryClicked = {},
                 attemptCreateHabit = {},
                 onHabitNameChanged = { _ -> },
                 onDaysToRepeatChanged = { _, _ -> },
@@ -261,6 +298,10 @@ fun CreateHabitScreenWithTimePickerPreview() {
             val snackBarHostState = remember { SnackbarHostState() }
             ScreenContent(
                 onBackArrowClicked = {},
+                categories = categories,
+                selectedCategory = categories.first(),
+                onCategorySelected = {},
+                onNewCategoryClicked = {},
                 attemptCreateHabit = {},
                 onHabitNameChanged = { _ -> },
                 onDaysToRepeatChanged = { _, _ -> },
