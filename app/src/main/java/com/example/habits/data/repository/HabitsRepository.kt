@@ -4,6 +4,8 @@ import com.example.habits.data.localdatasource.habits.HabitDao
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.localdatasource.quotes.QuoteDao
+import com.example.habits.data.localdatasource.quotes.QuoteEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -11,7 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class HabitsRepository @Inject constructor(
     private val habitDao: HabitDao,
-    private val habitCategoryDao: HabitCategoryDao
+    private val habitCategoryDao: HabitCategoryDao,
+    private val quoteDao: QuoteDao
 ) {
     fun getHabitsFlow(): Flow<List<HabitEntity>> {
         return habitDao.getHabitsFlow()
@@ -19,6 +22,10 @@ class HabitsRepository @Inject constructor(
 
     fun getCategories(): Flow<List<HabitCategoryEntity>> {
         return habitCategoryDao.getCategoriesFlow()
+    }
+
+    suspend fun getRandomQuote(): QuoteEntity? {
+        return quoteDao.getRandomQuote()
     }
 
     suspend fun insertCategory(category: HabitCategoryEntity) {

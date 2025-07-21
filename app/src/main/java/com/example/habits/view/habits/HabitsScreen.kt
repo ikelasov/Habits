@@ -28,10 +28,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
+import com.example.habits.data.localdatasource.quotes.QuoteEntity
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.components.LoadingScreen
 import com.example.habits.view.habits.screencomponents.HabitItem
 import com.example.habits.view.habits.screencomponents.HorizontalCalendar
+import com.example.habits.view.habits.screencomponents.MotivationalQuoteComponent
 import com.example.habits.view.habits.screencomponents.StatisticsContent
 import com.example.habits.view.habits.screencomponents.StatisticsItem
 import com.example.habits.view.habits.screencomponents.TopBar
@@ -51,6 +53,7 @@ fun HabitsScreen(
         ScreenContent(
             habits = viewState.habits,
             statistics = viewState.statisticsDataUi,
+            quote = viewState.quote,
             calendarDataUi = viewState.calendarDataUi,
             onCreateHabitClicked = onCreateHabitClicked,
             onNextMonthClicked = habitsViewModel::onNextMonthClicked,
@@ -68,6 +71,7 @@ fun HabitsScreen(
 private fun ScreenContent(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
+    quote: QuoteEntity?,
     calendarDataUi: CalendarDataUi,
     onCreateHabitClicked: () -> Unit,
     onNextMonthClicked: () -> Unit,
@@ -92,6 +96,7 @@ private fun ScreenContent(
         Content(
             habits = habits,
             statistics = statistics,
+            quote = quote,
             calendarDataUi = calendarDataUi,
             onNextMonthClicked = onNextMonthClicked,
             onPreviousMonthClicked = onPreviousMonthClicked,
@@ -111,6 +116,7 @@ private fun ScreenContent(
 private fun Content(
     habits: List<HabitUi>,
     statistics: StatisticsDataUi,
+    quote: QuoteEntity?,
     calendarDataUi: CalendarDataUi,
     onNextMonthClicked: () -> Unit,
     onPreviousMonthClicked: () -> Unit,
@@ -127,6 +133,8 @@ private fun Content(
         modifier = modifier.background(colorResource(R.color.background)),
     ) {
         item { StatisticsContent(statistics) }
+        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
+        item { MotivationalQuoteComponent(quote) }
         item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
         stickyHeader {
             HorizontalCalendar(
@@ -244,6 +252,11 @@ fun ScreenPreview() {
     ScreenContent(
         habits = listOf(element = mockHabit),
         statistics = getMockStatisticsDate(),
+        quote = QuoteEntity(
+            0,
+            "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+            "Aristotle"
+        ),
         calendarDataUi =
             CalendarDataUi(
                 selectedMonth = "February 2024",
