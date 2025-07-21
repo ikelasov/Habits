@@ -38,7 +38,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
@@ -223,15 +223,16 @@ private fun HabitProgressIndicator(
     ) {
         CircularProgressIndicator(
             progress = { 1f },
-            color = Color(0xFFD5D8DC),
+            color = MaterialTheme.colorScheme.surfaceVariant,
         )
         CircularProgressIndicator(
             progress = { anim },
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 fun HabitItemPreview() {
     val mockHabit =
