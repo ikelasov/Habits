@@ -6,9 +6,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
+import com.example.habits.data.localdatasource.quotes.QuoteEntity
 import com.example.habits.data.repository.StatisticsRepository
 import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase
+import com.example.habits.domain.QuoteUseCase
 import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
 import com.example.habits.view.habits.utils.formatMonthYear
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -30,6 +33,7 @@ class HabitsViewModel
 constructor(
     private val habitsUseCase: HabitsUseCase,
     private val categoryUseCase: HabitCategoryUseCase,
+    private val quoteUseCase: QuoteUseCase,
     private val statisticsRepository: StatisticsRepository,
 ) : ViewModel() {
     private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
@@ -40,6 +44,7 @@ constructor(
         get() = _viewState
 
     init {
+        fetchRandomQuote()
         viewModelScope.launch {
             combine(
                 habitsUseCase.getHabitsFlow(),
@@ -70,6 +75,7 @@ constructor(
                     statisticsDataUi = statisticsUi,
                     calendarDataUi = calendarDataUi,
                     loading = false,
+                    quote = _viewState.value.quote
                 )
             }.catch { throwable ->
                 // TODO: Implement emitting UI error. For now just rethrow
@@ -132,11 +138,17 @@ constructor(
     }
 
     // endregion
+
+    private fun fetchRandomQuote() = viewModelScope.launch {
+        val randomQuote = quoteUseCase.getRandomQuote()
+        _viewState.update { it.copy(quote = randomQuote) }
+    }
 }
 
 // region ViewState data model
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
+    val quote: QuoteEntity? = null,
     val statisticsDataUi: StatisticsDataUi = StatisticsDataUi(),
     val calendarDataUi: CalendarDataUi = CalendarDataUi(),
     val loading: Boolean = false,
@@ -196,7 +208,7 @@ data class CalendarItemUi(
 
 // endregion
 
-// Enums
+// region Enums
 
 enum class DraggedDirection {
     StartToEnd,
