@@ -10,6 +10,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.habits.view.auth.LoginScreen
+import com.example.habits.view.auth.SignUpScreen
 import com.example.habits.view.createhabit.CreateHabitScreen
 import com.example.habits.view.habits.HabitsScreen
 
@@ -17,17 +19,45 @@ import com.example.habits.view.habits.HabitsScreen
 fun HabitsNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    startDestination: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = HabitsDestinations.HabitsScreen.route,
+        startDestination = startDestination,
         modifier = modifier,
     ) {
+        composableWithAnimation(HabitsDestinations.LoginScreen.route) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(HabitsDestinations.HabitsScreen.route) {
+                        popUpTo(HabitsDestinations.LoginScreen.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(HabitsDestinations.SignUpScreen.route)
+                }
+            )
+        }
+        composableWithAnimation(HabitsDestinations.SignUpScreen.route) {
+            SignUpScreen(
+                onSignUpSuccess = {
+                    navController.navigate(HabitsDestinations.HabitsScreen.route) {
+                        popUpTo(HabitsDestinations.SignUpScreen.route) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                }
+            )
+        }
         composableWithAnimation(HabitsDestinations.HabitsScreen.route) {
             HabitsScreen(
                 onCreateHabitClicked = {
                     navController.navigate(HabitsDestinations.CreateHabitScreen.route)
                 },
+                // TODO: Add a call to authViewModel.signOut() here, perhaps from a settings icon
             )
         }
         composableWithAnimation(HabitsDestinations.CreateHabitScreen.route) {
@@ -54,7 +84,7 @@ fun NavGraphBuilder.composableWithAnimation(
         route = route,
         enterTransition = {
             slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Up,
+                AnimatedContentTransitionScope.SlideDirection.Up, 
                 animationSpec = tween(500),
             )
         },

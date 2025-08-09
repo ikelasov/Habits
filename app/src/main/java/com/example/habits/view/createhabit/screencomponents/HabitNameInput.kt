@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habits.R
+import com.example.habits.ui.components.BorderlessRoundedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +34,7 @@ fun HabitNameInput(
         )
         Spacer(modifier = Modifier.height(8.dp))
         BorderlessRoundedTextField(
-            habitName,
+            value = habitName,
             hint = stringResource(R.string.take_proteins),
             onValueChanged = onHabitNameValueChanged,
             modifier = Modifier.fillMaxWidth(),
