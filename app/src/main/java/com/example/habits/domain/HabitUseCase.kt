@@ -30,11 +30,11 @@ class HabitUseCase @Inject constructor(
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
-        throwIfMissingFields(habitName, daysToRepeat)
+        throwIfMissingFields(habitName, daysToRepeat, categoryId)
 
         habitRepository.createHabit(
             habitName = habitName,
-            categoryId = categoryId,
+            categoryId = categoryId!!,
             daysToRepeat = daysToRepeat,
             repetitionsPerDay = repetitionsPerDay,
             priorityLevel = priorityLevel,
@@ -93,6 +93,7 @@ class HabitUseCase @Inject constructor(
     private fun throwIfMissingFields(
         habitName: String,
         daysToRepeat: List<DaysOfWeek>,
+        categoryId: String?,
     ) {
         val missingFields = mutableListOf<CreateHabitMissingFields>()
         if (habitName.isEmpty()) {
@@ -100,6 +101,9 @@ class HabitUseCase @Inject constructor(
         }
         if (daysToRepeat.isEmpty()) {
             missingFields.add(CreateHabitMissingFields.DAYS_TO_REPEAT)
+        }
+        if (categoryId == null) {
+            missingFields.add(CreateHabitMissingFields.HABIT_CATEGORY)
         }
 
         if (missingFields.isNotEmpty()) {

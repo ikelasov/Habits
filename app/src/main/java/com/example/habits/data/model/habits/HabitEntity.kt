@@ -13,19 +13,18 @@ import java.time.LocalTime
     foreignKeys = [
         ForeignKey(
             entity = HabitCategoryEntity::class,
-            parentColumns = ["id"], // Points to the String 'id' in HabitCategoryEntity
-            childColumns = ["categoryId"], // Matches the String 'categoryId' in this entity
-            onDelete = ForeignKey.SET_NULL // If a category is deleted, habits become uncategorized
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.CASCADE
         )
     ],
-    // Adding an index on the foreign key column is good practice for query performance
     indices = [Index(value = ["categoryId"])]
 )
 data class HabitEntity(
     @PrimaryKey
     val id: String,
     val userId: String,
-    val categoryId: String?,
+    val categoryId: String,
     val name: String,
     val timeOfTheDay: TimeOfTheDay,
     val daysToRepeat: List<DaysOfWeek>,

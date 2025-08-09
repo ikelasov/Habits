@@ -1,51 +1,42 @@
 package com.example.habits.data.habits.repository
 
+import com.example.habits.data.habits.localdatasource.HabitLocalDataSource
+import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitEntity
 import com.example.habits.data.model.habits.HabitPriorityLevel
-import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
-import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class HabitRepository @Inject constructor(
-    private val habitsLocalDataSource: HabitsLocalDataSource,
-    private val habitRemoteDataSource: HabitRemoteDataSource,
+    private val localDataSource: HabitLocalDataSource,
+    private val remoteDataSource: HabitRemoteDataSource,
     firebaseAuth: FirebaseAuth
 ) {
-
     private val userId by lazy { firebaseAuth.currentUser?.uid!! }
 
     fun getHabitsFlow(): Flow<List<HabitEntity>> =
-        habitsLocalDataSource.getHabitsFlowForUser(userId)
+        localDataSource.getHabitsFlowForUser(userId)
 
     suspend fun getHabitsWithoutRemindersSet(): List<HabitEntity> =
-        habitsLocalDataSource.getHabitsWithoutRemindersSet(userId)
+        localDataSource.getHabitsWithoutRemindersSet(userId)
 
     suspend fun getHabit(habitId: String): HabitEntity =
-        habitsLocalDataSource.getHabit(habitId, userId)
+        localDataSource.getHabit(habitId, userId)
 
     suspend fun createHabit(
         habitName: String,
-        categoryId: String?,
+        categoryId: String,
         daysToRepeat: List<DaysOfWeek>,
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
-        val habitId = habitRemoteDataSource.createHabitAndGetDocId(
-            userId,
-            habitName,
-            categoryId,
-            daysToRepeat,
-            repetitionsPerDay,
-            priorityLevel,
-            reminderTime
-        )
-        habitsLocalDataSource.createHabit(
-            habitId,
+        remoteDataSource.createHabitAndGetDocId(
             userId,
             habitName,
             categoryId,
@@ -56,13 +47,9 @@ class HabitRepository @Inject constructor(
         )
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
-        habitRemoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
-        habitsLocalDataSource.updateHabitProgress(habitId, updatedProgress)
-    }
+    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) =
+        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
 
-    // TODO handle reminders (or completely remove)
-    suspend fun updateHabit(updatedHabitEntity: HabitEntity) {
-        habitsLocalDataSource.updateHabit(updatedHabitEntity)
-    }
+    suspend fun updateHabitRemindersSet(habitId: String) =
+        remoteDataSource.updateHabitReminderSet(habitId, userId)
 }

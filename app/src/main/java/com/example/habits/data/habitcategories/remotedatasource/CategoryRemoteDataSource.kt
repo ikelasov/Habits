@@ -1,4 +1,4 @@
-package com.example.habits.data.habitscategory.remotedatasource
+package com.example.habits.data.habitcategories.remotedatasource
 
 import com.example.habits.data.model.habitcategory.FirestoreHabitCategory
 import com.google.firebase.firestore.CollectionReference

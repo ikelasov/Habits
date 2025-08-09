@@ -7,4 +7,5 @@ class CreateHabitMissingFieldsException(
 enum class CreateHabitMissingFields(val value: String) {
     HABIT_NAME("Habit name"),
     DAYS_TO_REPEAT("Days to repeat"),
+    HABIT_CATEGORY("Habit category"),
 }
