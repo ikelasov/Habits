@@ -20,6 +20,9 @@ fun generateMockHabit(): HabitEntity {
         )
 
     return HabitEntity(
+        id = "11",
+        userId = "userId",
+        createdAt = System.currentTimeMillis(),
         name = habitName,
         timeOfTheDay = timeOfTheDay,
         repetitionsPerDay = repetitionsPerDay,
@@ -33,7 +36,7 @@ fun generateMockHabit(): HabitEntity {
         completedRepetitions = completedRepetitions,
         priorityLevel = habitPriorityLevel,
         reminderTimes = reminderTimes,
-        categoryId = 0
+        categoryId = "1"
     )
 }
 

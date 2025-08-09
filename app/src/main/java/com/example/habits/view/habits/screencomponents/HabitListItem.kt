@@ -55,7 +55,7 @@ import kotlin.math.roundToInt
 @Composable
 fun HabitItem(
     habit: HabitUi,
-    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
+    onHabitItemDragged: (String, DraggedDirection) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var offsetX by remember { mutableStateOf(0f) }
@@ -269,7 +269,7 @@ private fun HabitProgressIndicator(
 fun HabitItemPreview() {
     val mockHabit =
         HabitUi(
-            id = 0,
+            id = "1",
             name = "Go to the gym",
             category = "Category",
             categoryColor = Color.Red,

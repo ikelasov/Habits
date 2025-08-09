@@ -132,10 +132,10 @@ fun AddCategoryChip(
 }
 
 val categories = listOf(
-    HabitCategoryEntity(1, "Fitness", Color.Red.toArgb()),
-    HabitCategoryEntity(2, "Work", Color.Yellow.toArgb()),
-    HabitCategoryEntity(3, "Reading", Color.Green.toArgb()),
-    HabitCategoryEntity(4, "Health", Color.Blue.toArgb())
+    HabitCategoryEntity("1", "Fitness", Color.Red.toArgb(), userId = "1", createdAt = 123456789),
+    HabitCategoryEntity("2", "Work", Color.Yellow.toArgb(), userId = "1", createdAt = 123456789),
+    HabitCategoryEntity("3", "Reading", Color.Green.toArgb(), userId = "1", createdAt = 123456789),
+    HabitCategoryEntity("4", "Health", Color.Blue.toArgb(), userId = "1", createdAt = 123456789)
 )
 
 @PreviewLightDark

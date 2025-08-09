@@ -4,11 +4,11 @@ import com.example.habits.common.generateMockHabit
 import com.example.habits.data.localdatasource.habits.DaysOfWeek
 import com.example.habits.data.localdatasource.habits.HabitEntity
 import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habits.TimeOfTheDay
 import com.example.habits.data.repository.HabitRemindersRepository
 import com.example.habits.data.repository.HabitsRepository
 import com.example.habits.exception.CreateHabitMissingFields
 import com.example.habits.exception.CreateHabitMissingFieldsException
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 import javax.inject.Inject
@@ -18,6 +18,7 @@ class HabitsUseCase
 constructor(
     private val habitsRepository: HabitsRepository,
     private val habitRemindersRepository: HabitRemindersRepository,
+    private val auth: FirebaseAuth,
 ) {
     fun getHabitsFlow(): Flow<List<HabitEntity>> {
         return habitsRepository.getHabitsFlow()
@@ -25,7 +26,7 @@ constructor(
 
     suspend fun createHabit(
         habitName: String,
-        categoryId: Int?,
+        categoryId: String?,
         daysToRepeat: List<DaysOfWeek>,
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
@@ -33,35 +34,56 @@ constructor(
     ) {
         throwIfMissingFields(habitName, daysToRepeat)
 
-        val habitEntity =
-            HabitEntity(
-                name = habitName,
-                timeOfTheDay = TimeOfTheDay.ALL_DAY,
-                repetitionsPerDay = repetitionsPerDay,
-                daysToRepeat = daysToRepeat,
-                completedRepetitions = 0,
-                priorityLevel = priorityLevel,
-                reminderTimes = listOfNotNull(reminderTime),
-                categoryId = categoryId
-            )
+        val userId = auth.currentUser?.uid
+            ?: throw IllegalStateException("User not logged in. Cannot create habit.")
 
-        habitsRepository.createHabit(habitEntity)
+        habitsRepository.createHabit(
+            userId = userId,
+            habitName = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTime = reminderTime
+        )
+
         habitRemindersRepository.createNonSetReminders()
     }
 
     suspend fun addMockHabit() {
-        val mockHabit = generateMockHabit()
-        habitsRepository.createHabit(mockHabit)
+        // TODO: Update to associate mock habit with the current user and save to Firestore
+        val userId = auth.currentUser?.uid
+            ?: throw IllegalStateException("User not logged in. Cannot add mock habit.")
+        val mockHabit = generateMockHabit().copy(userId = userId) // Assuming HabitEntity has userId
+        // This needs to call the repository method that handles Firestore + local DB
+        // For now, it will likely fail or only save locally if habitsRepository.createHabit is the new one
+        // habitsRepository.createHabit(mockHabit) // This old signature won't work with new repo
+
+        // Placeholder for new way of adding mock habit
+        // For now, let's assume we'll use the main createHabit logic if generateMockHabit() provides all necessary fields
+        val mockDetails =
+            generateMockHabit() // generateMockHabit would need to be adapted or we map its fields
+        habitsRepository.createHabit(
+            userId = userId,
+            habitName = mockDetails.name,
+            categoryId = mockDetails.categoryId,
+            daysToRepeat = mockDetails.daysToRepeat,
+            repetitionsPerDay = mockDetails.repetitionsPerDay,
+            priorityLevel = mockDetails.priorityLevel,
+            reminderTime = mockDetails.reminderTimes.firstOrNull() // Adjust if generateMockHabit structure is different
+        )
+
 
         habitRemindersRepository.createNonSetReminders()
     }
 
     suspend fun deleteHabits() {
+        // TODO: Update to delete habits for the current user from Firestore and local DB
         habitsRepository.deleteHabits()
     }
 
     suspend fun updateProgress(
-        habitId: Int,
+        habitId: String,
         progressUpdateValue: Int,
     ) {
         val habit = habitsRepository.getHabit(habitId)
@@ -72,8 +94,8 @@ constructor(
         if (updatedProgress > habit.repetitionsPerDay) {
             return
         }
-        val updatedEntity = habit.copy(completedRepetitions = updatedProgress)
-        habitsRepository.updateHabit(updatedEntity)
+
+        habitsRepository.updateHabitProgress(habitId, updatedProgress)
     }
 
     private fun throwIfMissingFields(

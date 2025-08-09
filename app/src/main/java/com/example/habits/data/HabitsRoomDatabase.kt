@@ -57,23 +57,8 @@ abstract class HabitsRoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    populateCategories(database.habitCategoryDao())
                     populateQuotes(database.quoteDao())
                 }
-            }
-        }
-
-        suspend fun populateCategories(habitCategoryDao: HabitCategoryDao) {
-            val defaultCategories = listOf(
-                HabitCategoryEntity(name = "Fitness", color = Color.Red.toArgb()),
-                HabitCategoryEntity(name = "Health", color = Color.Blue.toArgb()),
-                HabitCategoryEntity(name = "Work", color = Color.Yellow.toArgb()),
-                HabitCategoryEntity(name = "Hobbies", color = Color.Cyan.toArgb()),
-                HabitCategoryEntity(name = "Personal Growth", color = Color.Green.toArgb())
-            )
-
-            defaultCategories.forEach { category ->
-                habitCategoryDao.insertCategory(category)
             }
         }
 

@@ -3,6 +3,7 @@ package com.example.habits.view.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.model.User
+import com.example.habits.data.repository.CategoryRepository
 import com.example.habits.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -22,7 +23,8 @@ data class AuthUiState(
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -49,6 +51,17 @@ class AuthViewModel @Inject constructor(
                             isLoading = false,
                             error = createUserResult.exceptionOrNull()?.message
                                 ?: "Failed to save user details."
+                        )
+                        return@launch
+                    }
+
+                    val createCategoriesResult =
+                        categoryRepository.createDefaultCategoriesForUser(firebaseUser.uid)
+                    if (createCategoriesResult.isFailure) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = createCategoriesResult.exceptionOrNull()?.message
+                                ?: "Failed to set up default categories."
                         )
                         return@launch
                     }
