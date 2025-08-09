@@ -1,8 +1,6 @@
 package com.example.habits.data.habits.repository
 
-import android.util.Log // Keep for other methods if used, or remove if not.
-import com.example.habits.data.habitscategory.localdatasource.CategoryLocalDataSource
-import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
+import com.example.habits.data.habits.localdatasource.HabitLocalDataSource
 import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitEntity
@@ -20,20 +18,20 @@ import javax.inject.Singleton
 
 @Singleton
 class HabitRepository @Inject constructor(
-    private val habitsLocalDataSource: HabitsLocalDataSource,
-    private val habitRemoteDataSource: HabitRemoteDataSource,
+    private val localDataSource: HabitLocalDataSource,
+    private val remoteDataSource: HabitRemoteDataSource,
     firebaseAuth: FirebaseAuth
 ) {
     private val userId by lazy { firebaseAuth.currentUser?.uid!! }
 
     fun getHabitsFlow(): Flow<List<HabitEntity>> =
-        habitsLocalDataSource.getHabitsFlowForUser(userId)
+        localDataSource.getHabitsFlowForUser(userId)
 
     suspend fun getHabitsWithoutRemindersSet(): List<HabitEntity> =
-        habitsLocalDataSource.getHabitsWithoutRemindersSet(userId)
+        localDataSource.getHabitsWithoutRemindersSet(userId)
 
     suspend fun getHabit(habitId: String): HabitEntity =
-        habitsLocalDataSource.getHabit(habitId, userId)
+        localDataSource.getHabit(habitId, userId)
 
     suspend fun createHabit(
         habitName: String,
@@ -43,7 +41,7 @@ class HabitRepository @Inject constructor(
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
-        habitRemoteDataSource.createHabitAndGetDocId(
+        remoteDataSource.createHabitAndGetDocId(
             userId,
             habitName,
             categoryId,
@@ -55,8 +53,8 @@ class HabitRepository @Inject constructor(
     }
 
     suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
-        habitRemoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
-        habitsLocalDataSource.updateHabitProgress(habitId, updatedProgress)
+        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
+        localDataSource.updateHabitProgress(habitId, updatedProgress)
     }
 
     // TODO handle reminders (or completely remove)
@@ -64,6 +62,6 @@ class HabitRepository @Inject constructor(
         // This method only updates local. If remote update is needed, it's missing.
         // Or, if this is for local-only changes, its name could be more specific.
         // Syncer won't pick this up unless there's a corresponding remote update.
-        habitsLocalDataSource.updateHabit(updatedHabitEntity)
+        localDataSource.updateHabit(updatedHabitEntity)
     }
 }

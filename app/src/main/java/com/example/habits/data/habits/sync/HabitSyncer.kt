@@ -1,7 +1,7 @@
 package com.example.habits.data.habits.sync
 
 import android.util.Log
-import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
+import com.example.habits.data.habits.localdatasource.HabitLocalDataSource
 import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.example.habits.data.model.habits.toHabitEntity
 import com.google.firebase.firestore.ListenerRegistration
@@ -12,8 +12,8 @@ import javax.inject.Singleton
 
 @Singleton
 class HabitSyncer @Inject constructor(
-    private val habitsRemoteDataSource: HabitRemoteDataSource,
-    private val habitLocalDataSource: HabitsLocalDataSource,
+    private val remoteDataSource: HabitRemoteDataSource,
+    private val localDataSource: HabitLocalDataSource,
     private val externalScope: CoroutineScope
 ) {
 
@@ -28,13 +28,13 @@ class HabitSyncer @Inject constructor(
         stopListeningForHabitChanges()
         currentUserId = userId
 
-        habitListenerRegistration = habitsRemoteDataSource.listenToRemoteHabits(
+        habitListenerRegistration = remoteDataSource.listenToRemoteHabits(
             userId = userId,
             onDataChanged = { firestoreHabits ->
                 externalScope.launch {
                     try {
                         val habitEntities = firestoreHabits.map { it.toHabitEntity() }
-                        habitLocalDataSource.replaceAllHabitsForUser(userId, habitEntities)
+                        localDataSource.replaceAllHabitsForUser(userId, habitEntities)
                     } catch (e: Exception) {
                         Log.e(
                             "HabitSyncer",

@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HabitsLocalDataSource @Inject constructor(
+class HabitLocalDataSource @Inject constructor(
     private val habitDao: HabitDao
 ) {
 
