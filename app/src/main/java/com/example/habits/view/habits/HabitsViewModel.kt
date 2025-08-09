@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.localdatasource.quotes.QuoteEntity
+import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.example.habits.data.repository.StatisticsRepository
 import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase

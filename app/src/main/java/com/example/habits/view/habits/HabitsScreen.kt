@@ -23,14 +23,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
-import com.example.habits.data.localdatasource.quotes.QuoteEntity
+import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.components.LoadingScreen
 import com.example.habits.view.habits.screencomponents.HabitItem

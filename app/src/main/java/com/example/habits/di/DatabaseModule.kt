@@ -4,7 +4,7 @@ import android.content.Context
 import com.example.habits.data.HabitsRoomDatabase
 import com.example.habits.data.habits.localdatasource.HabitDao
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
-import com.example.habits.data.localdatasource.quotes.QuoteDao
+import com.example.habits.data.quotes.localdatasource.QuoteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

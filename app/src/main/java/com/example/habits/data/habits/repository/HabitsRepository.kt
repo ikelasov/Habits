@@ -5,8 +5,8 @@ import com.example.habits.data.habits.localdatasource.HabitEntity
 import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
 import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
 import com.example.habits.data.habits.remotedatasource.HabitsRemoteDataSource
-import com.example.habits.data.localdatasource.quotes.QuoteDao
-import com.example.habits.data.localdatasource.quotes.QuoteEntity
+import com.example.habits.data.quotes.localdatasource.QuoteDao
+import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
@@ -15,27 +15,19 @@ import javax.inject.Inject
 class HabitsRepository @Inject constructor(
     private val habitsLocalDataSource: HabitsLocalDataSource,
     private val habitsRemoteDataSource: HabitsRemoteDataSource,
-    private val quoteDao: QuoteDao,
     firebaseAuth: FirebaseAuth
 ) {
 
     private val userId by lazy { firebaseAuth.currentUser?.uid!! }
 
-    fun getHabitsFlow(): Flow<List<HabitEntity>> {
-        return habitsLocalDataSource.getHabitsFlowForUser(userId)
-    }
+    fun getHabitsFlow(): Flow<List<HabitEntity>> =
+        habitsLocalDataSource.getHabitsFlowForUser(userId)
 
-    suspend fun getRandomQuote(): QuoteEntity? {
-        return quoteDao.getRandomQuote()
-    }
+    suspend fun getHabitsWithoutRemindersSet(): List<HabitEntity> =
+        habitsLocalDataSource.getHabitsWithoutRemindersSet(userId)
 
-    suspend fun getHabitsWithoutRemindersSet(): List<HabitEntity> {
-        return habitsLocalDataSource.getHabitsWithoutRemindersSet(userId)
-    }
-
-    suspend fun getHabit(habitId: String): HabitEntity {
-        return habitsLocalDataSource.getHabit(habitId, userId)
-    }
+    suspend fun getHabit(habitId: String): HabitEntity =
+        habitsLocalDataSource.getHabit(habitId, userId)
 
     suspend fun createHabit(
         habitName: String,
