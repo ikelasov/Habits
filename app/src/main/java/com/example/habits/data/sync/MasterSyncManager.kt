@@ -3,6 +3,7 @@ package com.example.habits.data.sync
 import android.util.Log
 import com.example.habits.data.habitcategories.sync.CategorySyncer
 import com.example.habits.data.habits.sync.HabitSyncer
+import com.example.habits.data.quotes.QuoteSyncer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
@@ -14,6 +15,7 @@ import javax.inject.Singleton
 class MasterSyncManager @Inject constructor(
     private val categorySyncer: CategorySyncer,
     private val habitSyncer: HabitSyncer,
+    private val quoteSyncer: QuoteSyncer,
     private val externalScope: CoroutineScope
 ) {
 
@@ -30,6 +32,7 @@ class MasterSyncManager @Inject constructor(
 
         syncJob = externalScope.launch {
             try {
+                quoteSyncer.syncQuotesIfWeeklyIntervalPassed()
                 categorySyncer.startListening(userId)
                 categorySyncer.initialSyncComplete.first()
                 habitSyncer.startListeningForHabitChanges(userId)

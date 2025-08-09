@@ -10,7 +10,7 @@ import androidx.core.content.edit
 import com.example.habits.data.quotes.repository.QuoteRepository
 
 @Singleton
-class QuoteSyncManager @Inject constructor(
+class QuoteSyncer @Inject constructor(
     private val quoteRepository: QuoteRepository,
     private val sharedPreferences: SharedPreferences,
     private val applicationScope: CoroutineScope
