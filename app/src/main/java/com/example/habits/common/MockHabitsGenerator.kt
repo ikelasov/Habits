@@ -1,9 +1,9 @@
 package com.example.habits.common
 
-import com.example.habits.data.localdatasource.habits.DaysOfWeek
-import com.example.habits.data.localdatasource.habits.HabitEntity
-import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habits.TimeOfTheDay
+import com.example.habits.data.habits.localdatasource.DaysOfWeek
+import com.example.habits.data.habits.localdatasource.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
+import com.example.habits.data.habits.localdatasource.TimeOfTheDay
 import java.time.LocalTime
 import kotlin.random.Random
 

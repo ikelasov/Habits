@@ -1,10 +1,9 @@
 package com.example.habits.view.habits.mapper
 
 import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 import com.example.habits.R
-import com.example.habits.data.localdatasource.habits.HabitEntity
-import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
+import com.example.habits.data.habits.localdatasource.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.view.habits.HabitUi
 

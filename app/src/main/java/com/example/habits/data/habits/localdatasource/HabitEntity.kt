@@ -1,4 +1,4 @@
-package com.example.habits.data.localdatasource.habits
+package com.example.habits.data.habits.localdatasource
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -23,9 +23,9 @@ import java.time.LocalTime
 )
 data class HabitEntity(
     @PrimaryKey
-    val id: String, // The ID will come from Firestore
-    val userId: String, // To scope habits to a specific user
-    val categoryId: String?, // Now a String to match Firestore's ID and nullable for SET_NULL
+    val id: String,
+    val userId: String,
+    val categoryId: String?,
     val name: String,
     val timeOfTheDay: TimeOfTheDay,
     val daysToRepeat: List<DaysOfWeek>,
@@ -34,7 +34,7 @@ data class HabitEntity(
     val priorityLevel: HabitPriorityLevel,
     val hasSetReminder: Boolean = false,
     val reminderTimes: List<LocalTime>,
-    val createdAt: Long // Timestamp for creation date
+    val createdAt: Long
 )
 
 enum class DaysOfWeek(val value: String) {
@@ -64,7 +64,7 @@ enum class DaysOfWeek(val value: String) {
 
 enum class TimeOfTheDay(val value: String) {
     MORNING("Morning"),
-    NOUN("Noun"), // Note: This might be a typo for "NOON"
+    NOON("Noon"),
     EVENING("Evening"),
     ALL_DAY("All day"),
 }

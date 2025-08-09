@@ -5,7 +5,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.habits.data.localdatasource.habits.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitEntity
 import com.example.habits.worker.utils.INPUT_DATA_HABIT_ID
 import com.example.habits.worker.utils.WORK_MANAGER_REMINDER_TAG
 import com.example.habits.worker.utils.findNextRemindersOffsetFromNow

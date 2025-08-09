@@ -1,21 +1,19 @@
 package com.example.habits.data
 
 import android.content.Context
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.habits.data.localdatasource.habits.HabitDao
-import com.example.habits.data.localdatasource.habits.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitDao
+import com.example.habits.data.habits.localdatasource.HabitEntity
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.data.localdatasource.quotes.QuoteDao
 import com.example.habits.data.localdatasource.quotes.QuoteEntity
-import com.example.habits.data.localdatasource.typeconverters.DaysOfWeekTypeConverter
-import com.example.habits.data.localdatasource.typeconverters.ReminderTimeTypeConverter
+import com.example.habits.data.habits.localdatasource.typeconverters.DaysOfWeekTypeConverter
+import com.example.habits.data.habits.localdatasource.typeconverters.ReminderTimeTypeConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

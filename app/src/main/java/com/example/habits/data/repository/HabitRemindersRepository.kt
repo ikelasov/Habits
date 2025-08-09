@@ -1,6 +1,7 @@
 package com.example.habits.data.repository
 
-import com.example.habits.data.localdatasource.habits.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitEntity
+import com.example.habits.data.habits.repository.HabitsRepository
 import com.example.habits.worker.WorkerStarter
 import javax.inject.Inject
 

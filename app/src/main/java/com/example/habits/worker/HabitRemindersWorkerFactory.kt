@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitsRepository
 import javax.inject.Inject
 
 class HabitRemindersWorkerFactory

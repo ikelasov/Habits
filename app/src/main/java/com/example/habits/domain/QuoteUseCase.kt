@@ -1,7 +1,7 @@
 package com.example.habits.domain
 
 import com.example.habits.data.localdatasource.quotes.QuoteEntity
-import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitsRepository
 import javax.inject.Inject
 
 class QuoteUseCase @Inject constructor(

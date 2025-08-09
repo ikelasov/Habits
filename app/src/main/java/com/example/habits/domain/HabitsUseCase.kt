@@ -1,11 +1,11 @@
 package com.example.habits.domain
 
 import com.example.habits.common.generateMockHabit
-import com.example.habits.data.localdatasource.habits.DaysOfWeek
-import com.example.habits.data.localdatasource.habits.HabitEntity
-import com.example.habits.data.localdatasource.habits.HabitPriorityLevel
+import com.example.habits.data.habits.localdatasource.DaysOfWeek
+import com.example.habits.data.habits.localdatasource.HabitEntity
+import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
 import com.example.habits.data.repository.HabitRemindersRepository
-import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitsRepository
 import com.example.habits.exception.CreateHabitMissingFields
 import com.example.habits.exception.CreateHabitMissingFieldsException
 import com.google.firebase.auth.FirebaseAuth
@@ -34,11 +34,7 @@ constructor(
     ) {
         throwIfMissingFields(habitName, daysToRepeat)
 
-        val userId = auth.currentUser?.uid
-            ?: throw IllegalStateException("User not logged in. Cannot create habit.")
-
         habitsRepository.createHabit(
-            userId = userId,
             habitName = habitName,
             categoryId = categoryId,
             daysToRepeat = daysToRepeat,
@@ -64,7 +60,6 @@ constructor(
         val mockDetails =
             generateMockHabit() // generateMockHabit would need to be adapted or we map its fields
         habitsRepository.createHabit(
-            userId = userId,
             habitName = mockDetails.name,
             categoryId = mockDetails.categoryId,
             daysToRepeat = mockDetails.daysToRepeat,
@@ -79,7 +74,6 @@ constructor(
 
     suspend fun deleteHabits() {
         // TODO: Update to delete habits for the current user from Firestore and local DB
-        habitsRepository.deleteHabits()
     }
 
     suspend fun updateProgress(

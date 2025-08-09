@@ -2,7 +2,7 @@ package com.example.habits.di
 
 import android.content.Context
 import com.example.habits.data.HabitsRoomDatabase
-import com.example.habits.data.localdatasource.habits.HabitDao
+import com.example.habits.data.habits.localdatasource.HabitDao
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
 import com.example.habits.data.localdatasource.quotes.QuoteDao
 import dagger.Module

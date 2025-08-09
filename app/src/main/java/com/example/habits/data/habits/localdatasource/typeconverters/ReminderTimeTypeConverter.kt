@@ -1,4 +1,4 @@
-package com.example.habits.data.localdatasource.typeconverters
+package com.example.habits.data.habits.localdatasource.typeconverters
 
 import androidx.room.TypeConverter
 import java.time.LocalTime

@@ -16,7 +16,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.habits.MainActivity
 import com.example.habits.R
-import com.example.habits.data.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitsRepository
 import com.example.habits.worker.utils.HABIT_REMINDER_CHANNEL_ID
 import com.example.habits.worker.utils.HABIT_REMINDER_CHANNEL_NAME
 import com.example.habits.worker.utils.INPUT_DATA_HABIT_ID
