@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.core.content.edit
+import com.example.habits.data.quotes.repository.QuotesRepository
 
 @Singleton
 class QuoteSyncManager @Inject constructor(

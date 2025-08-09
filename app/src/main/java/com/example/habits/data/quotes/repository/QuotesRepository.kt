@@ -1,8 +1,8 @@
-package com.example.habits.data.quotes
+package com.example.habits.data.quotes.repository
 
+import com.example.habits.data.model.FireStoreQuote
 import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.example.habits.data.quotes.localdatasource.QuotesLocalDataSource
-import com.example.habits.data.model.FireStoreQuote
 import com.example.habits.data.quotes.remotedatasource.QuotesRemoteDataSource
 import javax.inject.Inject
 

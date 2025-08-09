@@ -32,7 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
 import com.example.habits.data.habits.localdatasource.DaysOfWeek
 import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.common.formatAsHHmm
 import com.example.habits.view.createhabit.screencomponents.CreateCategoryDialog

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.habits.R
 import com.example.habits.data.habits.localdatasource.DaysOfWeek
 import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
 import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase
 import com.example.habits.exception.CreateHabitMissingFieldsException

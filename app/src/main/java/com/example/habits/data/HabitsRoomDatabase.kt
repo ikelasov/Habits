@@ -5,18 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.habits.data.habits.localdatasource.HabitDao
 import com.example.habits.data.habits.localdatasource.HabitEntity
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryDao
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
 import com.example.habits.data.quotes.localdatasource.QuoteDao
 import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.example.habits.data.habits.localdatasource.typeconverters.DaysOfWeekTypeConverter
 import com.example.habits.data.habits.localdatasource.typeconverters.ReminderTimeTypeConverter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [HabitEntity::class, HabitCategoryEntity::class, QuoteEntity::class],

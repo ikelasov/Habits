@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
 import java.time.DayOfWeek
 import java.time.LocalTime
 

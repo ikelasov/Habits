@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
-import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
+import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
 import com.example.habits.ui.theme.HabitsTheme
 
 @OptIn(ExperimentalLayoutApi::class)
