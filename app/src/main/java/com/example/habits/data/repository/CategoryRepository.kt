@@ -1,6 +1,7 @@
 package com.example.habits.data.repository
 
 import android.util.Log
+import androidx.core.graphics.toColorInt
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryDao
 import com.example.habits.data.localdatasource.habitscategory.HabitCategoryEntity
 import com.example.habits.data.model.FirestoreCategory
@@ -54,7 +55,7 @@ class CategoryRepository @Inject constructor(
                 HabitCategoryEntity(
                     id = categoryId,
                     name = categoryName,
-                    color = colorHex,
+                    color = colorHex.toColorInt(),
                     isDefault = false,
                     userId = userId,
                     createdAt = System.currentTimeMillis()
@@ -99,7 +100,7 @@ class CategoryRepository @Inject constructor(
                     HabitCategoryEntity(
                         id = newId,
                         name = name,
-                        color = color,
+                        color = color.toColorInt(),
                         isDefault = true,
                         userId = userId,
                         createdAt = System.currentTimeMillis()

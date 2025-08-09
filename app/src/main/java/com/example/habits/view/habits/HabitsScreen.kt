@@ -82,7 +82,7 @@ private fun ScreenContent(
     onDayClicked: (Int) -> Unit,
     createHabit: () -> Unit,
     deleteHabits: () -> Unit,
-    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
+    onHabitItemDragged: (String, DraggedDirection) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -129,7 +129,7 @@ private fun Content(
     onDayClicked: (Int) -> Unit,
     onCreateHabitClicked: () -> Unit,
     onDeleteClicked: () -> Unit,
-    onHabitItemDragged: (Int, DraggedDirection) -> Unit,
+    onHabitItemDragged: (String, DraggedDirection) -> Unit,
     listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
@@ -208,7 +208,7 @@ fun TopBarPreview() {
 fun HabitItemPreview() {
     val mockHabit =
         HabitUi(
-            id = 0,
+            id = "1",
             name = "Go to the gym",
             category = "Some",
             categoryColor = Color.Yellow,
@@ -244,7 +244,7 @@ fun StatisticsContentPreview() {
 fun ScreenPreview() {
     val mockHabit =
         HabitUi(
-            id = 0,
+            id = "1",
             name = "Go to the gym",
             category = "Some other",
             categoryColor = Color.Cyan,

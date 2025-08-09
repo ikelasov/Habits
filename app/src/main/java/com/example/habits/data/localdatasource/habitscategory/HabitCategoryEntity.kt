@@ -8,8 +8,8 @@ data class HabitCategoryEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    val color: String,
-    val isDefault: Boolean,
+    val color: Int,
+    val isDefault: Boolean = false,
     val userId: String,
     val createdAt: Long
 )

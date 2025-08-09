@@ -48,6 +48,8 @@ class CreateHabitViewModel @Inject constructor(
                 _viewState.update { it.copy(habitCreated = true) }
             } catch (missingFieldsException: CreateHabitMissingFieldsException) {
                 _viewState.update { it.copy(errorMessage = R.string.create_habit_missing_fields_error) }
+            } catch (exception: Exception) {
+                _viewState.update { it.copy(errorMessage = R.string.error_creating_habit) }
             }
         }
     }

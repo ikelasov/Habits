@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Habits</string>
     <string name="create_habit_missing_fields_error">All fields must be filled</string>
+    <string name="error_creating_habit">Error creating habit</string>
     <string name="task_repeat">Task Repeat</string>
     <string name="habit_name">Habit name</string>
     <string name="create_habit">Create habit</string>

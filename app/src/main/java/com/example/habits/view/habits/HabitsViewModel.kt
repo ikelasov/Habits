@@ -100,7 +100,7 @@ constructor(
     }
 
     fun onHabitItemDragged(
-        habitId: Int,
+        habitId: String,
         draggedDirection: DraggedDirection,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -160,7 +160,7 @@ data class HabitsViewState(
 
 @Stable
 data class HabitUi(
-    val id: Int,
+    val id: String,
     val name: String,
     val category: String,
     val categoryColor: Color?,

@@ -19,7 +19,7 @@ class WorkerStarter @Inject constructor(context: Context) {
 
     fun startWork(habitToSetReminder: HabitEntity) {
         val inputData = Data.Builder()
-        inputData.putInt(INPUT_DATA_HABIT_ID, habitToSetReminder.id)
+        inputData.putString(INPUT_DATA_HABIT_ID, habitToSetReminder.id)
 
         val initialDelayInSeconds =
             findNextRemindersOffsetFromNow(
@@ -41,7 +41,7 @@ class WorkerStarter @Inject constructor(context: Context) {
     private fun buildWorkRequest(
         initialDelayInSeconds: Long,
         inputData: Data.Builder,
-        habitId: Int,
+        habitId: String,
     ): OneTimeWorkRequest =
         OneTimeWorkRequestBuilder<HabitRemindersWorker>()
             .setInitialDelay(Duration.ofSeconds(initialDelayInSeconds))
