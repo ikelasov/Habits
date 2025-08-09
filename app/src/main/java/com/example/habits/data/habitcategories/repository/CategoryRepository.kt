@@ -5,6 +5,7 @@ import androidx.core.graphics.toColorInt
 import com.example.habits.data.habitscategory.localdatasource.CategoryLocalDataSource
 import com.example.habits.data.habitscategory.remotedatasource.CategoriesRemoteDataSource
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
+import com.example.habits.data.model.habitcategory.toHabitCategoryEntity
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,6 @@ class CategoryRepository @Inject constructor(
 ) {
 
     private var categoryListenerRegistration: ListenerRegistration? = null
-
     private val _initialSyncComplete = MutableSharedFlow<Unit>(replay = 1)
     val initialSyncComplete = _initialSyncComplete.asSharedFlow()
 
@@ -40,15 +40,7 @@ class CategoryRepository @Inject constructor(
             onDataChanged = { firestoreCategories ->
                 externalScope.launch {
                     val habitCategoryEntities = firestoreCategories.map { firestoreCategory ->
-                        HabitCategoryEntity(
-                            id = firestoreCategory.id,
-                            name = firestoreCategory.name,
-                            color = firestoreCategory.color.toColorInt(),
-                            isDefault = firestoreCategory.isDefault,
-                            userId = firestoreCategory.userId,
-                            createdAt = firestoreCategory.createdAt?.time
-                                ?: System.currentTimeMillis()
-                        )
+                        firestoreCategory.toHabitCategoryEntity()
                     }
 
                     categoryLocalDataSource.replaceAllCategoriesForUser(
