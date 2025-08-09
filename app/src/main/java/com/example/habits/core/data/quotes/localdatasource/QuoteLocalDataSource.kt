@@ -1,0 +1,13 @@
+package com.example.habits.core.data.quotes.localdatasource
+
+import com.example.habits.core.model.quotes.QuoteEntity
+import javax.inject.Inject
+
+class QuoteLocalDataSource @Inject constructor(private val quoteDao: QuoteDao) {
+
+    suspend fun getAllQuotes(): List<QuoteEntity> = quoteDao.getAllQuotes()
+    suspend fun getRandomQuote(): QuoteEntity? = quoteDao.getRandomQuote()
+    suspend fun saveQuotes(quotes: List<QuoteEntity>) {
+        quoteDao.insertAll(quotes)
+    }
+}

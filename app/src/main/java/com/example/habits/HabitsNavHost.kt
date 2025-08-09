@@ -10,10 +10,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.habits.view.auth.LoginScreen
-import com.example.habits.view.auth.SignUpScreen
-import com.example.habits.view.createhabit.CreateHabitScreen
-import com.example.habits.view.habits.HabitsScreen
+import com.example.habits.feature_habits.createhabit.ui.CreateHabitScreen
+import com.example.habits.feature_login.LoginScreen
+import com.example.habits.feature_login.SignUpScreen
+import com.example.habits.feature_habits.habits.HabitsScreen
 
 @Composable
 fun HabitsNavHost(
@@ -84,7 +84,7 @@ fun NavGraphBuilder.composableWithAnimation(
         route = route,
         enterTransition = {
             slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Up, 
+                AnimatedContentTransitionScope.SlideDirection.Up,
                 animationSpec = tween(500),
             )
         },
