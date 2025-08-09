@@ -61,8 +61,6 @@ fun HabitsScreen(
             onPreviousMonthClicked = habitsViewModel::onPreviousMonthClicked,
             onCurrentDateClicked = habitsViewModel::onCurrentDateClicked,
             onDayClicked = habitsViewModel::onDayClicked,
-            createHabit = habitsViewModel::addMockHabit,
-            deleteHabits = habitsViewModel::deleteHabits,
             onHabitItemDragged = habitsViewModel::onHabitItemDragged,
         )
     }
@@ -79,8 +77,6 @@ private fun ScreenContent(
     onPreviousMonthClicked: () -> Unit,
     onCurrentDateClicked: () -> Unit,
     onDayClicked: (Int) -> Unit,
-    createHabit: () -> Unit,
-    deleteHabits: () -> Unit,
     onHabitItemDragged: (String, DraggedDirection) -> Unit,
 ) {
     Scaffold(
@@ -106,8 +102,6 @@ private fun ScreenContent(
             onPreviousMonthClicked = onPreviousMonthClicked,
             onCurrentDateClicked = onCurrentDateClicked,
             onDayClicked = onDayClicked,
-            onCreateHabitClicked = createHabit,
-            onDeleteClicked = deleteHabits,
             onHabitItemDragged = onHabitItemDragged,
             listState = listState,
             modifier = Modifier.padding(contentPadding),
@@ -126,8 +120,6 @@ private fun Content(
     onPreviousMonthClicked: () -> Unit,
     onCurrentDateClicked: () -> Unit,
     onDayClicked: (Int) -> Unit,
-    onCreateHabitClicked: () -> Unit,
-    onDeleteClicked: () -> Unit,
     onHabitItemDragged: (String, DraggedDirection) -> Unit,
     listState: LazyListState,
     modifier: Modifier = Modifier,
@@ -160,13 +152,6 @@ private fun Content(
                 habit = it,
                 onHabitItemDragged = onHabitItemDragged,
             )
-        }
-
-        item {
-            CreateHabitButton(onButtonClick = { onCreateHabitClicked() })
-        }
-        item {
-            DeleteHabitsButton(onButtonClicked = { onDeleteClicked() })
         }
     }
 }
@@ -271,8 +256,6 @@ fun ScreenPreview() {
         onPreviousMonthClicked = {},
         onCurrentDateClicked = {},
         onDayClicked = {},
-        createHabit = {},
-        deleteHabits = {},
         onHabitItemDragged = { _, _ -> },
     )
 }

@@ -87,17 +87,6 @@ constructor(
     }
 
     // region Habits actions
-    fun addMockHabit() {
-        viewModelScope.launch {
-            habitUseCase.addMockHabit()
-        }
-    }
-
-    fun deleteHabits() {
-        viewModelScope.launch {
-            habitUseCase.deleteHabits()
-        }
-    }
 
     fun onHabitItemDragged(
         habitId: String,
