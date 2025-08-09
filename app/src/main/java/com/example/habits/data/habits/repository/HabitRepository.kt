@@ -5,13 +5,8 @@ import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitEntity
 import com.example.habits.data.model.habits.HabitPriorityLevel
-// import com.example.habits.data.model.habits.toHabitEntity; // Already in HabitSyncer if needed there
 import com.google.firebase.auth.FirebaseAuth
-// import com.google.firebase.firestore.ListenerRegistration; // Moved to HabitSyncer
-// import kotlinx.coroutines.CoroutineScope; // Moved to HabitSyncer for listener logic
 import kotlinx.coroutines.flow.Flow
-// import kotlinx.coroutines.flow.first; // If not used by other methods
-// import kotlinx.coroutines.launch; // Moved to HabitSyncer for listener logic
 import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Singleton
