@@ -1,6 +1,6 @@
 package com.example.habits.data.quotes.remotedatasource
 
-import com.example.habits.data.model.FireStoreQuote
+import com.example.habits.data.model.quotes.FireStoreQuote
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject

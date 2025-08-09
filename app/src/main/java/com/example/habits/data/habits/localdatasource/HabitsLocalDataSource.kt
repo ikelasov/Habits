@@ -1,5 +1,9 @@
 package com.example.habits.data.habits.localdatasource
 
+import com.example.habits.data.model.habits.DaysOfWeek
+import com.example.habits.data.model.habits.HabitEntity
+import com.example.habits.data.model.habits.HabitPriorityLevel
+import com.example.habits.data.model.habits.TimeOfTheDay
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 import javax.inject.Inject

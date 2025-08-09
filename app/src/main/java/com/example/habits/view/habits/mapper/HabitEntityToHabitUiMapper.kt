@@ -2,9 +2,9 @@ package com.example.habits.view.habits.mapper
 
 import androidx.compose.ui.graphics.Color
 import com.example.habits.R
-import com.example.habits.data.habits.localdatasource.HabitEntity
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
+import com.example.habits.data.model.habits.HabitEntity
+import com.example.habits.data.model.habits.HabitPriorityLevel
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.view.habits.HabitUi
 
 fun List<HabitEntity>.mapHabitEntityListToHabitUIList(categories: List<HabitCategoryEntity>): List<HabitUi> {

@@ -18,7 +18,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
+import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.ui.theme.HabitsTheme
 
 @Composable

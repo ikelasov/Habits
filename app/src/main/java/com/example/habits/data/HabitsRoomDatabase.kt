@@ -6,11 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.habits.data.habits.localdatasource.HabitDao
-import com.example.habits.data.habits.localdatasource.HabitEntity
+import com.example.habits.data.model.habits.HabitEntity
 import com.example.habits.data.habitscategory.localdatasource.HabitCategoryDao
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.data.quotes.localdatasource.QuoteDao
-import com.example.habits.data.quotes.localdatasource.QuoteEntity
+import com.example.habits.data.model.quotes.QuoteEntity
 import com.example.habits.data.habits.localdatasource.typeconverters.DaysOfWeekTypeConverter
 import com.example.habits.data.habits.localdatasource.typeconverters.ReminderTimeTypeConverter
 

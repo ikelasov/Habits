@@ -1,4 +1,4 @@
-package com.example.habits.data.habitscategory.localdatasource
+package com.example.habits.data.model.habitcategory
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

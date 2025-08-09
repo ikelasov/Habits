@@ -1,6 +1,6 @@
 package com.example.habits.domain
 
-import com.example.habits.data.quotes.localdatasource.QuoteEntity
+import com.example.habits.data.model.quotes.QuoteEntity
 import com.example.habits.data.habits.repository.HabitsRepository
 import com.example.habits.data.quotes.repository.QuotesRepository
 import javax.inject.Inject

@@ -1,10 +1,10 @@
-package com.example.habits.data.habits.localdatasource
+package com.example.habits.data.model.habits
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import java.time.DayOfWeek
 import java.time.LocalTime
 

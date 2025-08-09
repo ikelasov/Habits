@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
-import com.example.habits.data.quotes.localdatasource.QuoteEntity
+import com.example.habits.data.model.quotes.QuoteEntity
 import com.example.habits.ui.theme.HabitsTheme
 import com.example.habits.view.components.LoadingScreen
 import com.example.habits.view.habits.screencomponents.HabitItem

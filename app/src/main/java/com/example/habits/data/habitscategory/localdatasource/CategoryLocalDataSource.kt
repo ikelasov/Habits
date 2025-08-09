@@ -1,5 +1,6 @@
 package com.example.habits.data.habitscategory.localdatasource
 
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

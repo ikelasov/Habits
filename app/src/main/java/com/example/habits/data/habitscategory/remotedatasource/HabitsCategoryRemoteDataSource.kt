@@ -1,6 +1,6 @@
 package com.example.habits.data.habitscategory.remotedatasource
 
-import com.example.habits.data.model.FirestoreCategory
+import com.example.habits.data.model.habitcategory.FirestoreHabitCategory
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,7 +28,7 @@ class HabitsCategoryRemoteDataSource @Inject constructor(
         categoryName: String,
         colorHex: String
     ) {
-        val firestoreCategory = FirestoreCategory(
+        val firestoreHabitCategory = FirestoreHabitCategory(
             id = documentReference.id,
             name = categoryName,
             color = colorHex,
@@ -36,21 +36,21 @@ class HabitsCategoryRemoteDataSource @Inject constructor(
             userId = userId
         )
 
-        documentReference.set(firestoreCategory).await()
+        documentReference.set(firestoreHabitCategory).await()
     }
 
-    suspend fun createDefaultCategoriesForUser(userId: String): List<FirestoreCategory> {
+    suspend fun createDefaultCategoriesForUser(userId: String): List<FirestoreHabitCategory> {
         val userCategoriesCollection =
             getCategoriesCollectionReference(userId)
         val categoriesCreated =
-            mutableListOf<FirestoreCategory>()
+            mutableListOf<FirestoreHabitCategory>()
         val batch = firestore.batch()
 
         defaultCategorySpecs.forEach { (name, color) ->
             val newCategoryRef = userCategoriesCollection.document()
             val newId = newCategoryRef.id
 
-            val firestoreCategory = FirestoreCategory(
+            val firestoreHabitCategory = FirestoreHabitCategory(
                 id = newId,
                 name = name,
                 color = color,
@@ -58,8 +58,8 @@ class HabitsCategoryRemoteDataSource @Inject constructor(
                 userId = userId
             )
 
-            batch.set(newCategoryRef, firestoreCategory)
-            categoriesCreated.add(firestoreCategory)
+            batch.set(newCategoryRef, firestoreHabitCategory)
+            categoriesCreated.add(firestoreHabitCategory)
         }
 
         batch.commit().await()

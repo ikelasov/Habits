@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habits.R
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
+import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.ui.theme.HabitsTheme
 
 @Composable

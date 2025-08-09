@@ -1,6 +1,6 @@
 package com.example.habits.worker.utils
 
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
+import com.example.habits.data.model.habits.DaysOfWeek
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit

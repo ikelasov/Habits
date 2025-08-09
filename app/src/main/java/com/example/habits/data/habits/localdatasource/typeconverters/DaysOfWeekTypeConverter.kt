@@ -1,7 +1,7 @@
 package com.example.habits.data.habits.localdatasource.typeconverters
 
 import androidx.room.TypeConverter
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
+import com.example.habits.data.model.habits.DaysOfWeek
 
 class DaysOfWeekTypeConverter {
     @TypeConverter

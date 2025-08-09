@@ -1,9 +1,9 @@
 package com.example.habits.domain
 
 import com.example.habits.common.generateMockHabit
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.habits.localdatasource.HabitEntity
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
+import com.example.habits.data.model.habits.DaysOfWeek
+import com.example.habits.data.model.habits.HabitEntity
+import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.data.repository.HabitRemindersRepository
 import com.example.habits.data.habits.repository.HabitsRepository
 import com.example.habits.exception.CreateHabitMissingFields

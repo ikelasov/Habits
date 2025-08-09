@@ -1,9 +1,5 @@
-package com.example.habits.data.model
+package com.example.habits.data.model.habits
 
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.habits.localdatasource.HabitEntity
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.habits.localdatasource.TimeOfTheDay
 import com.google.firebase.firestore.ServerTimestamp
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

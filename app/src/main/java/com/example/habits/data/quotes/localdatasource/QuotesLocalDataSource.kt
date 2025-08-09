@@ -1,5 +1,6 @@
 package com.example.habits.data.quotes.localdatasource
 
+import com.example.habits.data.model.quotes.QuoteEntity
 import javax.inject.Inject
 
 class QuotesLocalDataSource @Inject constructor(private val quoteDao: QuoteDao) {

@@ -3,7 +3,7 @@ package com.example.habits.data.habitscategory.repository
 import android.util.Log
 import androidx.core.graphics.toColorInt
 import com.example.habits.data.habitscategory.localdatasource.CategoryLocalDataSource
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.data.habitscategory.remotedatasource.HabitsCategoryRemoteDataSource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

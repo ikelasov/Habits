@@ -1,12 +1,10 @@
 package com.example.habits.data.habits.repository
 
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.habits.localdatasource.HabitEntity
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
+import com.example.habits.data.model.habits.DaysOfWeek
+import com.example.habits.data.model.habits.HabitEntity
+import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
 import com.example.habits.data.habits.remotedatasource.HabitsRemoteDataSource
-import com.example.habits.data.quotes.localdatasource.QuoteDao
-import com.example.habits.data.quotes.localdatasource.QuoteEntity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime

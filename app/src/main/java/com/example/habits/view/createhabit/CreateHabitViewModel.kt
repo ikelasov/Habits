@@ -4,9 +4,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.R
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryEntity
+import com.example.habits.data.model.habits.DaysOfWeek
+import com.example.habits.data.model.habits.HabitPriorityLevel
+import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.domain.HabitCategoryUseCase
 import com.example.habits.domain.HabitsUseCase
 import com.example.habits.exception.CreateHabitMissingFieldsException

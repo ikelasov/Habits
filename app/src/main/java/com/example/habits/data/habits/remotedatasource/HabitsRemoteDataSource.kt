@@ -1,9 +1,9 @@
 package com.example.habits.data.habits.remotedatasource
 
-import com.example.habits.data.habits.localdatasource.DaysOfWeek
-import com.example.habits.data.habits.localdatasource.HabitPriorityLevel
-import com.example.habits.data.habits.localdatasource.TimeOfTheDay
-import com.example.habits.data.model.FirestoreHabit
+import com.example.habits.data.model.habits.DaysOfWeek
+import com.example.habits.data.model.habits.HabitPriorityLevel
+import com.example.habits.data.model.habits.TimeOfTheDay
+import com.example.habits.data.model.habits.FirestoreHabit
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.time.LocalTime
