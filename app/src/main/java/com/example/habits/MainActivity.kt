@@ -13,8 +13,8 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import com.example.habits.data.quotes.QuoteSyncManager
 import com.example.habits.data.sync.MasterSyncManager
-import com.example.habits.view.auth.AuthViewModel
 import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.view.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,8 +59,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // It's good practice to ensure sync is stopped here,
-        // though LaunchedEffect should also handle it if currentUser becomes null.
         masterSyncManager.stopSync()
     }
 }
