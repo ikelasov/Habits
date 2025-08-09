@@ -109,6 +109,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx") // Added Firestore KTX
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3") // Added version
 
     // endregion
