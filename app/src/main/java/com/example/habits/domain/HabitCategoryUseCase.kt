@@ -2,8 +2,8 @@ package com.example.habits.domain
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.example.habits.data.habitcategories.repository.CategoryRepository
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
-import com.example.habits.data.habitscategory.repository.CategoryRepository
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

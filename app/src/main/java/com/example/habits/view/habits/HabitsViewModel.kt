@@ -9,7 +9,7 @@ import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.quotes.QuoteEntity
 import com.example.habits.data.repository.StatisticsRepository
 import com.example.habits.domain.HabitCategoryUseCase
-import com.example.habits.domain.HabitsUseCase
+import com.example.habits.domain.HabitUseCase
 import com.example.habits.domain.QuoteUseCase
 import com.example.habits.view.habits.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.view.habits.mapper.mapToStatisticsDataUi
@@ -31,7 +31,7 @@ import javax.inject.Inject
 class HabitsViewModel
 @Inject
 constructor(
-    private val habitsUseCase: HabitsUseCase,
+    private val habitUseCase: HabitUseCase,
     private val categoryUseCase: HabitCategoryUseCase,
     private val quoteUseCase: QuoteUseCase,
     private val statisticsRepository: StatisticsRepository,
@@ -47,7 +47,7 @@ constructor(
         fetchRandomQuote()
         viewModelScope.launch {
             combine(
-                habitsUseCase.getHabitsFlow(),
+                habitUseCase.getHabitsFlow(),
                 categoryUseCase.getCategoriesFlow(),
                 statisticsRepository.getStatistics(),
                 selectedMonth,
@@ -89,13 +89,13 @@ constructor(
     // region Habits actions
     fun addMockHabit() {
         viewModelScope.launch {
-            habitsUseCase.addMockHabit()
+            habitUseCase.addMockHabit()
         }
     }
 
     fun deleteHabits() {
         viewModelScope.launch {
-            habitsUseCase.deleteHabits()
+            habitUseCase.deleteHabits()
         }
     }
 
@@ -109,7 +109,7 @@ constructor(
                     DraggedDirection.StartToEnd -> 1
                     DraggedDirection.EndToStart -> -1
                 }
-            habitsUseCase.updateProgress(habitId, valueToUpdate)
+            habitUseCase.updateProgress(habitId, valueToUpdate)
         }
     }
 

@@ -1,12 +1,11 @@
 package com.example.habits.domain
 
 import com.example.habits.data.model.quotes.QuoteEntity
-import com.example.habits.data.habits.repository.HabitsRepository
-import com.example.habits.data.quotes.repository.QuotesRepository
+import com.example.habits.data.quotes.repository.QuoteRepository
 import javax.inject.Inject
 
 class QuoteUseCase @Inject constructor(
-    private val quotesRepository: QuotesRepository
+    private val quoteRepository: QuoteRepository
 ) {
-    suspend fun getRandomQuote(): QuoteEntity? = quotesRepository.getRandomQuote()
+    suspend fun getRandomQuote(): QuoteEntity? = quoteRepository.getRandomQuote()
 }

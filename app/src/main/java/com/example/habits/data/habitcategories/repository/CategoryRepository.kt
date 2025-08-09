@@ -1,9 +1,9 @@
-package com.example.habits.data.habitscategory.repository
+package com.example.habits.data.habitcategories.repository
 
 import android.util.Log
 import androidx.core.graphics.toColorInt
 import com.example.habits.data.habitscategory.localdatasource.CategoryLocalDataSource
-import com.example.habits.data.habitscategory.remotedatasource.HabitsCategoryRemoteDataSource
+import com.example.habits.data.habitscategory.remotedatasource.CategoriesRemoteDataSource
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CategoryRepository @Inject constructor(
-    private val habitsCategoryRemoteDataSource: HabitsCategoryRemoteDataSource,
+    private val categoriesRemoteDataSource: CategoriesRemoteDataSource,
     private val categoryLocalDataSource: CategoryLocalDataSource,
     private val externalScope: CoroutineScope
 ) {
@@ -27,7 +27,7 @@ class CategoryRepository @Inject constructor(
     fun startListeningForCategoryChanges(userId: String) {
         stopListeningForCategoryChanges()
 
-        categoryListenerRegistration = habitsCategoryRemoteDataSource.listenToRemoteCategories(
+        categoryListenerRegistration = categoriesRemoteDataSource.listenToRemoteCategories(
             userId = userId,
             onDataChanged = { firestoreCategories ->
                 externalScope.launch {
@@ -69,9 +69,9 @@ class CategoryRepository @Inject constructor(
         colorHex: String
     ): Result<Unit> {
         return try {
-            val newCategoryRef = habitsCategoryRemoteDataSource.getNewCategoryReferenceId(userId)
+            val newCategoryRef = categoriesRemoteDataSource.getNewCategoryReferenceId(userId)
             // Firestore write only; listener will handle local update
-            habitsCategoryRemoteDataSource.createCategory(
+            categoriesRemoteDataSource.createCategory(
                 userId,
                 newCategoryRef,
                 categoryName,
@@ -87,7 +87,7 @@ class CategoryRepository @Inject constructor(
     suspend fun createDefaultCategoriesForUser(userId: String): Result<Unit> {
         return try {
             // Firestore write only; listener will handle local update
-            habitsCategoryRemoteDataSource.createDefaultCategoriesForUser(userId)
+            categoriesRemoteDataSource.createDefaultCategoriesForUser(userId)
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e("CategoryRepository", "Error creating default categories for user $userId", e)

@@ -4,15 +4,15 @@ import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitEntity
 import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.data.habits.localdatasource.HabitsLocalDataSource
-import com.example.habits.data.habits.remotedatasource.HabitsRemoteDataSource
+import com.example.habits.data.habits.remotedatasource.HabitRemoteDataSource
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 import javax.inject.Inject
 
-class HabitsRepository @Inject constructor(
+class HabitRepository @Inject constructor(
     private val habitsLocalDataSource: HabitsLocalDataSource,
-    private val habitsRemoteDataSource: HabitsRemoteDataSource,
+    private val habitRemoteDataSource: HabitRemoteDataSource,
     firebaseAuth: FirebaseAuth
 ) {
 
@@ -35,7 +35,7 @@ class HabitsRepository @Inject constructor(
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
-        val habitId = habitsRemoteDataSource.createHabitAndGetDocId(
+        val habitId = habitRemoteDataSource.createHabitAndGetDocId(
             userId,
             habitName,
             categoryId,
@@ -57,7 +57,7 @@ class HabitsRepository @Inject constructor(
     }
 
     suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
-        habitsRemoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
+        habitRemoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
         habitsLocalDataSource.updateHabitProgress(habitId, updatedProgress)
     }
 

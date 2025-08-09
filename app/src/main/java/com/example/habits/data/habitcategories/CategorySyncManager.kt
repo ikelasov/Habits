@@ -1,11 +1,11 @@
-package com.example.habits.data.habitscategory
+package com.example.habits.data.habitcategories
 
-import com.example.habits.data.habitscategory.repository.CategoryRepository
+import com.example.habits.data.habitcategories.repository.CategoryRepository
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
 
 @ActivityScoped
-class CategoriesSyncManager @Inject constructor(
+class CategorySyncManager @Inject constructor(
     private val categoryRepository: CategoryRepository
 ) {
 

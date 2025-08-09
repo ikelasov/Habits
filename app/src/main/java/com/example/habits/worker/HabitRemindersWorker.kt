@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
@@ -16,7 +15,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.example.habits.MainActivity
 import com.example.habits.R
-import com.example.habits.data.habits.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitRepository
 import com.example.habits.worker.utils.HABIT_REMINDER_CHANNEL_ID
 import com.example.habits.worker.utils.HABIT_REMINDER_CHANNEL_NAME
 import com.example.habits.worker.utils.INPUT_DATA_HABIT_ID
@@ -33,14 +32,14 @@ class HabitRemindersWorker
 constructor(
     @Assisted private val appContext: Context,
     @Assisted private val params: WorkerParameters,
-    private val habitsRepository: HabitsRepository,
+    private val habitRepository: HabitRepository,
 ) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             val habitId = inputData.getString(INPUT_DATA_HABIT_ID)
             if (habitId == null) return@withContext Result.failure()
 
-            val habit = habitsRepository.getHabit(habitId)
+            val habit = habitRepository.getHabit(habitId)
 
             makeReminderNotification(habit.name, appContext)
 

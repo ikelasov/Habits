@@ -11,7 +11,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HabitsRemoteDataSource @Inject constructor(
+class HabitRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 

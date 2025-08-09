@@ -5,22 +5,22 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CategoryLocalDataSource @Inject constructor(
-    private val habitCategoryDao: HabitCategoryDao
+    private val categoryDao: CategoryDao
 ) {
 
     fun getCategoriesForUserFlow(userId: String): Flow<List<HabitCategoryEntity>> {
-        return habitCategoryDao.getCategoriesForUserFlow(userId)
+        return categoryDao.getCategoriesForUserFlow(userId)
     }
 
     suspend fun insert(habitCategoryEntity: HabitCategoryEntity) {
-        habitCategoryDao.insert(habitCategoryEntity)
+        categoryDao.insert(habitCategoryEntity)
     }
 
     suspend fun insertAll(categories: List<HabitCategoryEntity>) {
-        habitCategoryDao.insertAll(categories)
+        categoryDao.insertAll(categories)
     }
 
     suspend fun replaceAllCategoriesForUser(userId: String, categories: List<HabitCategoryEntity>) {
-        habitCategoryDao.replaceAllForUser(userId, categories)
+        categoryDao.replaceAllForUser(userId, categories)
     }
 }

@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class HabitsCategoryRemoteDataSource @Inject constructor(
+class CategoriesRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 

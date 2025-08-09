@@ -8,7 +8,7 @@ import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.domain.HabitCategoryUseCase
-import com.example.habits.domain.HabitsUseCase
+import com.example.habits.domain.HabitUseCase
 import com.example.habits.exception.CreateHabitMissingFieldsException
 import com.example.habits.view.common.toLocalTime
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreateHabitViewModel @Inject constructor(
-    private val habitsUseCase: HabitsUseCase,
+    private val habitUseCase: HabitUseCase,
     private val habitCategoryUseCase: HabitCategoryUseCase
 ) : ViewModel() {
     private val _viewState = MutableStateFlow(ViewState())
@@ -36,7 +36,7 @@ class CreateHabitViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 with(_viewState.value) {
-                    habitsUseCase.createHabit(
+                    habitUseCase.createHabit(
                         habitName,
                         selectedCategory?.id,
                         daysToRepeat,

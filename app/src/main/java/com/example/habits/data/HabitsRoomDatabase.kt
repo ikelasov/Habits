@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.habits.data.habits.localdatasource.HabitDao
 import com.example.habits.data.model.habits.HabitEntity
-import com.example.habits.data.habitscategory.localdatasource.HabitCategoryDao
+import com.example.habits.data.habitscategory.localdatasource.CategoryDao
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.example.habits.data.quotes.localdatasource.QuoteDao
 import com.example.habits.data.model.quotes.QuoteEntity
@@ -22,7 +22,7 @@ import com.example.habits.data.habits.localdatasource.typeconverters.ReminderTim
 @TypeConverters(DaysOfWeekTypeConverter::class, ReminderTimeTypeConverter::class)
 abstract class HabitsRoomDatabase : RoomDatabase() {
     abstract fun habitDao(): HabitDao
-    abstract fun habitCategoryDao(): HabitCategoryDao
+    abstract fun habitCategoryDao(): CategoryDao
     abstract fun quoteDao(): QuoteDao
 
     companion object {

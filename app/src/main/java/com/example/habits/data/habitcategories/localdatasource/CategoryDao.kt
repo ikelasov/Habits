@@ -11,7 +11,7 @@ import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface HabitCategoryDao {
+interface CategoryDao {
 
     @Transaction
     suspend fun replaceAllForUser(userId: String, categories: List<HabitCategoryEntity>) {

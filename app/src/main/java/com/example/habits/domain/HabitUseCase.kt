@@ -5,7 +5,7 @@ import com.example.habits.data.model.habits.DaysOfWeek
 import com.example.habits.data.model.habits.HabitEntity
 import com.example.habits.data.model.habits.HabitPriorityLevel
 import com.example.habits.data.repository.HabitRemindersRepository
-import com.example.habits.data.habits.repository.HabitsRepository
+import com.example.habits.data.habits.repository.HabitRepository
 import com.example.habits.exception.CreateHabitMissingFields
 import com.example.habits.exception.CreateHabitMissingFieldsException
 import com.google.firebase.auth.FirebaseAuth
@@ -13,15 +13,13 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalTime
 import javax.inject.Inject
 
-class HabitsUseCase
-@Inject
-constructor(
-    private val habitsRepository: HabitsRepository,
+class HabitUseCase @Inject constructor(
+    private val habitRepository: HabitRepository,
     private val habitRemindersRepository: HabitRemindersRepository,
     private val auth: FirebaseAuth,
 ) {
     fun getHabitsFlow(): Flow<List<HabitEntity>> {
-        return habitsRepository.getHabitsFlow()
+        return habitRepository.getHabitsFlow()
     }
 
     suspend fun createHabit(
@@ -34,7 +32,7 @@ constructor(
     ) {
         throwIfMissingFields(habitName, daysToRepeat)
 
-        habitsRepository.createHabit(
+        habitRepository.createHabit(
             habitName = habitName,
             categoryId = categoryId,
             daysToRepeat = daysToRepeat,
@@ -59,7 +57,7 @@ constructor(
         // For now, let's assume we'll use the main createHabit logic if generateMockHabit() provides all necessary fields
         val mockDetails =
             generateMockHabit() // generateMockHabit would need to be adapted or we map its fields
-        habitsRepository.createHabit(
+        habitRepository.createHabit(
             habitName = mockDetails.name,
             categoryId = mockDetails.categoryId,
             daysToRepeat = mockDetails.daysToRepeat,
@@ -80,7 +78,7 @@ constructor(
         habitId: String,
         progressUpdateValue: Int,
     ) {
-        val habit = habitsRepository.getHabit(habitId)
+        val habit = habitRepository.getHabit(habitId)
         if (habit.completedRepetitions == 0 && progressUpdateValue < 0) {
             return
         }
@@ -89,7 +87,7 @@ constructor(
             return
         }
 
-        habitsRepository.updateHabitProgress(habitId, updatedProgress)
+        habitRepository.updateHabitProgress(habitId, updatedProgress)
     }
 
     private fun throwIfMissingFields(

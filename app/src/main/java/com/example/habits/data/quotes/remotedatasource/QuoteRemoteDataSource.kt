@@ -5,7 +5,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class QuotesRemoteDataSource @Inject constructor(
+class QuoteRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
     suspend fun getQuotes(): List<FireStoreQuote> {

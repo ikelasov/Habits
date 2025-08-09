@@ -2,13 +2,13 @@ package com.example.habits.data.quotes.repository
 
 import com.example.habits.data.model.quotes.FireStoreQuote
 import com.example.habits.data.model.quotes.QuoteEntity
-import com.example.habits.data.quotes.localdatasource.QuotesLocalDataSource
-import com.example.habits.data.quotes.remotedatasource.QuotesRemoteDataSource
+import com.example.habits.data.quotes.localdatasource.QuoteLocalDataSource
+import com.example.habits.data.quotes.remotedatasource.QuoteRemoteDataSource
 import javax.inject.Inject
 
-class QuotesRepository @Inject constructor(
-    private val remoteDataSource: QuotesRemoteDataSource,
-    private val localDataSource: QuotesLocalDataSource
+class QuoteRepository @Inject constructor(
+    private val remoteDataSource: QuoteRemoteDataSource,
+    private val localDataSource: QuoteLocalDataSource
 ) {
 
     suspend fun getRandomQuote(): QuoteEntity? = localDataSource.getRandomQuote()

@@ -7,11 +7,11 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import androidx.core.content.edit
-import com.example.habits.data.quotes.repository.QuotesRepository
+import com.example.habits.data.quotes.repository.QuoteRepository
 
 @Singleton
 class QuoteSyncManager @Inject constructor(
-    private val quotesRepository: QuotesRepository,
+    private val quoteRepository: QuoteRepository,
     private val sharedPreferences: SharedPreferences,
     private val applicationScope: CoroutineScope
 ) {
@@ -29,7 +29,7 @@ class QuoteSyncManager @Inject constructor(
         if (currentTime - lastSyncTimestamp >= oneWeekInMillis || lastSyncTimestamp == 0L) {
             applicationScope.launch {
                 try {
-                    quotesRepository.fetchAndSaveQuotes()
+                    quoteRepository.fetchAndSaveQuotes()
                     sharedPreferences.edit {
                         putLong(PREF_LAST_QUOTE_SYNC_TIMESTAMP, System.currentTimeMillis())
                     }

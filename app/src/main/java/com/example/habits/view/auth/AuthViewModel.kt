@@ -3,7 +3,7 @@ package com.example.habits.view.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.data.model.User
-import com.example.habits.data.habitscategory.repository.CategoryRepository
+import com.example.habits.data.habitcategories.repository.CategoryRepository
 import com.example.habits.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
