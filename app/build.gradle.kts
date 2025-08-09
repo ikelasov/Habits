@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.9.0-1.0.12"
     id("org.jmailen.kotlinter") version "4.2.0"
+    id("com.google.gms.google-services")
     kotlin("kapt")
 }
 
@@ -101,6 +102,12 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hiltVersion")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+
+    // endregion
+
+    // region Firebase
+
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
 
     // endregion
 
