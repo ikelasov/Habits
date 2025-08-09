@@ -3,10 +3,13 @@ package com.example.habits.data.localdatasource.habitscategory
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "habit_category_table")
+@Entity(tableName = "user_categories_table")
 data class HabitCategoryEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: String,
     val name: String,
-    val color: Int
+    val color: String,
+    val isDefault: Boolean,
+    val userId: String,
+    val createdAt: Long
 )
