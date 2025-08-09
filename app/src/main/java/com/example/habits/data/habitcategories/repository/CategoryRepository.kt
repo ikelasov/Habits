@@ -1,72 +1,21 @@
 package com.example.habits.data.habitcategories.repository
 
 import android.util.Log
-import androidx.core.graphics.toColorInt
+import com.example.habits.data.habitcategories.remotedatasource.CategoriesRemoteDataSource
 import com.example.habits.data.habitscategory.localdatasource.CategoryLocalDataSource
-import com.example.habits.data.habitscategory.remotedatasource.CategoriesRemoteDataSource
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
-import com.example.habits.data.model.habitcategory.toHabitCategoryEntity
-import com.google.firebase.firestore.ListenerRegistration
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CategoryRepository @Inject constructor(
-    private val categoriesRemoteDataSource: CategoriesRemoteDataSource,
-    private val categoryLocalDataSource: CategoryLocalDataSource,
-    private val externalScope: CoroutineScope
+    private val remoteDataSource: CategoriesRemoteDataSource,
+    private val localDataSource: CategoryLocalDataSource
 ) {
 
-    private var categoryListenerRegistration: ListenerRegistration? = null
-    private val _initialSyncComplete = MutableSharedFlow<Unit>(replay = 1)
-    val initialSyncComplete = _initialSyncComplete.asSharedFlow()
-
     fun getCategoriesForUserFlow(userId: String): Flow<List<HabitCategoryEntity>> =
-        categoryLocalDataSource.getCategoriesForUserFlow(userId)
-
-    fun startListeningForCategoryChanges(userId: String) {
-        stopListeningForCategoryChanges()
-
-        val initialSyncDone = AtomicBoolean(false)
-
-        categoryListenerRegistration = categoriesRemoteDataSource.listenToRemoteCategories(
-            userId = userId,
-            onDataChanged = { firestoreCategories ->
-                externalScope.launch {
-                    val habitCategoryEntities = firestoreCategories.map { firestoreCategory ->
-                        firestoreCategory.toHabitCategoryEntity()
-                    }
-
-                    categoryLocalDataSource.replaceAllCategoriesForUser(
-                        userId,
-                        habitCategoryEntities
-                    )
-
-                    if (!initialSyncDone.getAndSet(true)) {
-                        _initialSyncComplete.tryEmit(Unit)
-                    }
-                }
-            },
-            onError = { exception ->
-                Log.e(
-                    "CategoryRepository",
-                    "Error listening to category changes for user $userId",
-                    exception
-                )
-            }
-        )
-    }
-
-    fun stopListeningForCategoryChanges() {
-        categoryListenerRegistration?.remove()
-        categoryListenerRegistration = null
-    }
+        localDataSource.getCategoriesForUserFlow(userId)
 
     suspend fun createCategory(
         userId: String,
@@ -74,9 +23,8 @@ class CategoryRepository @Inject constructor(
         colorHex: String
     ): Result<Unit> {
         return try {
-            val newCategoryRef = categoriesRemoteDataSource.getNewCategoryReferenceId(userId)
-            // Firestore write only; listener will handle local update
-            categoriesRemoteDataSource.createCategory(
+            val newCategoryRef = remoteDataSource.getNewCategoryReferenceId(userId)
+            remoteDataSource.createCategory(
                 userId,
                 newCategoryRef,
                 categoryName,
@@ -91,8 +39,7 @@ class CategoryRepository @Inject constructor(
 
     suspend fun createDefaultCategoriesForUser(userId: String): Result<Unit> {
         return try {
-            // Firestore write only; listener will handle local update
-            categoriesRemoteDataSource.createDefaultCategoriesForUser(userId)
+            remoteDataSource.createDefaultCategoriesForUser(userId)
             Result.success(Unit)
         } catch (e: Exception) {
             Log.e("CategoryRepository", "Error creating default categories for user $userId", e)
