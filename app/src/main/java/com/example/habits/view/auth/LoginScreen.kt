@@ -15,7 +15,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.habits.ui.components.BorderlessRoundedTextField
+import com.example.habits.view.components.BorderlessRoundedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.habits.R
-import com.example.habits.ui.components.BorderlessRoundedTextField
+import com.example.habits.view.components.BorderlessRoundedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

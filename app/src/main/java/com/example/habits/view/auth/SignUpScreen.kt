@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.habits.ui.components.BorderlessRoundedTextField
+import com.example.habits.view.components.BorderlessRoundedTextField
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +25,7 @@ fun SignUpScreen(
     onSignUpSuccess: () -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authUiState by authViewModel.uiState.collectAsState()
@@ -48,6 +50,24 @@ fun SignUpScreen(
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.height(24.dp))
+
+        BorderlessRoundedTextField(
+            value = name,
+            onValueChanged = { name = it; authViewModel.clearError() },
+            hint = "Name",
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                capitalization = KeyboardCapitalization.Words,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(onNext = {
+                focusManager.moveFocus(FocusDirection.Down)
+            }),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
 
         BorderlessRoundedTextField(
             value = email,
@@ -78,8 +98,8 @@ fun SignUpScreen(
             ),
             keyboardActions = KeyboardActions(onDone = {
                 focusManager.clearFocus()
-                if (email.isNotBlank() && password.isNotBlank()) {
-                    authViewModel.signUp(email, password)
+                if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+                    authViewModel.signUp(name, email, password)
                 }
             }),
             visualTransformation = PasswordVisualTransformation(),
@@ -94,8 +114,8 @@ fun SignUpScreen(
         } else {
             Button(
                 onClick = {
-                    if (email.isNotBlank() && password.isNotBlank()) {
-                        authViewModel.signUp(email, password)
+                    if (name.isNotBlank() && email.isNotBlank() && password.isNotBlank()) {
+                        authViewModel.signUp(name, email, password)
                     }
                 },
                 colors =
@@ -108,7 +128,7 @@ fun SignUpScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
-                enabled = email.isNotBlank() && password.isNotBlank()
+                enabled = name.isNotBlank() && email.isNotBlank() && password.isNotBlank() && name.isNotBlank()
             ) {
                 Text("Sign Up")
             }

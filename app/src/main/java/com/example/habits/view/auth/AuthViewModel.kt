@@ -2,6 +2,8 @@ package com.example.habits.view.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habits.data.model.User
+import com.example.habits.data.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +21,8 @@ data class AuthUiState(
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -29,11 +32,27 @@ class AuthViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(currentUser = auth.currentUser)
     }
 
-    fun signUp(email: String, password: String) {
+    fun signUp(name: String, email: String, password: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
             try {
-                auth.createUserWithEmailAndPassword(email, password).await()
+                val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                authResult.user?.let { firebaseUser ->
+                    val newUser = User(
+                        uid = firebaseUser.uid,
+                        name = name,
+                        email = firebaseUser.email ?: ""
+                    )
+                    val createUserResult = userRepository.createUserDocument(newUser)
+                    if (createUserResult.isFailure) {
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            error = createUserResult.exceptionOrNull()?.message
+                                ?: "Failed to save user details."
+                        )
+                        return@launch
+                    }
+                }
                 _uiState.value =
                     _uiState.value.copy(isLoading = false, currentUser = auth.currentUser)
             } catch (e: Exception) {
