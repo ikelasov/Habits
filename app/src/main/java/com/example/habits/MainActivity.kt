@@ -6,12 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.habits.data.habitcategories.CategorySyncManager
 import com.example.habits.data.quotes.QuoteSyncManager
+import com.example.habits.data.sync.MasterSyncManager
 import com.example.habits.view.auth.AuthViewModel
 import com.example.habits.ui.theme.HabitsTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
     lateinit var quoteSyncManager: QuoteSyncManager
 
     @Inject
-    lateinit var categorySyncManager: CategorySyncManager
+    lateinit var masterSyncManager: MasterSyncManager
 
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -37,12 +38,18 @@ class MainActivity : ComponentActivity() {
             val authUiState by authViewModel.uiState.collectAsState()
             val currentUser = authUiState.currentUser
 
+            LaunchedEffect(currentUser) {
+                if (currentUser != null) {
+                    quoteSyncManager.syncQuotesIfWeeklyIntervalPassed()
+                    masterSyncManager.startSync(currentUser.uid)
+                } else {
+                    masterSyncManager.stopSync()
+                }
+            }
+
             val startDestination = if (currentUser != null) {
-                quoteSyncManager.syncQuotesIfWeeklyIntervalPassed()
-                categorySyncManager.startListeningForCategoryChanges(currentUser.uid)
                 HabitsDestinations.HabitsScreen.route
             } else {
-                categorySyncManager.stopListeningForCategoryChanges()
                 HabitsDestinations.LoginScreen.route
             }
 
@@ -52,7 +59,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        categorySyncManager.stopListeningForCategoryChanges()
+        // It's good practice to ensure sync is stopped here,
+        // though LaunchedEffect should also handle it if currentUser becomes null.
+        masterSyncManager.stopSync()
     }
 }
 

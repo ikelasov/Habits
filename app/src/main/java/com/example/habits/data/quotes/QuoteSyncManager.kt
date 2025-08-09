@@ -25,9 +25,9 @@ class QuoteSyncManager @Inject constructor(
         val lastSyncTimestamp = sharedPreferences.getLong(PREF_LAST_QUOTE_SYNC_TIMESTAMP, 0L)
         val currentTime = System.currentTimeMillis()
         val oneWeekInMillis = TimeUnit.DAYS.toMillis(SYNC_INTERVAL_DAYS)
-
-        if (currentTime - lastSyncTimestamp >= oneWeekInMillis || lastSyncTimestamp == 0L) {
-            applicationScope.launch {
+        applicationScope.launch {
+            val quotes = quoteRepository.getAllQuotes()
+            if (currentTime - lastSyncTimestamp >= oneWeekInMillis || lastSyncTimestamp == 0L || quotes.isEmpty()) {
                 try {
                     quoteRepository.fetchAndSaveQuotes()
                     sharedPreferences.edit {

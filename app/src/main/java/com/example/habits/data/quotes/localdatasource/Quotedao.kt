@@ -9,6 +9,9 @@ import com.example.habits.data.model.quotes.QuoteEntity
 @Dao
 interface QuoteDao {
 
+    @Query("SELECT * FROM quotes_table")
+    suspend fun getAllQuotes(): List<QuoteEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuote(quote: QuoteEntity)
 

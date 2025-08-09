@@ -8,17 +8,17 @@ import java.util.Date
 private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
 data class FirestoreHabit(
-    val id: String,
-    val userId: String,
-    val categoryId: String?,
-    val name: String,
-    val timeOfTheDay: String,
-    val daysToRepeat: List<String>,
-    val repetitionsPerDay: Int,
-    val completedRepetitions: Int,
-    val priorityLevel: String,
-    val hasSetReminder: Boolean,
-    val reminderTimes: List<String>,
+    val id: String = "",
+    val userId: String = "",
+    val categoryId: String = "",
+    val name: String = "",
+    val timeOfTheDay: String = "",
+    val daysToRepeat: List<String> = emptyList(),
+    val repetitionsPerDay: Int = 0,
+    val completedRepetitions: Int = 0,
+    val priorityLevel: String = "",
+    val hasSetReminder: Boolean = false,
+    val reminderTimes: List<String> = emptyList(),
     @ServerTimestamp
     val createdAt: Date? = null
 )

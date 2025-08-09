@@ -27,7 +27,7 @@ class HabitsLocalDataSource @Inject constructor(
         habitId: String,
         userId: String,
         habitName: String,
-        categoryId: String?,
+        categoryId: String,
         daysToRepeat: List<DaysOfWeek>,
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
@@ -56,5 +56,9 @@ class HabitsLocalDataSource @Inject constructor(
 
     suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
         habitDao.updateCompletedRepetitions(habitId, updatedProgress)
+    }
+
+    suspend fun replaceAllHabitsForUser(userId: String, habits: List<HabitEntity>) {
+        habitDao.replaceAllForUser(userId, habits)
     }
 }

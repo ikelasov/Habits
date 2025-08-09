@@ -8,7 +8,10 @@ import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,11 +24,16 @@ class CategoryRepository @Inject constructor(
 
     private var categoryListenerRegistration: ListenerRegistration? = null
 
+    private val _initialSyncComplete = MutableSharedFlow<Unit>(replay = 1)
+    val initialSyncComplete = _initialSyncComplete.asSharedFlow()
+
     fun getCategoriesForUserFlow(userId: String): Flow<List<HabitCategoryEntity>> =
         categoryLocalDataSource.getCategoriesForUserFlow(userId)
 
     fun startListeningForCategoryChanges(userId: String) {
         stopListeningForCategoryChanges()
+
+        val initialSyncDone = AtomicBoolean(false)
 
         categoryListenerRegistration = categoriesRemoteDataSource.listenToRemoteCategories(
             userId = userId,
@@ -42,10 +50,15 @@ class CategoryRepository @Inject constructor(
                                 ?: System.currentTimeMillis()
                         )
                     }
+
                     categoryLocalDataSource.replaceAllCategoriesForUser(
                         userId,
                         habitCategoryEntities
                     )
+
+                    if (!initialSyncDone.getAndSet(true)) {
+                        _initialSyncComplete.tryEmit(Unit)
+                    }
                 }
             },
             onError = { exception ->

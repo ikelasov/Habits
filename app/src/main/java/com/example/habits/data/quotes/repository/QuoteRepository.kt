@@ -11,6 +11,7 @@ class QuoteRepository @Inject constructor(
     private val localDataSource: QuoteLocalDataSource
 ) {
 
+    suspend fun getAllQuotes(): List<QuoteEntity> = localDataSource.getAllQuotes()
     suspend fun getRandomQuote(): QuoteEntity? = localDataSource.getRandomQuote()
 
     suspend fun fetchAndSaveQuotes() {
