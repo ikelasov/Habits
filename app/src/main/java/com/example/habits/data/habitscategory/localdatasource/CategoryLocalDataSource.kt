@@ -19,4 +19,8 @@ class CategoryLocalDataSource @Inject constructor(
     suspend fun insertAll(categories: List<HabitCategoryEntity>) {
         habitCategoryDao.insertAll(categories)
     }
+
+    suspend fun replaceAllCategoriesForUser(userId: String, categories: List<HabitCategoryEntity>) {
+        habitCategoryDao.replaceAllForUser(userId, categories)
+    }
 }

@@ -4,6 +4,7 @@ import com.example.habits.data.model.habitcategory.FirestoreHabitCategory
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -77,4 +78,25 @@ class HabitsCategoryRemoteDataSource @Inject constructor(
         firestore.collection("users")
             .document(userId)
             .collection("categories")
+
+    fun listenToRemoteCategories(
+        userId: String,
+        onDataChanged: (List<FirestoreHabitCategory>) -> Unit,
+        onError: (Exception) -> Unit
+    ): ListenerRegistration {
+        val query = getCategoriesCollectionReference(userId)
+        return query.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                onError(exception)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val categories = snapshot.documents.mapNotNull { document ->
+                    document.toObject(FirestoreHabitCategory::class.java)
+                }
+                onDataChanged(categories)
+            }
+        }
+    }
 }

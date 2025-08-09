@@ -5,12 +5,19 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.example.habits.data.model.habitcategory.HabitCategoryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitCategoryDao {
+
+    @Transaction
+    suspend fun replaceAllForUser(userId: String, categories: List<HabitCategoryEntity>) {
+        clearUserCategories(userId)
+        insertAll(categories)
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(category: HabitCategoryEntity)

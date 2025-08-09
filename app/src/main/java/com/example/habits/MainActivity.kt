@@ -10,6 +10,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
+import com.example.habits.data.habitscategory.CategoriesSyncManager
 import com.example.habits.data.quotes.QuoteSyncManager
 import com.example.habits.view.auth.AuthViewModel
 import com.example.habits.ui.theme.HabitsTheme
@@ -21,6 +22,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var quoteSyncManager: QuoteSyncManager
+
+    @Inject
+    lateinit var categoriesSyncManager: CategoriesSyncManager
 
     private val authViewModel: AuthViewModel by viewModels()
 
@@ -35,13 +39,20 @@ class MainActivity : ComponentActivity() {
 
             val startDestination = if (currentUser != null) {
                 quoteSyncManager.syncQuotesIfWeeklyIntervalPassed()
+                categoriesSyncManager.startListeningForCategoryChanges(currentUser.uid)
                 HabitsDestinations.HabitsScreen.route
             } else {
+                categoriesSyncManager.stopListeningForCategoryChanges()
                 HabitsDestinations.LoginScreen.route
             }
 
             HabitsApp(startDestination = startDestination)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        categoriesSyncManager.stopListeningForCategoryChanges()
     }
 }
 
