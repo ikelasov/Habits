@@ -47,16 +47,9 @@ class HabitRepository @Inject constructor(
         )
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
+    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) =
         remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
-        localDataSource.updateHabitProgress(habitId, updatedProgress)
-    }
 
-    // TODO handle reminders (or completely remove)
-    suspend fun updateHabit(updatedHabitEntity: HabitEntity) {
-        // This method only updates local. If remote update is needed, it's missing.
-        // Or, if this is for local-only changes, its name could be more specific.
-        // Syncer won't pick this up unless there's a corresponding remote update.
-        localDataSource.updateHabit(updatedHabitEntity)
-    }
+    suspend fun updateHabitRemindersSet(habitId: String) =
+        remoteDataSource.updateHabitReminderSet(habitId, userId)
 }

@@ -14,8 +14,6 @@ class HabitRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    private fun getHabitsCollectionReference(userId: String) = firestore.collection("users").document(userId).collection("habits")
-
     fun listenToRemoteHabits(
         userId: String,
         onDataChanged: (List<FirestoreHabit>) -> Unit,
@@ -73,8 +71,7 @@ class HabitRemoteDataSource @Inject constructor(
     }
 
     suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, userId: String) {
-        val habitDocRef = firestore.collection("users").document(userId)
-            .collection("habits").document(habitId)
+        val habitDocRef = getHabitDocumentReference(userId, habitId)
 
         val firestoreUpdateData = hashMapOf<String, Any>(
             "completedRepetitions" to updatedProgress,
@@ -82,4 +79,25 @@ class HabitRemoteDataSource @Inject constructor(
 
         habitDocRef.update(firestoreUpdateData).await()
     }
+
+    suspend fun updateHabitReminderSet(habitId: String, userId: String) {
+        val habitDocRef = getHabitDocumentReference(userId, habitId)
+
+        val firestoreUpdateData = hashMapOf<String, Any>(
+            "hasSetReminder" to true,
+        )
+
+        habitDocRef.update(firestoreUpdateData).await()
+    }
+
+    private fun getHabitsCollectionReference(userId: String) =
+        firestore.collection("users")
+            .document(userId)
+            .collection("habits")
+
+    private fun getHabitDocumentReference(userId: String, habitId: String) =
+        firestore.collection("users")
+            .document(userId)
+            .collection("habits")
+            .document(habitId)
 }
