@@ -14,12 +14,15 @@ import com.example.habits.feature_habits.createhabit.ui.CreateHabitScreen
 import com.example.habits.feature_login.LoginScreen
 import com.example.habits.feature_login.SignUpScreen
 import com.example.habits.feature_habits.habits.HabitsScreen
+import com.example.habits.feature_habits.manage_categories.ManageCategoriesScreen
+import com.example.habits.feature_habits.manage_habits.ManageHabitsScreen
 
 @Composable
 fun HabitsNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    startDestination: String
+    startDestination: String,
+    onMenuClick: () -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -57,7 +60,7 @@ fun HabitsNavHost(
                 onCreateHabitClicked = {
                     navController.navigate(HabitsDestinations.CreateHabitScreen.route)
                 },
-                // TODO: Add a call to authViewModel.signOut() here, perhaps from a settings icon
+                onMenuClicked = onMenuClick
             )
         }
         composableWithAnimation(HabitsDestinations.CreateHabitScreen.route) {
@@ -71,6 +74,16 @@ fun HabitsNavHost(
                         inclusive = false,
                     )
                 },
+            )
+        }
+        composableWithAnimation(HabitsDestinations.ManageHabitsScreen.route) {
+            ManageHabitsScreen(
+                onMenuClicked = onMenuClick
+            )
+        }
+        composableWithAnimation(HabitsDestinations.ManageCategoriesScreen.route) {
+            ManageCategoriesScreen(
+                onMenuClicked = onMenuClick
             )
         }
     }

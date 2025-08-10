@@ -9,10 +9,11 @@ import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.data.repository.StatisticsRepository
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.domain.GetCategoriesFlowUseCase
-import com.example.habits.feature_habits.habits.domain.GetHabitsFlow
+import com.example.habits.feature_habits.common.domain.GetHabitsFlowUseCase
 import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
 import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
-import com.example.habits.feature_habits.habits.mapper.mapHabitEntityListToHabitUIList
+import com.example.habits.feature_habits.common.mapper.mapHabitEntityListToHabitUIList
+import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.mapper.mapToStatisticsDataUi
 import com.example.habits.feature_habits.habits.utils.formatMonthYear
 import com.example.habits.feature_habits.habits.utils.getDaysOfMonthAbbreviated
@@ -30,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HabitsViewModel @Inject constructor(
-    private val getHabitsFlow: GetHabitsFlow,
+    private val getHabitsFlowUseCase: GetHabitsFlowUseCase,
     private val updateHabitProgressUseCase: UpdateHabitProgressUseCase,
     private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
@@ -47,7 +48,7 @@ class HabitsViewModel @Inject constructor(
         fetchRandomQuote()
         viewModelScope.launch {
             combine(
-                getHabitsFlow(),
+                getHabitsFlowUseCase(),
                 getCategoriesFlowUseCase(),
                 statisticsRepository.getStatistics(),
                 selectedMonth,
@@ -135,29 +136,13 @@ class HabitsViewModel @Inject constructor(
 }
 
 // region ViewState data model
+
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
     val quote: QuoteEntity? = null,
     val statisticsDataUi: StatisticsDataUi = StatisticsDataUi(),
     val calendarDataUi: CalendarDataUi = CalendarDataUi(),
     val loading: Boolean = false,
-)
-
-// endregion
-
-// region HabitUi data model
-
-@Stable
-data class HabitUi(
-    val id: String,
-    val name: String,
-    val category: String,
-    val categoryColor: Color?,
-    val timeToDoIndication: String,
-    val daysToRepeat: String,
-    val repetitionIndication: String,
-    val progress: Float,
-    val priorityIndicationColor: Int,
 )
 
 // endregion

@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
 import com.example.habits.core.model.quotes.QuoteEntity
+import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.screencomponents.HabitItem
 import com.example.habits.feature_habits.habits.screencomponents.HorizontalCalendar
 import com.example.habits.feature_habits.habits.screencomponents.LoadingScreen
@@ -43,6 +44,7 @@ import com.example.habits.ui.theme.HabitsTheme
 @Composable
 fun HabitsScreen(
     onCreateHabitClicked: () -> Unit,
+    onMenuClicked: () -> Unit,
     habitsViewModel: HabitsViewModel = hiltViewModel(),
 ) {
     val viewState by habitsViewModel.viewState
@@ -62,6 +64,7 @@ fun HabitsScreen(
             onCurrentDateClicked = habitsViewModel::onCurrentDateClicked,
             onDayClicked = habitsViewModel::onDayClicked,
             onHabitItemDragged = habitsViewModel::onHabitItemDragged,
+            onMenuClicked = onMenuClicked,
         )
     }
 }
@@ -78,6 +81,7 @@ private fun ScreenContent(
     onCurrentDateClicked: () -> Unit,
     onDayClicked: (Int) -> Unit,
     onHabitItemDragged: (String, DraggedDirection) -> Unit,
+    onMenuClicked: () -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -89,7 +93,7 @@ private fun ScreenContent(
             }
         },
         topBar = {
-            TopBar()
+            TopBar(onMenuClicked = onMenuClicked)
         },
     ) { contentPadding ->
         val listState = rememberLazyListState()
@@ -184,7 +188,7 @@ private fun DeleteHabitsButton(
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-    TopBar()
+    TopBar(onMenuClicked = {})
 }
 
 @Preview
@@ -257,6 +261,7 @@ fun ScreenPreview() {
         onCurrentDateClicked = {},
         onDayClicked = {},
         onHabitItemDragged = { _, _ -> },
+        onMenuClicked = {}
     )
 }
 

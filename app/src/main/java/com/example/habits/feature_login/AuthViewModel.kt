@@ -95,6 +95,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun signOut() {
+        auth.signOut()
+    }
+
     fun clearError() {
         _uiState.update { it.copy(error = null) }
     }

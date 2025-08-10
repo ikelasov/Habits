@@ -4,7 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,6 +26,7 @@ import com.example.habits.R
 fun TopBar(
     userName: String = "Ilias",
     @DrawableRes profileIcon: Int = R.drawable.ic_profile,
+    onMenuClicked: () -> Unit = {}
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -31,6 +36,14 @@ fun TopBar(
             Row {
                 Text(text = "Hello, ")
                 Text(text = "$userName!", color = colorResource(R.color.medium_priority))
+            }
+        },
+        navigationIcon = {
+            IconButton(onClick = onMenuClicked) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu"
+                )
             }
         },
         actions = {
