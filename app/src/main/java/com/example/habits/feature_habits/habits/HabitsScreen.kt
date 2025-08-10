@@ -2,12 +2,18 @@
 
 package com.example.habits.feature_habits.habits
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -23,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
@@ -67,6 +74,12 @@ fun HabitsScreen(
             onMenuClicked = onMenuClicked,
         )
     }
+}
+
+@Composable
+fun isLandscape(): Boolean {
+    val configuration = LocalConfiguration.current
+    return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 }
 
 @Composable
@@ -128,34 +141,61 @@ private fun Content(
     listState: LazyListState,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        state = listState,
-        modifier = modifier.background(MaterialTheme.colorScheme.background),
-    ) {
-        item { StatisticsContent(statistics) }
-        item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
-        item { MotivationalQuoteComponent(quote) }
-        item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
-        stickyHeader {
-            HorizontalCalendar(
-                selectedMonth = calendarDataUi.selectedMonth,
-                onNextMonthClicked = onNextMonthClicked,
-                onPreviousMonthClicked = onPreviousMonthClicked,
-                onCurrentDateClicked = onCurrentDateClicked,
-                daysOfMonth = calendarDataUi.daysOfMonth,
-                onDayClicked = onDayClicked,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
-        }
-        item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
-        items(
-            items = habits,
-            key = { it.id },
+    if (isLandscape()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = modifier.background(MaterialTheme.colorScheme.background),
+            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            HabitItem(
-                habit = it,
-                onHabitItemDragged = onHabitItemDragged,
-            )
+            item {
+                HorizontalCalendar(
+                    selectedMonth = calendarDataUi.selectedMonth,
+                    onNextMonthClicked = onNextMonthClicked,
+                    onPreviousMonthClicked = onPreviousMonthClicked,
+                    onCurrentDateClicked = onCurrentDateClicked,
+                    daysOfMonth = calendarDataUi.daysOfMonth,
+                    onDayClicked = onDayClicked,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+            items(habits) { habit ->
+                HabitItem(
+                    habit = habit,
+                    onHabitItemDragged = onHabitItemDragged,
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            state = listState,
+            modifier = modifier.background(MaterialTheme.colorScheme.background),
+        ) {
+            item { StatisticsContent(statistics) }
+            item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
+            item { MotivationalQuoteComponent(quote) }
+            item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
+            stickyHeader {
+                HorizontalCalendar(
+                    selectedMonth = calendarDataUi.selectedMonth,
+                    onNextMonthClicked = onNextMonthClicked,
+                    onPreviousMonthClicked = onPreviousMonthClicked,
+                    onCurrentDateClicked = onCurrentDateClicked,
+                    daysOfMonth = calendarDataUi.daysOfMonth,
+                    onDayClicked = onDayClicked,
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
+            item { Spacer(modifier = Modifier.padding(vertical = 8.dp)) }
+            items(
+                items = habits,
+                key = { it.id },
+            ) {
+                HabitItem(
+                    habit = it,
+                    onHabitItemDragged = onHabitItemDragged,
+                )
+            }
         }
     }
 }
