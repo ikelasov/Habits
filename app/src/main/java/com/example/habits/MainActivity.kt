@@ -1,12 +1,17 @@
 package com.example.habits
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.List
@@ -27,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -48,7 +54,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, true)
         enableEdgeToEdge()
 
         setContent {
@@ -84,11 +89,18 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun isLandscape(): Boolean {
+    val configuration = LocalConfiguration.current
+    return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
     HabitsTheme {
         val navController = rememberNavController()
+        val navScrollState = rememberScrollState()
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -97,7 +109,11 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
         ModalNavigationDrawer(
             drawerState = drawerState,
             drawerContent = {
-                ModalDrawerSheet {
+                ModalDrawerSheet(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .verticalScroll(navScrollState)
+                ) {
                     Surface(modifier = Modifier.height(200.dp)) {
                         // Placeholder for future content
                     }
@@ -109,7 +125,8 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         onClick = {
                             navController.navigate(HabitsDestinations.HabitsScreen.route)
                             scope.launch { drawerState.close() }
-                        }
+                        },
+                        modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                     NavigationDrawerItem(
                         icon = { Icon(Icons.AutoMirrored.Default.List, contentDescription = null) },
@@ -118,7 +135,8 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         onClick = {
                             navController.navigate(HabitsDestinations.ManageHabitsScreen.route)
                             scope.launch { drawerState.close() }
-                        }
+                        },
+                        modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                     NavigationDrawerItem(
                         icon = { Icon(Icons.AutoMirrored.Default.List, contentDescription = null) },
@@ -127,7 +145,8 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         onClick = {
                             navController.navigate(HabitsDestinations.ManageCategoriesScreen.route)
                             scope.launch { drawerState.close() }
-                        }
+                        },
+                        modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                     Spacer(Modifier.weight(1f))
                     HorizontalDivider()
@@ -143,7 +162,8 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         onClick = {
                             onSignOut()
                             scope.launch { drawerState.close() }
-                        }
+                        },
+                        modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                 }
             }

@@ -1,9 +1,9 @@
 package com.example.habits.feature_habits.manage_categories
 
-import androidx.compose.foundation.background // Added for Box background
+import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size // Added for Box size
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape // Added for Box shape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
@@ -30,16 +34,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color // Added for Color
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.habits.feature_habits.manage_habits.isLandscape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,14 +73,21 @@ fun ManageCategoriesScreen(
                     IconButton(onClick = onMenuClicked) {
                         Icon(Icons.Filled.Menu, contentDescription = "Open navigation drawer")
                     }
-                }
+                },
+                windowInsets = TopAppBarDefaults.windowInsets
             )
         }
     ) { innerPadding ->
+        val baseModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier = if (isLandscape()) {
+                baseModifier.safeContentPadding()
+            } else {
+                baseModifier
+            },
             contentAlignment = Alignment.Center
         ) {
             ManageCategoriesContent(
@@ -90,6 +104,12 @@ fun ManageCategoriesScreen(
 }
 
 @Composable
+fun isLandscape(): Boolean {
+    val configuration = LocalConfiguration.current
+    return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+}
+
+@Composable
 private fun ManageCategoriesContent(
     state: CategoriesScreenState,
     onDeleteCategoryClicked: (String) -> Unit
@@ -97,14 +117,29 @@ private fun ManageCategoriesContent(
     if (state.categories.isEmpty()) {
         Text("No categories yet. Add some from the habits screen!")
     } else {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            items(state.categories, key = { it.id }) { category ->
-                CategoryListItem(
-                    category = category,
-                    onDeleteClicked = { onDeleteCategoryClicked(category.id) }
-                )
+        if (isLandscape()) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(state.categories, key = { it.id }) { category ->
+                    CategoryListItem(
+                        category = category,
+                        onDeleteClicked = { onDeleteCategoryClicked(category.id) }
+                    )
+                }
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(state.categories, key = { it.id }) { category ->
+                    CategoryListItem(
+                        category = category,
+                        onDeleteClicked = { onDeleteCategoryClicked(category.id) }
+                    )
+                }
             }
         }
     }
@@ -141,11 +176,9 @@ private fun CategoryListItem(
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f)
             )
-            // Spacer(modifier = Modifier.width(8.dp)) // Original spacer removed as weight handles space before delete
             IconButton(onClick = onDeleteClicked) {
                 Icon(Icons.Filled.Delete, contentDescription = "Delete category")
             }
         }
     }
 }
-

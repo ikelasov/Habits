@@ -1,7 +1,9 @@
 package com.example.habits.feature_habits.manage_habits
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -13,9 +15,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -36,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -68,14 +75,20 @@ fun ManageHabitsScreen(
                     IconButton(onClick = onMenuClicked) {
                         Icon(Icons.Filled.Menu, contentDescription = "Open navigation drawer")
                     }
-                }
+                },
             )
         }
     ) { innerPadding ->
+        val baseModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+            modifier = if (isLandscape()) {
+                baseModifier.safeContentPadding()
+            } else {
+                baseModifier
+            }
         ) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -87,22 +100,46 @@ fun ManageHabitsScreen(
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(
-                        horizontal = 8.dp,
-                        vertical = 8.dp
-                    )
-                ) {
-                    items(viewState.habits) { habit ->
-                        HabitListItem(habit = habit, onDeleteClicked = {
-                            viewModel.onDeleteHabitClicked(habit.id)
-                        })
+                if (isLandscape()) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 8.dp
+                        ),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(viewState.habits) { habit ->
+                            HabitListItem(habit = habit, onDeleteClicked = {
+                                viewModel.onDeleteHabitClicked(habit.id)
+                            })
+                        }
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(
+                            horizontal = 8.dp,
+                            vertical = 8.dp
+                        )
+                    ) {
+                        items(viewState.habits) { habit ->
+                            HabitListItem(habit = habit, onDeleteClicked = {
+                                viewModel.onDeleteHabitClicked(habit.id)
+                            })
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun isLandscape(): Boolean {
+    val configuration = LocalConfiguration.current
+    return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 }
 
 @Composable
@@ -114,7 +151,7 @@ private fun HabitListItem(
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth()
     ) {
         Row(
