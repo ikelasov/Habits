@@ -52,4 +52,7 @@ class HabitRepository @Inject constructor(
 
     suspend fun updateHabitRemindersSet(habitId: String) =
         remoteDataSource.updateHabitReminderSet(habitId, userId)
+
+    suspend fun deleteHabit(habitId: String) =
+        remoteDataSource.deleteHabit(userId, habitId)
 }

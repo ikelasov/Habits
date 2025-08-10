@@ -90,6 +90,10 @@ class HabitRemoteDataSource @Inject constructor(
         habitDocRef.update(firestoreUpdateData).await()
     }
 
+    suspend fun deleteHabit(userId: String, habitId: String) {
+        getHabitDocumentReference(userId, habitId).delete().await()
+    }
+
     private fun getHabitsCollectionReference(userId: String) =
         firestore.collection("users")
             .document(userId)
