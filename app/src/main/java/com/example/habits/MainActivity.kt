@@ -11,9 +11,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.example.habits.data.sync.MasterSyncManager
+import com.example.habits.core.data.sync.MasterSyncManager
 import com.example.habits.ui.theme.HabitsTheme
-import com.example.habits.view.auth.AuthViewModel
+import com.example.habits.feature_login.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
