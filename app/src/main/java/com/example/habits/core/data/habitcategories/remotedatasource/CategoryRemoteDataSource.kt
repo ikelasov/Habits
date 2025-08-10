@@ -68,6 +68,10 @@ class CategoriesRemoteDataSource @Inject constructor(
         return categoriesCreated
     }
 
+    suspend fun deleteCategory(userId: String, categoryId: String) {
+        getCategoryDocumentReference(userId, categoryId).delete().await()
+    }
+
     fun getNewCategoryReferenceId(userId: String): DocumentReference =
         firestore.collection("users")
             .document(userId)
@@ -78,6 +82,9 @@ class CategoriesRemoteDataSource @Inject constructor(
         firestore.collection("users")
             .document(userId)
             .collection("categories")
+
+    fun getCategoryDocumentReference(userId: String, categoryId: String): DocumentReference =
+        getCategoriesCollectionReference(userId).document(categoryId)
 
     fun listenToRemoteCategories(
         userId: String,

@@ -40,6 +40,9 @@ class CategoryRepository @Inject constructor(
         }
     }
 
+    suspend fun deleteCategory(categoryId: String) =
+        remoteDataSource.deleteCategory(userId, categoryId)
+
     suspend fun createDefaultCategoriesForUser(userId: String): Result<Unit> {
         return try {
             remoteDataSource.createDefaultCategoriesForUser(userId)
