@@ -94,7 +94,7 @@ class HabitsViewModel @Inject constructor(
                     DraggedDirection.StartToEnd -> 1
                     DraggedDirection.EndToStart -> -1
                 }
-            updateHabitProgressUseCase(habitId, valueToUpdate)
+            updateHabitProgressUseCase(habitId, valueToUpdate, selectedDay.value)
         }
     }
 

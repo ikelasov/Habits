@@ -47,8 +47,8 @@ class HabitRepository @Inject constructor(
         )
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) =
-        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
+    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, date: String) =
+        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId, date)
 
     suspend fun updateHabitRemindersSet(habitId: String) =
         remoteDataSource.updateHabitReminderSet(habitId, userId)

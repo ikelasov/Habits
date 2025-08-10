@@ -1,6 +1,8 @@
 package com.example.habits.feature_habits.habits.domain
 
 import com.example.habits.core.data.habits.repository.HabitRepository
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class UpdateHabitProgressUseCase @Inject constructor(
@@ -10,6 +12,7 @@ class UpdateHabitProgressUseCase @Inject constructor(
     suspend operator fun invoke(
         habitId: String,
         progressUpdateValue: Int,
+        date: LocalDate
     ) {
         val habit = habitRepository.getHabit(habitId)
         if (habit.completedRepetitions == 0 && progressUpdateValue < 0) {
@@ -19,7 +22,7 @@ class UpdateHabitProgressUseCase @Inject constructor(
         if (updatedProgress > habit.repetitionsPerDay) {
             return
         }
-
-        habitRepository.updateHabitProgress(habitId, updatedProgress)
+        val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        habitRepository.updateHabitProgress(habitId, updatedProgress, dateString)
     }
 }

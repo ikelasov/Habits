@@ -70,16 +70,6 @@ class HabitRemoteDataSource @Inject constructor(
         return habitId
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, userId: String) {
-        val habitDocRef = getHabitDocumentReference(userId, habitId)
-
-        val firestoreUpdateData = hashMapOf<String, Any>(
-            "completedRepetitions" to updatedProgress,
-        )
-
-        habitDocRef.update(firestoreUpdateData).await()
-    }
-
     suspend fun updateHabitReminderSet(habitId: String, userId: String) {
         val habitDocRef = getHabitDocumentReference(userId, habitId)
 
@@ -92,6 +82,26 @@ class HabitRemoteDataSource @Inject constructor(
 
     suspend fun deleteHabit(userId: String, habitId: String) {
         getHabitDocumentReference(userId, habitId).delete().await()
+    }
+
+    suspend fun updateHabitProgress(
+        habitId: String,
+        updatedProgress: Int,
+        userId: String,
+        date: String
+    ) {
+        val habitCompletionDocRef = getHabitDocumentReference(userId, habitId)
+            .collection("habitCompletions")
+            .document(date)
+
+        val completionData = hashMapOf(
+            "completedRepetitions" to updatedProgress,
+            "habitId" to habitId,
+            "date" to com.google.firebase.firestore.FieldValue.serverTimestamp()
+        )
+
+        habitCompletionDocRef.set(completionData, com.google.firebase.firestore.SetOptions.merge())
+            .await()
     }
 
     private fun getHabitsCollectionReference(userId: String) =
