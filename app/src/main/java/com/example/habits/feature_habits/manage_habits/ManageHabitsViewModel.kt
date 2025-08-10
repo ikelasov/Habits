@@ -39,7 +39,7 @@ class ManageHabitsViewModel @Inject constructor(
         getCategoriesFlowUseCase(),
     ) { habits, categories ->
         _isLoading.update { false }
-        ScreenState(habits.mapHabitEntityListToHabitUIList(categories))
+        ScreenState(habits.mapHabitEntityListToHabitUIList(categories, emptyMap()))
     }.catch { throwable ->
         _isLoading.update { false }
         _message.emit(throwable.message ?: "Unknown error")

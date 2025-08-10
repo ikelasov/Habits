@@ -2,8 +2,10 @@ package com.example.habits.core.data.habits.remotedatasource
 
 import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.model.habits.FirestoreHabit
+import com.example.habits.core.model.habits.FirestoreHabitCompletion
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.core.model.habits.TimeOfTheDay
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.tasks.await
@@ -33,6 +35,27 @@ class HabitRemoteDataSource @Inject constructor(
             }
         }
     }
+
+    fun listenToAllHabitCompletions(
+        userId: String,
+        onDataChanged: (List<DocumentSnapshot>) -> Unit,
+        onError: (Exception) -> Unit
+    ): ListenerRegistration {
+        val query = firestore.collectionGroup("habitCompletions")
+            .whereEqualTo("userId", userId)
+
+        return query.addSnapshotListener { snapshot, error ->
+            if (error != null) {
+                onError(error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                onDataChanged(snapshot.documents)
+            }
+        }
+    }
+
 
     suspend fun createHabitAndGetDocId(
         userId: String,
@@ -97,7 +120,8 @@ class HabitRemoteDataSource @Inject constructor(
         val completionData = hashMapOf(
             "completedRepetitions" to updatedProgress,
             "habitId" to habitId,
-            "date" to com.google.firebase.firestore.FieldValue.serverTimestamp()
+            "date" to com.google.firebase.firestore.FieldValue.serverTimestamp(),
+            "userId" to userId
         )
 
         habitCompletionDocRef.set(completionData, com.google.firebase.firestore.SetOptions.merge())

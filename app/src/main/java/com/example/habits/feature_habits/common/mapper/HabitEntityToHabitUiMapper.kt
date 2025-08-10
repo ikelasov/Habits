@@ -7,14 +7,21 @@ import com.example.habits.core.model.habits.HabitEntity
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.feature_habits.common.model.HabitUi
 
-fun List<HabitEntity>.mapHabitEntityListToHabitUIList(categories: List<HabitCategoryEntity>): List<HabitUi> {
+fun List<HabitEntity>.mapHabitEntityListToHabitUIList(
+    categories: List<HabitCategoryEntity>,
+    habitIdToCompletions: Map<String, Int>
+): List<HabitUi> {
     return this.map {
         val category = categories.find { category -> category.id == it.categoryId }
-        it.mapHabitEntityToHabitUI(category)
+        val completedRepetitions = habitIdToCompletions[it.id] ?: 0
+        it.mapHabitEntityToHabitUI(category, completedRepetitions)
     }
 }
 
-fun HabitEntity.mapHabitEntityToHabitUI(category: HabitCategoryEntity?): HabitUi {
+fun HabitEntity.mapHabitEntityToHabitUI(
+    category: HabitCategoryEntity?,
+    completedRepetitions: Int
+): HabitUi {
     val timeToDoIndication = this.timeOfTheDay.value
 
     val repetitionIndication =
@@ -29,7 +36,7 @@ fun HabitEntity.mapHabitEntityToHabitUI(category: HabitCategoryEntity?): HabitUi
             }
         }
 
-    val progress = this.completedRepetitions.toFloat() / this.repetitionsPerDay.toFloat()
+    val progress = completedRepetitions.toFloat() / this.repetitionsPerDay.toFloat()
 
     val priorityIndicationColor =
         when (this.priorityLevel) {

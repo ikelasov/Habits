@@ -15,14 +15,19 @@ class UpdateHabitProgressUseCase @Inject constructor(
         date: LocalDate
     ) {
         val habit = habitRepository.getHabit(habitId)
-        if (habit.completedRepetitions == 0 && progressUpdateValue < 0) {
+        val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        val habitCompletions = habitRepository
+            .getHabitCompletionForId(habitId, date)
+            ?.completedRepetitions
+            ?: 0
+
+        if (habitCompletions == 0 && progressUpdateValue < 0) {
             return
         }
-        val updatedProgress = habit.completedRepetitions + progressUpdateValue
+        val updatedProgress = habitCompletions + progressUpdateValue
         if (updatedProgress > habit.repetitionsPerDay) {
             return
         }
-        val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
         habitRepository.updateHabitProgress(habitId, updatedProgress, dateString)
     }
 }
