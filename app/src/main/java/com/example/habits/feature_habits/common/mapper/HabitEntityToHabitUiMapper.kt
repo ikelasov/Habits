@@ -1,11 +1,11 @@
-package com.example.habits.feature_habits.habits.mapper
+package com.example.habits.feature_habits.common.mapper
 
 import androidx.compose.ui.graphics.Color
 import com.example.habits.R
 import com.example.habits.core.model.habitcategory.HabitCategoryEntity
 import com.example.habits.core.model.habits.HabitEntity
 import com.example.habits.core.model.habits.HabitPriorityLevel
-import com.example.habits.feature_habits.habits.HabitUi
+import com.example.habits.feature_habits.common.model.HabitUi
 
 fun List<HabitEntity>.mapHabitEntityListToHabitUIList(categories: List<HabitCategoryEntity>): List<HabitUi> {
     return this.map {

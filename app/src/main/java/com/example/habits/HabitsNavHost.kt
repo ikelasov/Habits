@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.habits.feature_habits.createhabit.ui.CreateHabitScreen
 import com.example.habits.feature_login.LoginScreen
-import com.example.habits.feature_login.SignUpScreen
+import com.example.habits.feature_login. SignUpScreen
 import com.example.habits.feature_habits.habits.HabitsScreen
 import com.example.habits.feature_habits.manage_categories.ManageCategoriesScreen
 import com.example.habits.feature_habits.manage_habits.ManageHabitsScreen
@@ -77,10 +77,12 @@ fun HabitsNavHost(
             )
         }
         composableWithAnimation(HabitsDestinations.ManageHabitsScreen.route) {
-            ManageHabitsScreen()
+            ManageHabitsScreen(
+                onMenuClicked = onMenuClick
+            )
         }
         composableWithAnimation(HabitsDestinations.ManageCategoriesScreen.route) {
-            ManageCategoriesScreen()
+            ManageCategoriesScreen() // Assuming this will also need onMenuClicked later
         }
     }
 }

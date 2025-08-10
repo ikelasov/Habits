@@ -30,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
 import com.example.habits.core.model.quotes.QuoteEntity
+import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.screencomponents.HabitItem
 import com.example.habits.feature_habits.habits.screencomponents.HorizontalCalendar
 import com.example.habits.feature_habits.habits.screencomponents.LoadingScreen

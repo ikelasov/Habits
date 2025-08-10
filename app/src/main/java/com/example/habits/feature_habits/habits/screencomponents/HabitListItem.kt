@@ -46,9 +46,9 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
-import com.example.habits.ui.theme.HabitsTheme
+import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.DraggedDirection
-import com.example.habits.feature_habits.habits.HabitUi
+import com.example.habits.ui.theme.HabitsTheme
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
