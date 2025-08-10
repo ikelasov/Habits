@@ -35,7 +35,6 @@ class HabitsViewModel @Inject constructor(
     private val updateHabitProgressUseCase: UpdateHabitProgressUseCase,
     private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
-    private val statisticsRepository: StatisticsRepository,
 ) : ViewModel() {
     private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
     private val selectedDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
@@ -50,15 +49,13 @@ class HabitsViewModel @Inject constructor(
             combine(
                 getHabitsFlowUseCase(),
                 getCategoriesFlowUseCase(),
-                statisticsRepository.getStatistics(),
                 selectedMonth,
                 selectedDay,
-            ) { habits, categories, statistics, selectedDate, selectedDay ->
+            ) { habits, categories, selectedDate, selectedDay ->
                 val habitsUiList =
                     habits
                         .filter { it.daysToRepeat.contains(DaysOfWeek.fromLocalDate(selectedDay.dayOfWeek)) }
                         .mapHabitEntityListToHabitUIList(categories)
-                val statisticsUi = statistics.mapToStatisticsDataUi()
                 val calendarItemsUi =
                     getDaysOfMonthAbbreviated(
                         selectedDate.year,
@@ -73,7 +70,6 @@ class HabitsViewModel @Inject constructor(
 
                 HabitsViewState(
                     habits = habitsUiList,
-                    statisticsDataUi = statisticsUi,
                     calendarDataUi = calendarDataUi,
                     loading = false,
                     quote = _viewState.value.quote
@@ -140,7 +136,6 @@ class HabitsViewModel @Inject constructor(
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
     val quote: QuoteEntity? = null,
-    val statisticsDataUi: StatisticsDataUi = StatisticsDataUi(),
     val calendarDataUi: CalendarDataUi = CalendarDataUi(),
     val loading: Boolean = false,
 )
