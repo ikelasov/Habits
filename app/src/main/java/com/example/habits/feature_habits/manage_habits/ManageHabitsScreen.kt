@@ -79,11 +79,16 @@ fun ManageHabitsScreen(
             )
         }
     ) { innerPadding ->
+        val baseModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .safeContentPadding()
+            modifier = if (isLandscape()) {
+                baseModifier.safeContentPadding()
+            } else {
+                baseModifier
+            }
         ) {
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

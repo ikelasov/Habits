@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.habits.feature_habits.manage_habits.isLandscape
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,11 +78,16 @@ fun ManageCategoriesScreen(
             )
         }
     ) { innerPadding ->
+        val baseModifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .safeContentPadding(),
+            modifier = if (isLandscape()) {
+                baseModifier.safeContentPadding()
+            } else {
+                baseModifier
+            },
             contentAlignment = Alignment.Center
         ) {
             ManageCategoriesContent(
