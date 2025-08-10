@@ -24,7 +24,7 @@ import com.example.habits.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar(
-    userName: String = "Ilias",
+    userName: String,
     @DrawableRes profileIcon: Int = R.drawable.ic_profile,
     onMenuClicked: () -> Unit = {}
 ) {
@@ -35,7 +35,10 @@ fun TopBar(
         title = {
             Row {
                 Text(text = "Hello, ")
-                Text(text = "$userName!", color = colorResource(R.color.medium_priority))
+                Text(
+                    text = if (userName.isBlank()) "Stranger!" else "$userName!",
+                    color = colorResource(R.color.medium_priority)
+                )
             }
         },
         navigationIcon = {
@@ -59,5 +62,5 @@ fun TopBar(
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-    TopBar()
+    TopBar(userName = "Stranger")
 }

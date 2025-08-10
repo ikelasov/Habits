@@ -59,6 +59,7 @@ fun HabitsScreen(
         LoadingScreen()
     } else {
         ScreenContent(
+            userName = viewState.userName,
             habits = viewState.habits,
             quote = viewState.quote,
             calendarDataUi = viewState.calendarDataUi,
@@ -81,6 +82,7 @@ fun isLandscape(): Boolean {
 
 @Composable
 private fun ScreenContent(
+    userName: String,
     habits: List<HabitUi>,
     quote: QuoteEntity?,
     calendarDataUi: CalendarDataUi,
@@ -102,7 +104,7 @@ private fun ScreenContent(
             }
         },
         topBar = {
-            TopBar(onMenuClicked = onMenuClicked)
+            TopBar(userName = userName, onMenuClicked = onMenuClicked)
         },
     ) { contentPadding ->
         val listState = rememberLazyListState()
@@ -221,7 +223,7 @@ private fun DeleteHabitsButton(
 @Preview(showBackground = true)
 @Composable
 fun TopBarPreview() {
-    TopBar(onMenuClicked = {})
+    TopBar(userName = "Stranger", onMenuClicked = {})
 }
 
 @Preview
@@ -278,7 +280,8 @@ fun ScreenPreview() {
             onCurrentDateClicked = {},
             onDayClicked = {},
             onHabitItemDragged = { _, _ -> },
-            onMenuClicked = {}
+            onMenuClicked = {},
+            userName = "Stranger"
         )
     }
 }

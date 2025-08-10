@@ -17,7 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
 import com.example.habits.feature_habits.habits.StatisticsDataUi
-import com.example.habits.feature_habits.habits.getMockStatisticsDate
 
 @Composable
 fun StatisticsContent(statistics: StatisticsDataUi) {
@@ -82,12 +81,6 @@ fun StatisticsItem(
             contentDescription = null,
         )
     }
-}
-
-@Preview
-@Composable
-fun StatisticsContentPreview() {
-    StatisticsContent(getMockStatisticsDate())
 }
 
 @Preview(showBackground = true)

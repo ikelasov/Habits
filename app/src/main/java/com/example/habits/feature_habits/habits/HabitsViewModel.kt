@@ -2,11 +2,9 @@ package com.example.habits.feature_habits.habits
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habits.core.common.model.DaysOfWeek
-import com.example.habits.core.data.repository.StatisticsRepository
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.domain.GetCategoriesFlowUseCase
 import com.example.habits.feature_habits.common.domain.GetHabitsFlowUseCase
@@ -14,7 +12,7 @@ import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
 import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
 import com.example.habits.feature_habits.common.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.feature_habits.common.model.HabitUi
-import com.example.habits.feature_habits.habits.mapper.mapToStatisticsDataUi
+import com.example.habits.feature_habits.habits.domain.GetUsersNameUseCase
 import com.example.habits.feature_habits.habits.utils.formatMonthYear
 import com.example.habits.feature_habits.habits.utils.getDaysOfMonthAbbreviated
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +33,7 @@ class HabitsViewModel @Inject constructor(
     private val updateHabitProgressUseCase: UpdateHabitProgressUseCase,
     private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
+    private val getUsersNameUseCase: GetUsersNameUseCase,
 ) : ViewModel() {
     private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
     private val selectedDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
@@ -45,6 +44,7 @@ class HabitsViewModel @Inject constructor(
 
     init {
         fetchRandomQuote()
+        getCurrentUserName()
         viewModelScope.launch {
             combine(
                 getHabitsFlowUseCase(),
@@ -68,11 +68,10 @@ class HabitsViewModel @Inject constructor(
                         calendarItemsUi,
                     )
 
-                HabitsViewState(
+                _viewState.value.copy(
                     habits = habitsUiList,
                     calendarDataUi = calendarDataUi,
-                    loading = false,
-                    quote = _viewState.value.quote
+                    loading = false
                 )
             }.catch { throwable ->
                 // TODO: Implement emitting UI error. For now just rethrow
@@ -129,12 +128,18 @@ class HabitsViewModel @Inject constructor(
         val randomQuote = this@HabitsViewModel.getRandomQuoteUseCase()
         _viewState.update { it.copy(quote = randomQuote) }
     }
+
+    private fun getCurrentUserName() = viewModelScope.launch {
+        val currentUserName = getUsersNameUseCase().getOrNull() ?: return@launch
+        _viewState.update { it.copy(userName = currentUserName) }
+    }
 }
 
 // region ViewState data model
 
 data class HabitsViewState(
     val habits: List<HabitUi> = listOf(),
+    val userName: String = "",
     val quote: QuoteEntity? = null,
     val calendarDataUi: CalendarDataUi = CalendarDataUi(),
     val loading: Boolean = false,
