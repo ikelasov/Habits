@@ -42,8 +42,6 @@ import com.example.habits.feature_habits.habits.screencomponents.HabitItem
 import com.example.habits.feature_habits.habits.screencomponents.HorizontalCalendar
 import com.example.habits.feature_habits.habits.screencomponents.LoadingScreen
 import com.example.habits.feature_habits.habits.screencomponents.MotivationalQuoteComponent
-import com.example.habits.feature_habits.habits.screencomponents.StatisticsContent
-import com.example.habits.feature_habits.habits.screencomponents.StatisticsItem
 import com.example.habits.feature_habits.habits.screencomponents.TopBar
 import com.example.habits.feature_habits.habits.utils.getDaysOfMonth
 import com.example.habits.ui.theme.HabitsTheme
@@ -62,7 +60,6 @@ fun HabitsScreen(
     } else {
         ScreenContent(
             habits = viewState.habits,
-            statistics = viewState.statisticsDataUi,
             quote = viewState.quote,
             calendarDataUi = viewState.calendarDataUi,
             onCreateHabitClicked = onCreateHabitClicked,
@@ -85,7 +82,6 @@ fun isLandscape(): Boolean {
 @Composable
 private fun ScreenContent(
     habits: List<HabitUi>,
-    statistics: StatisticsDataUi,
     quote: QuoteEntity?,
     calendarDataUi: CalendarDataUi,
     onCreateHabitClicked: () -> Unit,
@@ -112,7 +108,6 @@ private fun ScreenContent(
         val listState = rememberLazyListState()
         Content(
             habits = habits,
-            statistics = statistics,
             quote = quote,
             calendarDataUi = calendarDataUi,
             onNextMonthClicked = onNextMonthClicked,
@@ -130,7 +125,6 @@ private fun ScreenContent(
 @Composable
 private fun Content(
     habits: List<HabitUi>,
-    statistics: StatisticsDataUi,
     quote: QuoteEntity?,
     calendarDataUi: CalendarDataUi,
     onNextMonthClicked: () -> Unit,
@@ -171,7 +165,6 @@ private fun Content(
             state = listState,
             modifier = modifier.background(MaterialTheme.colorScheme.background),
         ) {
-            item { StatisticsContent(statistics) }
             item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
             item { MotivationalQuoteComponent(quote) }
             item { Spacer(modifier = Modifier.padding(vertical = 4.dp)) }
@@ -251,22 +244,6 @@ fun HabitItemPreview() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun StatisticsItemPreview() {
-    StatisticsItem(
-        statisticTitle = "20 Days",
-        statisticsComment = "Longest streak",
-        icon = R.drawable.ic_longest_streak,
-    )
-}
-
-@Preview
-@Composable
-fun StatisticsContentPreview() {
-    StatisticsContent(getMockStatisticsDate())
-}
-
 @PreviewLightDark
 @Composable
 fun ScreenPreview() {
@@ -282,45 +259,28 @@ fun ScreenPreview() {
             0.3f,
             R.color.purple_200,
         )
-    ScreenContent(
-        habits = listOf(element = mockHabit),
-        statistics = getMockStatisticsDate(),
-        quote = QuoteEntity(
-            0,
-            "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
-            "Aristotle"
-        ),
-        calendarDataUi =
-            CalendarDataUi(
-                selectedMonth = "February 2024",
-                daysOfMonth = getDaysOfMonth(2024, 2),
+    HabitsTheme {
+        ScreenContent(
+            habits = listOf(element = mockHabit),
+            quote = QuoteEntity(
+                0,
+                "We are what we repeatedly do. Excellence, then, is not an act, but a habit.",
+                "Aristotle"
             ),
-        onCreateHabitClicked = {},
-        onNextMonthClicked = {},
-        onPreviousMonthClicked = {},
-        onCurrentDateClicked = {},
-        onDayClicked = {},
-        onHabitItemDragged = { _, _ -> },
-        onMenuClicked = {}
-    )
+            calendarDataUi =
+                CalendarDataUi(
+                    selectedMonth = "February 2024",
+                    daysOfMonth = getDaysOfMonth(2024, 2),
+                ),
+            onCreateHabitClicked = {},
+            onNextMonthClicked = {},
+            onPreviousMonthClicked = {},
+            onCurrentDateClicked = {},
+            onDayClicked = {},
+            onHabitItemDragged = { _, _ -> },
+            onMenuClicked = {}
+        )
+    }
 }
 
 // endregion
-
-// TODO move this
-internal fun getMockStatisticsDate(): StatisticsDataUi {
-    val longestStreak =
-        StatisticsItemUi("20 Days", "Longest streak", R.drawable.ic_longest_streak)
-    val currentStreak =
-        StatisticsItemUi("7 Days", "Current streak", R.drawable.ic_current_streak)
-    val completionRate =
-        StatisticsItemUi("98%", "Completion rate", R.drawable.ic_completion_rate)
-    val averageTasks = StatisticsItemUi("7", "Average tasks", R.drawable.ic_average_tasks)
-
-    return StatisticsDataUi(
-        longestStreak = longestStreak,
-        currentStreak = currentStreak,
-        completionRate = completionRate,
-        averageTasks = averageTasks,
-    )
-}
