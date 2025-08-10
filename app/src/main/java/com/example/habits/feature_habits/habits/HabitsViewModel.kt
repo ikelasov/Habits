@@ -9,7 +9,7 @@ import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.data.repository.StatisticsRepository
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.domain.GetCategoriesFlowUseCase
-import com.example.habits.feature_habits.habits.domain.GetHabitsFlow
+import com.example.habits.feature_habits.habits.domain.GetHabitsFlowUseCase
 import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
 import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
 import com.example.habits.feature_habits.habits.mapper.mapHabitEntityListToHabitUIList
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HabitsViewModel @Inject constructor(
-    private val getHabitsFlow: GetHabitsFlow,
+    private val getHabitsFlowUseCase: GetHabitsFlowUseCase,
     private val updateHabitProgressUseCase: UpdateHabitProgressUseCase,
     private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
@@ -47,7 +47,7 @@ class HabitsViewModel @Inject constructor(
         fetchRandomQuote()
         viewModelScope.launch {
             combine(
-                getHabitsFlow(),
+                getHabitsFlowUseCase(),
                 getCategoriesFlowUseCase(),
                 statisticsRepository.getStatistics(),
                 selectedMonth,
