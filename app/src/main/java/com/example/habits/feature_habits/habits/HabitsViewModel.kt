@@ -9,7 +9,7 @@ import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.data.repository.StatisticsRepository
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.domain.GetCategoriesFlowUseCase
-import com.example.habits.feature_habits.habits.domain.GetHabitsFlowUseCase
+import com.example.habits.feature_habits.common.domain.GetHabitsFlowUseCase
 import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
 import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
 import com.example.habits.feature_habits.habits.mapper.mapHabitEntityListToHabitUIList
