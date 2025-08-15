@@ -2,6 +2,7 @@ package com.example.habits.core.worker
 
 import android.content.Context
 import androidx.work.Data
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -27,15 +28,17 @@ class WorkerStarter @Inject constructor(context: Context) {
                 habitToSetReminder.reminderTimes,
             )
 
-        buildWorkRequest(
+        val workRequest = buildWorkRequest(
             initialDelayInSeconds,
             inputData,
             habitToSetReminder.id,
-        ).enqueue()
-    }
+        )
 
-    private fun OneTimeWorkRequest.enqueue() {
-        workManager.enqueue(this)
+        workManager.enqueueUniqueWork(
+            "habit_reminder_${habitToSetReminder.id}",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
     }
 
     private fun buildWorkRequest(
