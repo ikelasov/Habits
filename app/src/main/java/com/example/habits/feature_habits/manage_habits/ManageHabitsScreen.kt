@@ -2,6 +2,7 @@ package com.example.habits.feature_habits.manage_habits
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,6 +31,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -49,9 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
+import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.feature_habits.common.model.HabitUi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ManageHabitsScreen(
     onMenuClicked: () -> Unit,
@@ -79,59 +83,88 @@ fun ManageHabitsScreen(
             )
         }
     ) { innerPadding ->
-        val baseModifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-
-        Box(
-            modifier = if (isLandscape()) {
-                baseModifier.safeContentPadding()
-            } else {
-                baseModifier
-            }
+        // Use a Column to place the filter above the content list.
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
+            PriorityFilter(
+                selectedPriority = viewState.selectedPriority,
+                onPrioritySelected = viewModel::onPriorityFilterChanged
+            )
 
-            if (viewState.habits.isEmpty()) {
-                Text(
-                    text = "No habits yet. Create some!",
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            } else {
-                if (isLandscape()) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(
-                            horizontal = 8.dp,
-                            vertical = 8.dp
-                        ),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(viewState.habits) { habit ->
-                            HabitListItem(habit = habit, onDeleteClicked = {
-                                viewModel.onDeleteHabitClicked(habit.id)
-                            })
-                        }
-                    }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (isLandscape()) Modifier.safeContentPadding() else Modifier
+                    )
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (viewState.habits.isEmpty()) {
+                    Text(
+                        text = "No habits found. Try changing the filter!",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(
-                            horizontal = 8.dp,
-                            vertical = 8.dp
-                        )
-                    ) {
-                        items(viewState.habits) { habit ->
-                            HabitListItem(habit = habit, onDeleteClicked = {
-                                viewModel.onDeleteHabitClicked(habit.id)
-                            })
+                    if (isLandscape()) {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(viewState.habits) { habit ->
+                                HabitListItem(habit = habit, onDeleteClicked = {
+                                    viewModel.onDeleteHabitClicked(habit.id)
+                                })
+                            }
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp)
+                        ) {
+                            items(viewState.habits, key = { it.id }) { habit ->
+                                HabitListItem(
+                                    habit = habit,
+                                    onDeleteClicked = {
+                                        viewModel.onDeleteHabitClicked(habit.id)
+                                    },
+                                )
+                            }
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PriorityFilter(
+    selectedPriority: HabitPriorityLevel?,
+    onPrioritySelected: (HabitPriorityLevel?) -> Unit
+) {
+    val priorities = listOf(null) + HabitPriorityLevel.entries
+
+    LazyRow(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(priorities) { priority ->
+            FilterChip(
+                selected = selectedPriority == priority,
+                onClick = { onPrioritySelected(priority) },
+                label = { Text(priority?.value ?: "All") }
+            )
         }
     }
 }

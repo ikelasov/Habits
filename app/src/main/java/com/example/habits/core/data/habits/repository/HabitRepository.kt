@@ -30,7 +30,7 @@ class HabitRepository @Inject constructor(
     suspend fun getHabit(habitId: String): HabitEntity =
         localDataSource.getHabit(habitId, userId)
 
-    suspend fun getHabitCompletionForDate(date: LocalDate): Flow<List<HabitCompletionEntity>> =
+    fun getHabitCompletionForDate(date: LocalDate): Flow<List<HabitCompletionEntity>> =
         localDataSource.getHabitCompletionsForDate(date)
 
     suspend fun getHabitCompletionForId(habitId: String, date: LocalDate): HabitCompletionEntity? =

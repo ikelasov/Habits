@@ -55,6 +55,7 @@ fun HabitEntity.mapHabitEntityToHabitUI(
         daysToRepeat = daysToRepeat,
         repetitionIndication = repetitionIndication,
         progress = progress,
+        priorityLevel = this.priorityLevel,
         priorityIndicationColor = priorityIndicationColor,
     )
 }

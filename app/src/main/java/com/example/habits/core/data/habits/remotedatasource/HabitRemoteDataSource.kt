@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.tasks.await
 import java.time.LocalTime
 import javax.inject.Inject
+import kotlin.text.get
 
 class HabitRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
@@ -104,7 +105,17 @@ class HabitRemoteDataSource @Inject constructor(
     }
 
     suspend fun deleteHabit(userId: String, habitId: String) {
-        getHabitDocumentReference(userId, habitId).delete().await()
+        val habitDocRef = getHabitDocumentReference(userId, habitId)
+        val batch = firestore.batch()
+
+        val habitCompletionsQuery = habitDocRef.collection("habitCompletions").get().await()
+
+        for (document in habitCompletionsQuery.documents) {
+            batch.delete(document.reference)
+        }
+
+        batch.delete(habitDocRef)
+        batch.commit().await()
     }
 
     suspend fun updateHabitProgress(
