@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.habits.R
+import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.screencomponents.HabitItem
@@ -238,8 +239,9 @@ fun HabitItemPreview() {
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
-            0.3f,
-            R.color.purple_200,
+            progress = 0.3f,
+            priorityLevel = HabitPriorityLevel.LOW_PRIORITY,
+            priorityIndicationColor = R.color.purple_200,
         )
     HabitsTheme {
         HabitItem(mockHabit, { _, _ -> })
@@ -258,8 +260,9 @@ fun ScreenPreview() {
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
-            0.3f,
-            R.color.purple_200,
+            priorityLevel = HabitPriorityLevel.LOW_PRIORITY,
+            progress = 0.3f,
+            priorityIndicationColor = R.color.purple_200,
         )
     HabitsTheme {
         ScreenContent(

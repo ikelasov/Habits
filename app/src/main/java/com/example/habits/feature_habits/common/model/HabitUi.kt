@@ -2,6 +2,7 @@ package com.example.habits.feature_habits.common.model
 
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
+import com.example.habits.core.model.habits.HabitPriorityLevel
 
 @Stable
 data class HabitUi(
@@ -13,5 +14,6 @@ data class HabitUi(
     val daysToRepeat: String,
     val repetitionIndication: String,
     val progress: Float,
+    val priorityLevel: HabitPriorityLevel,
     val priorityIndicationColor: Int,
 )

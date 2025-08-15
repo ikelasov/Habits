@@ -8,11 +8,12 @@ import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.model.quotes.QuoteEntity
 import com.example.habits.feature_habits.common.domain.GetCategoriesFlowUseCase
 import com.example.habits.feature_habits.common.domain.GetHabitsFlowUseCase
-import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
-import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
 import com.example.habits.feature_habits.common.mapper.mapHabitEntityListToHabitUIList
 import com.example.habits.feature_habits.common.model.HabitUi
+import com.example.habits.feature_habits.habits.domain.GetHabitCompletionsForDayUseCase
+import com.example.habits.feature_habits.habits.domain.GetRandomQuoteUseCase
 import com.example.habits.feature_habits.habits.domain.GetUsersNameUseCase
+import com.example.habits.feature_habits.habits.domain.UpdateHabitProgressUseCase
 import com.example.habits.feature_habits.habits.utils.formatMonthYear
 import com.example.habits.feature_habits.habits.utils.getDaysOfMonthAbbreviated
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +23,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatten
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -34,6 +39,7 @@ class HabitsViewModel @Inject constructor(
     private val getCategoriesFlowUseCase: GetCategoriesFlowUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
     private val getUsersNameUseCase: GetUsersNameUseCase,
+    private val getHabitCompletionsForUseCase: GetHabitCompletionsForDayUseCase,
 ) : ViewModel() {
     private val selectedMonth: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
     private val selectedDay: MutableStateFlow<LocalDate> = MutableStateFlow(LocalDate.now())
@@ -42,6 +48,10 @@ class HabitsViewModel @Inject constructor(
     val viewState: StateFlow<HabitsViewState>
         get() = _viewState
 
+    val completionsFlow = selectedDay.flatMapLatest { day ->
+        getHabitCompletionsForUseCase(day)
+    }
+
     init {
         fetchRandomQuote()
         getCurrentUserName()
@@ -49,13 +59,17 @@ class HabitsViewModel @Inject constructor(
             combine(
                 getHabitsFlowUseCase(),
                 getCategoriesFlowUseCase(),
+                completionsFlow,
                 selectedMonth,
                 selectedDay,
-            ) { habits, categories, selectedDate, selectedDay ->
+            ) { habits, categories, completionsForDay, selectedDate, selectedDay ->
+                val completionsMap =
+                    completionsForDay.associateBy({ it.habitId }, { it.completedRepetitions })
+
                 val habitsUiList =
                     habits
                         .filter { it.daysToRepeat.contains(DaysOfWeek.fromLocalDate(selectedDay.dayOfWeek)) }
-                        .mapHabitEntityListToHabitUIList(categories)
+                        .mapHabitEntityListToHabitUIList(categories, completionsMap)
                 val calendarItemsUi =
                     getDaysOfMonthAbbreviated(
                         selectedDate.year,
@@ -82,7 +96,7 @@ class HabitsViewModel @Inject constructor(
         }
     }
 
-    // region Habits actions
+// region Habits actions
 
     fun onHabitItemDragged(
         habitId: String,
@@ -94,13 +108,13 @@ class HabitsViewModel @Inject constructor(
                     DraggedDirection.StartToEnd -> 1
                     DraggedDirection.EndToStart -> -1
                 }
-            updateHabitProgressUseCase(habitId, valueToUpdate)
+            updateHabitProgressUseCase(habitId, valueToUpdate, selectedDay.value)
         }
     }
 
-    // endregion
+// endregion
 
-    // region Date picker actions
+// region Date picker actions
 
     fun onNextMonthClicked() {
         selectedMonth.value = selectedMonth.value.plusMonths(1)
@@ -122,7 +136,7 @@ class HabitsViewModel @Inject constructor(
         selectedDay.value = adjustedDate
     }
 
-    // endregion
+// endregion
 
     private fun fetchRandomQuote() = viewModelScope.launch {
         val randomQuote = this@HabitsViewModel.getRandomQuoteUseCase()

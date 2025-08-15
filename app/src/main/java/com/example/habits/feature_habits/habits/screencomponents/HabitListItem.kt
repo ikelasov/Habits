@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.habits.R
+import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.feature_habits.common.model.HabitUi
 import com.example.habits.feature_habits.habits.DraggedDirection
 import com.example.habits.ui.theme.HabitsTheme
@@ -276,8 +277,9 @@ fun HabitItemPreview() {
             timeToDoIndication = "10:00 AM",
             daysToRepeat = "Mon,Sun",
             repetitionIndication = "10 times per day",
-            0.3f,
-            R.color.purple_200,
+            progress = 0.3f,
+            priorityIndicationColor = R.color.purple_200,
+            priorityLevel = HabitPriorityLevel.LOW_PRIORITY
         )
     HabitsTheme {
         HabitItem(mockHabit, { _, _ -> })

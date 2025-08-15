@@ -1,17 +1,20 @@
 package com.example.habits.core.data.habits.localdatasource
 
 import com.example.habits.core.common.model.DaysOfWeek
+import com.example.habits.core.model.habits.HabitCompletionEntity
 import com.example.habits.core.model.habits.HabitEntity
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.core.model.habits.TimeOfTheDay
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class HabitLocalDataSource @Inject constructor(
-    private val habitDao: HabitDao
+    private val habitDao: HabitDao,
+    private val habitCompletionDao: HabitCompletionDao
 ) {
 
     suspend fun getHabit(habitId: String, userId: String): HabitEntity =
@@ -22,6 +25,15 @@ class HabitLocalDataSource @Inject constructor(
 
     suspend fun getHabitsWithoutRemindersSet(userId: String): List<HabitEntity> =
         habitDao.getUserHabitsWithoutRemindersSet(userId)
+
+    fun getHabitCompletionsForDate(date: LocalDate): Flow<List<HabitCompletionEntity>> =
+        habitCompletionDao.getHabitCompletionsForDate(date)
+
+    suspend fun insertOrUpdateHabitCompletions(completions: List<HabitCompletionEntity>) =
+        habitCompletionDao.insertOrUpdateHabitCompletions(completions)
+
+    suspend fun getHabitCompletionForId(habitId: String, date: LocalDate): HabitCompletionEntity? =
+        habitCompletionDao.getHabitCompletionById(habitId, date)
 
     suspend fun createHabit(
         habitId: String,

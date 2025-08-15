@@ -2,6 +2,7 @@ package com.example.habits.core.di
 
 import android.content.Context
 import com.example.habits.core.data.habitcategories.localdatasource.CategoryDao
+import com.example.habits.core.data.habits.localdatasource.HabitCompletionDao
 import com.example.habits.core.data.habits.localdatasource.HabitDao
 import com.example.habits.core.data.quotes.localdatasource.QuoteDao
 import com.example.habits.core.db.HabitsRoomDatabase
@@ -18,6 +19,10 @@ class DatabaseModule {
     @Provides
     fun provideHabitsDao(habitsDatabase: HabitsRoomDatabase): HabitDao =
         habitsDatabase.habitDao()
+
+    @Provides
+    fun provideHabitCompletionDao(habitsDatabase: HabitsRoomDatabase): HabitCompletionDao =
+        habitsDatabase.habitCompletionDao()
 
     @Provides
     fun provideHabitsCategoriesDao(habitsDatabase: HabitsRoomDatabase): CategoryDao =

@@ -3,10 +3,12 @@ package com.example.habits.core.data.habits.repository
 import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.data.habits.localdatasource.HabitLocalDataSource
 import com.example.habits.core.data.habits.remotedatasource.HabitRemoteDataSource
+import com.example.habits.core.model.habits.HabitCompletionEntity
 import com.example.habits.core.model.habits.HabitEntity
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalTime
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,6 +30,12 @@ class HabitRepository @Inject constructor(
     suspend fun getHabit(habitId: String): HabitEntity =
         localDataSource.getHabit(habitId, userId)
 
+    fun getHabitCompletionForDate(date: LocalDate): Flow<List<HabitCompletionEntity>> =
+        localDataSource.getHabitCompletionsForDate(date)
+
+    suspend fun getHabitCompletionForId(habitId: String, date: LocalDate): HabitCompletionEntity? =
+        localDataSource.getHabitCompletionForId(habitId, date)
+
     suspend fun createHabit(
         habitName: String,
         categoryId: String,
@@ -47,8 +55,8 @@ class HabitRepository @Inject constructor(
         )
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) =
-        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId)
+    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, date: String) =
+        remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId, date)
 
     suspend fun updateHabitRemindersSet(habitId: String) =
         remoteDataSource.updateHabitReminderSet(habitId, userId)
