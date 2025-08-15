@@ -12,6 +12,7 @@ class HabitRemindersRepository @Inject constructor(
     suspend fun createNonSetReminders() {
         val habitsWithoutReminderSet = habitRepository.getHabitsWithoutRemindersSet()
         habitsWithoutReminderSet.forEach {
+            if (it.reminderTimes.isEmpty()) return
             workerStarter.startWork(it)
             markHabitReminderAsSet(it)
         }
