@@ -50,6 +50,7 @@ import com.example.habits.ui.theme.HabitsTheme
 @Composable
 fun HabitsScreen(
     onCreateHabitClicked: () -> Unit,
+    onHabitClicked: (String) -> Unit,
     onMenuClicked: () -> Unit,
     habitsViewModel: HabitsViewModel = hiltViewModel(),
 ) {
@@ -71,6 +72,7 @@ fun HabitsScreen(
             onDayClicked = habitsViewModel::onDayClicked,
             onHabitItemDragged = habitsViewModel::onHabitItemDragged,
             onMenuClicked = onMenuClicked,
+            onHabitClicked = onHabitClicked,
         )
     }
 }
@@ -94,6 +96,7 @@ private fun ScreenContent(
     onDayClicked: (Int) -> Unit,
     onHabitItemDragged: (String, DraggedDirection) -> Unit,
     onMenuClicked: () -> Unit,
+    onHabitClicked: (String) -> Unit,
 ) {
     Scaffold(
         floatingActionButton = {
@@ -119,6 +122,7 @@ private fun ScreenContent(
             onDayClicked = onDayClicked,
             onHabitItemDragged = onHabitItemDragged,
             listState = listState,
+            onHabitClicked = onHabitClicked,
             modifier = Modifier.padding(contentPadding),
         )
     }
@@ -137,6 +141,7 @@ private fun Content(
     onHabitItemDragged: (String, DraggedDirection) -> Unit,
     listState: LazyListState,
     modifier: Modifier = Modifier,
+    onHabitClicked: (String) -> Unit,
 ) {
     if (isLandscape()) {
         LazyVerticalGrid(
@@ -160,6 +165,7 @@ private fun Content(
                 HabitItem(
                     habit = habit,
                     onHabitItemDragged = onHabitItemDragged,
+                    onHabitClicked = onHabitClicked,
                 )
             }
         }
@@ -190,32 +196,10 @@ private fun Content(
                 HabitItem(
                     habit = it,
                     onHabitItemDragged = onHabitItemDragged,
+                    onHabitClicked = onHabitClicked,
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun CreateHabitButton(
-    onButtonClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Button(
-        onClick = { onButtonClick() },
-        modifier = modifier,
-    ) {
-        Text(text = "Add")
-    }
-}
-
-@Composable
-private fun DeleteHabitsButton(
-    onButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Button(onClick = { onButtonClicked() }, modifier = modifier) {
-        Text(text = "Delete")
     }
 }
 
@@ -244,7 +228,7 @@ fun HabitItemPreview() {
             priorityIndicationColor = R.color.purple_200,
         )
     HabitsTheme {
-        HabitItem(mockHabit, { _, _ -> })
+        HabitItem(mockHabit, { _, _ -> }, {})
     }
 }
 
@@ -266,6 +250,7 @@ fun ScreenPreview() {
         )
     HabitsTheme {
         ScreenContent(
+            userName = "Stranger",
             habits = listOf(element = mockHabit),
             quote = QuoteEntity(
                 0,
@@ -284,8 +269,7 @@ fun ScreenPreview() {
             onDayClicked = {},
             onHabitItemDragged = { _, _ -> },
             onMenuClicked = {},
-            userName = "Stranger"
-        )
+        ) {}
     }
 }
 

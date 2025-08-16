@@ -10,4 +10,5 @@
     <string name="times_per_day">Times per day</string>
     <string name="time">Time</string>
     <string name="time_for_progress">Time for progress!</string>
+    <string name="update_habit">Update habit</string>
 </resources>

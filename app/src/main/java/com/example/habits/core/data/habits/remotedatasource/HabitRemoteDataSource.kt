@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.tasks.await
 import java.time.LocalTime
 import javax.inject.Inject
+import kotlin.collections.emptyList
 import kotlin.text.get
 
 class HabitRemoteDataSource @Inject constructor(
@@ -92,6 +93,31 @@ class HabitRemoteDataSource @Inject constructor(
         newHabitRef.set(firestoreHabit).await()
 
         return habitId
+    }
+
+    suspend fun updateHabit(
+        habitId: String,
+        userId: String,
+        habitName: String,
+        categoryId: String,
+        daysToRepeat: List<DaysOfWeek>,
+        repetitionsPerDay: Int,
+        priorityLevel: HabitPriorityLevel,
+        reminderTime: LocalTime?
+    ) {
+        val habitDocRef = getHabitDocumentReference(userId, habitId)
+        val firestoreUpdateData = hashMapOf<String, Any>(
+            "name" to habitName,
+            "categoryId" to categoryId,
+            "daysToRepeat" to daysToRepeat.map { it.value },
+            "repetitionsPerDay" to repetitionsPerDay,
+            "priorityLevel" to priorityLevel.value,
+            ("reminderTimes" to reminderTime?.let { listOf(it.toString()) }
+                ?: emptyList<String>()) as Pair<String, Any>,
+            "hasSetReminder" to (reminderTime != null)
+        )
+
+        habitDocRef.update(firestoreUpdateData).await()
     }
 
     suspend fun updateHabitReminderSet(habitId: String, userId: String) {

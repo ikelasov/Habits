@@ -8,6 +8,6 @@ class GetHabitCompletionsForDayUseCase @Inject constructor(
     private val habitRepository: HabitRepository,
 ) {
 
-    suspend operator fun invoke(date: LocalDate) =
+    operator fun invoke(date: LocalDate) =
         habitRepository.getHabitCompletionForDate(date)
 }

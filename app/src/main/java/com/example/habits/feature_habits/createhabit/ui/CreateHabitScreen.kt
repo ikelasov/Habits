@@ -36,7 +36,7 @@ import com.example.habits.core.model.habitcategory.HabitCategoryEntity
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.feature_habits.createhabit.ui.screencomponents.CreateCategoryDialog
 import com.example.habits.feature_habits.createhabit.ui.screencomponents.CreateHabitButton
-import com.example.habits.feature_habits.createhabit.ui.screencomponents.CreateHabitTopBar
+import com.example.habits.feature_habits.createhabit.ui.screencomponents.UpsertHabitTopBar
 import com.example.habits.feature_habits.createhabit.ui.screencomponents.DayPicker
 import com.example.habits.feature_habits.createhabit.ui.screencomponents.HabitExecutionTime
 import com.example.habits.feature_habits.createhabit.ui.screencomponents.HabitNameInput
@@ -97,6 +97,7 @@ fun CreateHabitScreen(
         onDialogDismissed = viewModel::onDialogDismissed,
         onPriorityLevelChanged = viewModel::onPriorityLevelChanged,
         snackBarHostState = snackBarHostState,
+        isInEditMode = viewState.isEditMode
     )
 }
 
@@ -122,17 +123,20 @@ private fun ScreenContent(
     onDialogDismissed: () -> Unit,
     onPriorityLevelChanged: (HabitPriorityLevel) -> Unit,
     snackBarHostState: SnackbarHostState,
+    isInEditMode: Boolean,
 ) {
     Scaffold(
         topBar = {
-            CreateHabitTopBar(
+            UpsertHabitTopBar(
                 onBackArrowClicked = { onBackArrowClicked() },
+                isInEditMode = isInEditMode,
                 modifier = Modifier.padding(top = 8.dp),
             )
         },
         bottomBar = {
             CreateHabitButton(
                 onCreateHabitClicked = { attemptCreateHabit() },
+                isInEditMode,
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -294,6 +298,7 @@ fun CreateHabitScreenPreview() {
                 repetitionsPerDay = 3, priorityLevel = HabitPriorityLevel.MEDIUM_PRIORITY,
                 habitExecutionTime = "8:00",
                 shouldShowTimePicker = false,
+                isInEditMode = true
             )
         }
     }
@@ -325,6 +330,7 @@ fun CreateHabitScreenWithTimePickerPreview() {
                 repetitionsPerDay = 3, priorityLevel = HabitPriorityLevel.MEDIUM_PRIORITY,
                 habitExecutionTime = "8:00",
                 shouldShowTimePicker = true,
+                isInEditMode = true
             )
         }
     }

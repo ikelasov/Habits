@@ -36,7 +36,8 @@ class HabitSyncer @Inject constructor(
                 externalScope.launch {
                     try {
                         val habitEntities = firestoreHabits.map { it.toHabitEntity() }
-                        localDataSource.replaceAllHabitsForUser(userId, habitEntities)
+                        localDataSource.deleteMissingHabits(userId, habitEntities.map { it.id })
+                        localDataSource.upsertAll(habitEntities)
                     } catch (e: Exception) {
                         Log.e(
                             "HabitSyncer",

@@ -19,12 +19,18 @@ import com.example.habits.ui.theme.HabitsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateHabitTopBar(
+fun UpsertHabitTopBar(
     onBackArrowClicked: () -> Unit,
+    isInEditMode: Boolean,
     modifier: Modifier = Modifier,
 ) {
     TopAppBar(
-        title = { Text(text = stringResource(R.string.create_a_new_habit), fontSize = 18.sp) },
+        title = {
+            Text(
+                text = if (isInEditMode) stringResource(R.string.update_habit) else stringResource(R.string.create_a_new_habit),
+                fontSize = 18.sp
+            )
+        },
         navigationIcon = {
             IconButton(onClick = { onBackArrowClicked() }) {
                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -41,6 +47,6 @@ fun CreateHabitTopBar(
 @Composable
 fun CreateHabitTopBarPreview() {
     HabitsTheme {
-        CreateHabitTopBar(onBackArrowClicked = { })
+        UpsertHabitTopBar(onBackArrowClicked = { }, true)
     }
 }
