@@ -18,6 +18,7 @@ import com.example.habits.feature_habits.habits.utils.formatMonthYear
 import com.example.habits.feature_habits.habits.utils.getDaysOfMonthAbbreviated
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -48,6 +49,7 @@ class HabitsViewModel @Inject constructor(
     val viewState: StateFlow<HabitsViewState>
         get() = _viewState
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val completionsFlow = selectedDay.flatMapLatest { day ->
         getHabitCompletionsForUseCase(day)
     }

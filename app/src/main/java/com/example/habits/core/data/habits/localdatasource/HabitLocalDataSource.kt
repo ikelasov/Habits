@@ -70,7 +70,11 @@ class HabitLocalDataSource @Inject constructor(
         habitDao.updateCompletedRepetitions(habitId, updatedProgress)
     }
 
-    suspend fun replaceAllHabitsForUser(userId: String, habits: List<HabitEntity>) {
-        habitDao.replaceAllForUser(userId, habits)
+    suspend fun upsertAll(habits: List<HabitEntity>) {
+        habitDao.upsertAll(habits)
+    }
+
+    suspend fun deleteMissingHabits(userId: String, remoteHabitIds: List<String>) {
+        habitDao.deleteMissingHabits(userId, remoteHabitIds)
     }
 }

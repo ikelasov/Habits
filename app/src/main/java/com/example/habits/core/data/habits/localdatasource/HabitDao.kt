@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
+import androidx.room.Upsert
 import com.example.habits.core.model.habits.HabitEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -39,11 +39,11 @@ interface HabitDao {
     @Query("DELETE from user_habits_table WHERE id=:habitId")
     suspend fun deleteHabit(habitId: String)
 
-    @Transaction
-    suspend fun replaceAllForUser(userId: String, habits: List<HabitEntity>) {
-        deleteAllHabits(userId)
-        insertAll(habits)
-    }
+    @Upsert
+    suspend fun upsertAll(habits: List<HabitEntity>)
+
+    @Query("DELETE FROM user_habits_table WHERE userId = :userId AND id NOT IN (:remoteHabitIds)")
+    suspend fun deleteMissingHabits(userId: String, remoteHabitIds: List<String>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(categories: List<HabitEntity>)
