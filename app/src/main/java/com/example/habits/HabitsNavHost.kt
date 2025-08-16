@@ -5,11 +5,14 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.habits.feature_habits.createhabit.ui.CreateHabitScreen
 import com.example.habits.feature_login.LoginScreen
 import com.example.habits.feature_login.SignUpScreen
@@ -58,12 +61,25 @@ fun HabitsNavHost(
         composableWithAnimation(HabitsDestinations.HabitsScreen.route) {
             HabitsScreen(
                 onCreateHabitClicked = {
-                    navController.navigate(HabitsDestinations.CreateHabitScreen.route)
+                    navController.navigate(HabitsDestinations.CreateHabitScreen.createRoute(null))
                 },
-                onMenuClicked = onMenuClick
+                onMenuClicked = onMenuClick,
+                onHabitClicked = { habitId ->
+                    navController.navigate(
+                        HabitsDestinations.CreateHabitScreen.createRoute(
+                            habitId
+                        )
+                    )
+                },
             )
         }
-        composableWithAnimation(HabitsDestinations.CreateHabitScreen.route) {
+        composableWithAnimation(
+            route = HabitsDestinations.CreateHabitScreen.route,
+            arguments = listOf(navArgument(HABIT_ID) {
+                type = NavType.StringType
+                nullable = true
+            })
+        ) {
             CreateHabitScreen(
                 onBackArrowClicked = {
                     navController.popBackStack()
@@ -91,10 +107,12 @@ fun HabitsNavHost(
 
 fun NavGraphBuilder.composableWithAnimation(
     route: String,
+    arguments: List<NamedNavArgument> = emptyList(),
     content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
     composable(
         route = route,
+        arguments = arguments,
         enterTransition = {
             slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Up,

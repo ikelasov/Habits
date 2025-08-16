@@ -19,6 +19,7 @@ import com.example.habits.ui.theme.HabitsTheme
 @Composable
 fun CreateHabitButton(
     onCreateHabitClicked: () -> Unit,
+    isInEditMode: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Button(
@@ -32,7 +33,10 @@ fun CreateHabitButton(
             ),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
     ) {
-        Text(text = stringResource(R.string.create_habit), fontSize = 18.sp)
+        Text(
+            text = if (isInEditMode) stringResource(R.string.update_habit) else stringResource(R.string.create_habit),
+            fontSize = 18.sp
+        )
     }
 }
 
@@ -42,6 +46,7 @@ fun CreateHabitButtonPreview() {
     HabitsTheme {
         CreateHabitButton(
             {},
+            true,
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),

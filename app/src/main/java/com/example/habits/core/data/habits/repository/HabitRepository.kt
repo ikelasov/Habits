@@ -55,6 +55,27 @@ class HabitRepository @Inject constructor(
         )
     }
 
+    suspend fun updateHabit(
+        habitId: String,
+        habitName: String,
+        categoryId: String,
+        daysToRepeat: List<DaysOfWeek>,
+        repetitionsPerDay: Int,
+        priorityLevel: HabitPriorityLevel,
+        reminderTime: LocalTime?
+    ) {
+        remoteDataSource.updateHabit(
+            habitId = habitId,
+            userId = userId,
+            habitName = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTime = reminderTime
+        )
+    }
+
     suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, date: String) =
         remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId, date)
 
