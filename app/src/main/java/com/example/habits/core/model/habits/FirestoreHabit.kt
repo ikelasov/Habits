@@ -38,7 +38,7 @@ fun FirestoreHabit.toHabitEntity(): HabitEntity {
         completedRepetitions = completedRepetitions,
         priorityLevel = HabitPriorityLevel.entries.first { it.value == priorityLevel },
         hasSetReminder = hasSetReminder,
-        reminderTimes = reminderTimes.map { LocalTime.parse(it, timeFormatter) },
+        reminderTimes = reminderTimes?.map { LocalTime.parse(it, timeFormatter) } ?: emptyList(),
         createdAt = createdAt?.time ?: System.currentTimeMillis()
     )
 }
