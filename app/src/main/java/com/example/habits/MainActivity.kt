@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
                 )
             ) {
                 AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
+                    .setTitle("Notification permission needed")
                     .setMessage("This permission is needed to show reminders for your habits.")
                     .setPositiveButton("OK") { _, _ ->
                         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
