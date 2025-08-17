@@ -116,7 +116,7 @@ private fun findNextReminderOffsetForNextWeek(
     val repetitionsBeforeToday =
         repetitionDaysToOffsetFromTodayPair.filter { it.second < 0 }
     val offsetOfTheClosestDay =
-        repetitionsBeforeToday.maxByOrNull { it.second }!!.second + 7
+        repetitionsBeforeToday.maxByOrNull { it.second }!!.second
     // Since the offset of the reminder day is negative (because it belongs to previous days)
     // we add 7 days to calculate the offset for the same day of the next week
     val adjustedOffset = offsetOfTheClosestDay + 7

@@ -2,17 +2,17 @@ package com.example.habits.core.data.habits.remotedatasource
 
 import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.model.habits.FirestoreHabit
-import com.example.habits.core.model.habits.FirestoreHabitCompletion
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import com.example.habits.core.model.habits.TimeOfTheDay
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import kotlin.collections.emptyList
-import kotlin.text.get
 
 class HabitRemoteDataSource @Inject constructor(
     private val firestore: FirebaseFirestore
@@ -58,8 +58,17 @@ class HabitRemoteDataSource @Inject constructor(
         }
     }
 
+    fun getNewHabitDocumentId(userId: String): String {
+        val habitsCollection = firestore
+            .collection("users")
+            .document(userId)
+            .collection("habits")
+        val newHabitRef = habitsCollection.document()
+        return newHabitRef.id
+    }
 
-    suspend fun createHabitAndGetDocId(
+    suspend fun createHabit(
+        habitId: String,
         userId: String,
         habitName: String,
         categoryId: String,
@@ -67,14 +76,13 @@ class HabitRemoteDataSource @Inject constructor(
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
-    ): String {
+    ) {
 
         val habitsCollection = firestore
             .collection("users")
             .document(userId)
             .collection("habits")
-        val newHabitRef = habitsCollection.document()
-        val habitId = newHabitRef.id
+        val habitRef = habitsCollection.document(habitId)
 
         val firestoreHabit = FirestoreHabit(
             id = habitId,
@@ -90,9 +98,7 @@ class HabitRemoteDataSource @Inject constructor(
             reminderTimes = reminderTime?.let { listOf(it.toString()) } ?: emptyList(),
         )
 
-        newHabitRef.set(firestoreHabit).await()
-
-        return habitId
+        habitRef.set(firestoreHabit).await()
     }
 
     suspend fun updateHabit(
@@ -103,7 +109,8 @@ class HabitRemoteDataSource @Inject constructor(
         daysToRepeat: List<DaysOfWeek>,
         repetitionsPerDay: Int,
         priorityLevel: HabitPriorityLevel,
-        reminderTime: LocalTime?
+        reminderTime: LocalTime?,
+        hasSetReminder: Boolean
     ) {
         val habitDocRef = getHabitDocumentReference(userId, habitId)
         val firestoreUpdateData = hashMapOf<String, Any>(
@@ -114,7 +121,7 @@ class HabitRemoteDataSource @Inject constructor(
             "priorityLevel" to priorityLevel.value,
             ("reminderTimes" to reminderTime?.let { listOf(it.toString()) }
                 ?: emptyList<String>()) as Pair<String, Any>,
-            "hasSetReminder" to (reminderTime != null)
+            "hasSetReminder" to hasSetReminder
         )
 
         habitDocRef.update(firestoreUpdateData).await()
@@ -148,11 +155,12 @@ class HabitRemoteDataSource @Inject constructor(
         habitId: String,
         updatedProgress: Int,
         userId: String,
-        date: String
+        date: LocalDate
     ) {
+        val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
         val habitCompletionDocRef = getHabitDocumentReference(userId, habitId)
             .collection("habitCompletions")
-            .document(date)
+            .document(dateString)
 
         val completionData = hashMapOf(
             "completedRepetitions" to updatedProgress,

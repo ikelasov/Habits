@@ -44,14 +44,26 @@ class HabitRepository @Inject constructor(
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
-        remoteDataSource.createHabitAndGetDocId(
-            userId,
-            habitName,
-            categoryId,
-            daysToRepeat,
-            repetitionsPerDay,
-            priorityLevel,
-            reminderTime
+        val newDocId = remoteDataSource.getNewHabitDocumentId(userId)
+        localDataSource.createHabit(
+            habitId = newDocId,
+            userId = userId,
+            habitName = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTime = reminderTime
+        )
+        remoteDataSource.createHabit(
+            habitId = newDocId,
+            userId = userId,
+            habitName = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTime = reminderTime
         )
     }
 
@@ -64,6 +76,21 @@ class HabitRepository @Inject constructor(
         priorityLevel: HabitPriorityLevel,
         reminderTime: LocalTime?
     ) {
+        val currentHabit = localDataSource.getHabit(habitId, userId)
+        val hasUpdatesOnDaysToRepeat = currentHabit.daysToRepeat != daysToRepeat
+        val hasUpdatedReminderTime =
+            (reminderTime?.let { listOf(it) } ?: emptyList()) != currentHabit.reminderTimes
+        localDataSource.updateHabit(
+            habitId = habitId,
+            userId = userId,
+            habitName = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTime = reminderTime,
+            hasSetReminder = currentHabit.hasSetReminder && !hasUpdatedReminderTime && !hasUpdatesOnDaysToRepeat
+        )
         remoteDataSource.updateHabit(
             habitId = habitId,
             userId = userId,
@@ -72,16 +99,23 @@ class HabitRepository @Inject constructor(
             daysToRepeat = daysToRepeat,
             repetitionsPerDay = repetitionsPerDay,
             priorityLevel = priorityLevel,
-            reminderTime = reminderTime
+            reminderTime = reminderTime,
+            hasSetReminder = currentHabit.hasSetReminder && !hasUpdatedReminderTime && !hasUpdatesOnDaysToRepeat
         )
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, date: String) =
+    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int, date: LocalDate) {
+        localDataSource.updateHabitProgress(userId, habitId, date, updatedProgress)
         remoteDataSource.updateHabitProgress(habitId, updatedProgress, userId, date)
+    }
 
-    suspend fun updateHabitRemindersSet(habitId: String) =
+    suspend fun updateHabitRemindersSet(habitId: String) {
+        localDataSource.updateHabitRemindersSet(habitId, userId)
         remoteDataSource.updateHabitReminderSet(habitId, userId)
+    }
 
-    suspend fun deleteHabit(habitId: String) =
+    suspend fun deleteHabit(habitId: String) {
+        localDataSource.deleteHabit(habitId)
         remoteDataSource.deleteHabit(userId, habitId)
+    }
 }

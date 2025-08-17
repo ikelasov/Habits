@@ -62,16 +62,51 @@ class HabitLocalDataSource @Inject constructor(
         habitDao.createHabit(habitEntity)
     }
 
-    suspend fun updateHabit(habitEntity: HabitEntity) {
-        habitDao.updateHabit(habitEntity)
+    suspend fun updateHabit(
+        habitId: String,
+        userId: String,
+        habitName: String,
+        categoryId: String,
+        daysToRepeat: List<DaysOfWeek>,
+        repetitionsPerDay: Int,
+        priorityLevel: HabitPriorityLevel,
+        reminderTime: LocalTime?,
+        hasSetReminder: Boolean
+    ) {
+        val existing = habitDao.getHabit(habitId, userId)
+        val updated = existing.copy(
+            name = habitName,
+            categoryId = categoryId,
+            daysToRepeat = daysToRepeat,
+            repetitionsPerDay = repetitionsPerDay,
+            priorityLevel = priorityLevel,
+            reminderTimes = reminderTime?.let { listOf(it) } ?: emptyList(),
+            hasSetReminder = hasSetReminder
+        )
+        habitDao.updateHabit(updated)
     }
 
-    suspend fun updateHabitProgress(habitId: String, updatedProgress: Int) {
-        habitDao.updateCompletedRepetitions(habitId, updatedProgress)
+    suspend fun updateHabitProgress(
+        userId: String,
+        habitId: String,
+        date: LocalDate,
+        updatedProgress: Int
+    ) {
+        val habitCompletion = HabitCompletionEntity(userId, habitId, date, updatedProgress)
+        habitCompletionDao.insertOrUpdateHabitCompletion(habitCompletion)
+    }
+
+    suspend fun updateHabitRemindersSet(habitId: String, userId: String) {
+        val existing = habitDao.getHabit(habitId, userId)
+        habitDao.updateHabit(existing.copy(hasSetReminder = true))
     }
 
     suspend fun upsertAll(habits: List<HabitEntity>) {
         habitDao.upsertAll(habits)
+    }
+
+    suspend fun deleteHabit(habitId: String) {
+        habitDao.deleteHabit(habitId)
     }
 
     suspend fun deleteMissingHabits(userId: String, remoteHabitIds: List<String>) {

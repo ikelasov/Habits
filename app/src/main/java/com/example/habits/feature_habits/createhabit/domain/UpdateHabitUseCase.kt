@@ -2,12 +2,14 @@ package com.example.habits.feature_habits.createhabit.domain
 
 import com.example.habits.core.common.model.DaysOfWeek
 import com.example.habits.core.data.habits.repository.HabitRepository
+import com.example.habits.core.data.repository.HabitRemindersRepository
 import com.example.habits.core.model.habits.HabitPriorityLevel
 import java.time.LocalTime
 import javax.inject.Inject
 
 class UpdateHabitUseCase @Inject constructor(
-    private val habitRepository: HabitRepository
+    private val habitRepository: HabitRepository,
+    private val habitRemindersRepository: HabitRemindersRepository
 ) {
     suspend operator fun invoke(
         habitId: String,
@@ -28,5 +30,6 @@ class UpdateHabitUseCase @Inject constructor(
             priorityLevel = priorityLevel,
             reminderTime = reminderTime
         )
+        habitRemindersRepository.createNonSetReminders()
     }
 }

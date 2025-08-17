@@ -15,6 +15,9 @@ interface HabitCompletionDao {
     suspend fun insertOrUpdateHabitCompletions(completions: List<HabitCompletionEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrUpdateHabitCompletion(completions: HabitCompletionEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabitCompletion(habitCompletion: HabitCompletionEntity)
 
     @Query("SELECT * FROM habit_completions WHERE habitId = :habitId AND date = :date")

@@ -15,7 +15,6 @@ class UpdateHabitProgressUseCase @Inject constructor(
         date: LocalDate
     ) {
         val habit = habitRepository.getHabit(habitId)
-        val dateString = date.format(DateTimeFormatter.ISO_LOCAL_DATE)
         val habitCompletions = habitRepository
             .getHabitCompletionForId(habitId, date)
             ?.completedRepetitions
@@ -28,6 +27,6 @@ class UpdateHabitProgressUseCase @Inject constructor(
         if (updatedProgress > habit.repetitionsPerDay) {
             return
         }
-        habitRepository.updateHabitProgress(habitId, updatedProgress, dateString)
+        habitRepository.updateHabitProgress(habitId, updatedProgress, date)
     }
 }
