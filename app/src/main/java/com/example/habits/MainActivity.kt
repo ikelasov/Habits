@@ -1,10 +1,15 @@
 package com.example.habits
 
+import android.Manifest
+import android.app.AlertDialog
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -41,6 +46,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.habits.core.data.sync.MasterSyncManager
@@ -57,10 +63,18 @@ class MainActivity : ComponentActivity() {
     lateinit var masterSyncManager: MasterSyncManager
 
     private val authViewModel: AuthViewModel by viewModels()
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (!isGranted)
+            Toast.makeText(this, "Notifications disabled.", Toast.LENGTH_SHORT).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        askNotificationPermission()
 
         setContent {
             val authUiState by authViewModel.uiState.collectAsState()
@@ -86,6 +100,28 @@ class MainActivity : ComponentActivity() {
                     authViewModel.signOut()
                 }
             )
+        }
+    }
+
+    private fun askNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                )
+            ) {
+                AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to show reminders for your habits.")
+                    .setPositiveButton("OK") { _, _ ->
+                        requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                    .show()
+            } else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 
@@ -147,7 +183,12 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.AutoMirrored.Default.List, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                Icons.AutoMirrored.Default.List,
+                                contentDescription = null
+                            )
+                        },
                         label = { Text("Manage Habits") },
                         selected = currentRoute == HabitsDestinations.ManageHabitsScreen.route,
                         onClick = {
@@ -157,7 +198,12 @@ fun HabitsApp(startDestination: String, onSignOut: () -> Unit) {
                         modifier = if (isLandscape()) Modifier.safeContentPadding() else Modifier
                     )
                     NavigationDrawerItem(
-                        icon = { Icon(Icons.AutoMirrored.Default.List, contentDescription = null) },
+                        icon = {
+                            Icon(
+                                Icons.AutoMirrored.Default.List,
+                                contentDescription = null
+                            )
+                        },
                         label = { Text("Manage Categories") },
                         selected = currentRoute == HabitsDestinations.ManageCategoriesScreen.route,
                         onClick = {
